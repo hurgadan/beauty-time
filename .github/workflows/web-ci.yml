@@ -1,16 +1,22 @@
-name: CRM CI
+name: Web CI
 
 on:
   push:
     paths:
-      - '**'
+      - 'web/**'
+      - '.github/workflows/web-ci.yml'
   pull_request:
     paths:
-      - '**'
+      - 'web/**'
+      - '.github/workflows/web-ci.yml'
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -20,7 +26,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: package-lock.json
+          cache-dependency-path: web/package-lock.json
 
       - name: Install
         run: npm install
