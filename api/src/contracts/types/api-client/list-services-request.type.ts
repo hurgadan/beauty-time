@@ -1,1 +1,2 @@
-export interface ListServicesRequestDto {}
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export type ListServicesRequestDto = {};

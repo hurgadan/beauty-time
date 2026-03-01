@@ -1,6 +1,6 @@
-import type { Request } from 'express';
-import type { AuthUser } from './auth-user.interface';
+import type { AuthUser } from "./auth-user.interface";
 
-export interface RequestWithUser extends Request {
+export interface RequestWithUser {
+  headers: Record<string, string | string[] | undefined>;
   user?: AuthUser;
 }

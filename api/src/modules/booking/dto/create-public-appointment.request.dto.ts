@@ -1,26 +1,27 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsISO8601, IsOptional, IsString } from 'class-validator';
-import type { CreatePublicAppointmentRequestDto as CreatePublicAppointmentRequestDtoContract } from '../../../contracts';
+import { ApiProperty } from "@nestjs/swagger";
+import { IsEmail, IsISO8601, IsOptional, IsString } from "class-validator";
+
+import type { CreatePublicAppointmentRequestDto as CreatePublicAppointmentRequestDtoContract } from "../../../contracts";
 
 export class CreatePublicAppointmentRequestDto implements CreatePublicAppointmentRequestDtoContract {
-  @ApiProperty({ example: 'Anna Muller' })
+  @ApiProperty({ example: "Anna Muller" })
   @IsString()
   public clientName!: string;
 
-  @ApiProperty({ example: 'anna@email.de' })
+  @ApiProperty({ example: "anna@email.de" })
   @IsEmail()
   public clientEmail!: string;
 
-  @ApiProperty({ example: 'srv_1' })
+  @ApiProperty({ example: "srv_1" })
   @IsString()
   public serviceId!: string;
 
-  @ApiProperty({ required: false, example: 'staff_1' })
+  @ApiProperty({ required: false, example: "staff_1" })
   @IsOptional()
   @IsString()
   public staffId?: string;
 
-  @ApiProperty({ example: '2026-02-27T10:00:00+01:00' })
+  @ApiProperty({ example: "2026-02-27T10:00:00+01:00" })
   @IsISO8601()
   public startsAtIso!: string;
 }

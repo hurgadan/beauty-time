@@ -1,5 +1,5 @@
 export enum ClientSalutation {
-  HERR = 'herr',
-  FRAU = 'frau',
-  NONE = 'none',
+  HERR = "herr",
+  FRAU = "frau",
+  NONE = "none",
 }

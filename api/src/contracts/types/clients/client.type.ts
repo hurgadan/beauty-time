@@ -1,5 +1,5 @@
-import type { ClientGender } from './enums/client-gender.enum';
-import type { ClientSalutation } from './enums/client-salutation.enum';
+import type { ClientGender } from "./enums/client-gender.enum";
+import type { ClientSalutation } from "./enums/client-salutation.enum";
 
 export interface ClientDto {
   id: string;

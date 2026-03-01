@@ -1,6 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
-import type { ListServicesResponseDto as ListServicesResponseDtoContract } from '../../../contracts';
-import { ServiceListItemDto } from './service-list-item.dto';
+import { ApiProperty } from "@nestjs/swagger";
+
+import { ServiceListItemDto } from "./service-list-item.dto";
+import type { ListServicesResponseDto as ListServicesResponseDtoContract } from "../../../contracts";
 
 export class ListServicesResponseDto implements ListServicesResponseDtoContract {
   @ApiProperty({ type: () => [ServiceListItemDto] })

@@ -1,4 +1,4 @@
-import type { ServiceListItemDto } from './service-list-item.type';
+import type { ServiceListItemDto } from "./service-list-item.type";
 
 export interface ListServicesResponseDto {
   items: ServiceListItemDto[];

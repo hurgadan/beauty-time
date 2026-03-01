@@ -1,14 +1,15 @@
-import { Controller, Get } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { HealthCheckResponseDto } from './dto/health-check.response.dto';
+import { Controller, Get } from "@nestjs/common";
+import { ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 
-@ApiTags('health')
-@Controller('health')
+import { HealthCheckResponseDto } from "./dto/health-check.response.dto";
+
+@ApiTags("health")
+@Controller("health")
 export class HealthController {
   @Get()
-  @ApiOperation({ summary: 'Health check' })
+  @ApiOperation({ summary: "Health check" })
   @ApiOkResponse({ type: HealthCheckResponseDto })
   public check(): HealthCheckResponseDto {
-    return { status: 'ok', service: 'api' };
+    return { status: "ok", service: "api" };
   }
 }

@@ -1,6 +1,6 @@
 export enum ClientGender {
-  MALE = 'male',
-  FEMALE = 'female',
-  DIVERSE = 'diverse',
-  UNSPECIFIED = 'unspecified',
+  MALE = "male",
+  FEMALE = "female",
+  DIVERSE = "diverse",
+  UNSPECIFIED = "unspecified",
 }

@@ -1,2 +1,2 @@
-export * from './enums';
-export * from './client.type';
+export * from "./enums";
+export * from "./client.type";

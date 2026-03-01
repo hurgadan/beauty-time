@@ -1,1 +1,1 @@
-export * from './appointment-status.enum';
+export * from "./appointment-status.enum";
