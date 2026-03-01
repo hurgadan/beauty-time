@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CRM Login & Onboarding</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="prototype-shell">
+      <header class="prototype-header">
+        <div>
+          <span class="badge">CRM · Screen 1</span>
+          <h1 style="margin-top: 8px">Login & Onboarding</h1>
+        </div>
+        <a class="button secondary" href="./crm-dashboard.html" style="text-decoration: none">Next: Dashboard</a>
+      </header>
+
+      <section class="prototype-grid two">
+        <article class="card panel">
+          <div class="card-head">
+            <div>
+              <h2 style="font-size: 26px">Welcome back</h2>
+              <p class="muted" style="margin-top: 4px">Owner/staff login for salon workspace</p>
+            </div>
+            <span class="badge info">SSO-ready</span>
+          </div>
+          <div class="form-grid">
+            <div class="field">
+              <label>Email</label>
+              <input class="input" placeholder="owner@studio.de" />
+            </div>
+            <div class="field">
+              <label>Password</label>
+              <input class="input" type="password" placeholder="••••••••" />
+            </div>
+            <div class="split">
+              <label class="mini muted"><input type="checkbox" /> Keep me signed in</label>
+              <a class="mini" href="#">Forgot password?</a>
+            </div>
+            <button class="button primary">Sign in to CRM</button>
+          </div>
+        </article>
+
+        <article class="card panel">
+          <div class="card-head">
+            <div>
+              <h2 style="font-size: 26px">First-time setup</h2>
+              <p class="muted" style="margin-top: 4px">Onboard a salon or solo master in 3 minutes</p>
+            </div>
+          </div>
+          <div class="chip-row">
+            <span class="chip active">1 Business profile</span>
+            <span class="chip">2 Services</span>
+            <span class="chip">3 Staff</span>
+          </div>
+          <div class="divider"></div>
+          <div class="form-grid two">
+            <div class="field">
+              <label>Business name</label>
+              <input class="input" value="Beauty Studio Berlin Mitte" />
+            </div>
+            <div class="field">
+              <label>Timezone</label>
+              <select class="select">
+                <option>Europe/Berlin</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Business type</label>
+              <select class="select">
+                <option>Salon (multi-staff)</option>
+                <option>Solo master</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Locale</label>
+              <select class="select">
+                <option>Deutsch (DE)</option>
+                <option>English (EN)</option>
+              </select>
+            </div>
+          </div>
+          <button class="button primary" style="margin-top: 8px">Create workspace</button>
+          <p class="mini muted" style="margin-top: 8px">GDPR notice and data processing agreement are shown before final step.</p>
+        </article>
+      </section>
+    </div>
+  </body>
+</html>

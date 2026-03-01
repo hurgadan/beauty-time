@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CRM Dashboard</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="crm-layout">
+        <aside class="crm-sidebar">
+          <div class="brand-block">
+            <h1>Beauty-Time</h1>
+            <p>Salon cockpit</p>
+          </div>
+          <nav class="nav">
+            <a class="nav-item active" href="./crm-dashboard.html">Dashboard</a>
+            <a class="nav-item" href="./crm-calendar.html">Calendar</a>
+            <a class="nav-item" href="./crm-appointments.html">Appointments</a>
+            <a class="nav-item" href="./crm-client-card.html">Clients</a>
+            <a class="nav-item" href="./crm-services.html">Services</a>
+            <a class="nav-item" href="./crm-staff-schedule.html">Staff</a>
+            <a class="nav-item" href="./crm-notifications.html">Notifications</a>
+            <a class="nav-item" href="./crm-settings.html">Settings</a>
+          </nav>
+        </aside>
+
+        <main class="crm-main">
+          <section class="card crm-header">
+            <div>
+              <span class="badge info">Europe/Berlin</span>
+              <h2 style="margin-top: 6px; font-size: 33px">Heute, Donnerstag</h2>
+              <p class="muted" style="margin-top: 4px">6 appointments · 2 need confirmation</p>
+            </div>
+            <div class="header-actions">
+              <a class="button secondary" href="./crm-mobile-prototype.html" style="text-decoration: none">Open mobile CRM</a>
+              <button class="button primary">+ New Appointment</button>
+            </div>
+          </section>
+
+          <section class="kpi-grid">
+            <article class="card kpi-card">
+              <p class="muted">Booked Today</p>
+              <div class="kpi-value">18</div>
+              <span class="badge success">+12% vs last Thu</span>
+            </article>
+            <article class="card kpi-card">
+              <p class="muted">No-show Risk</p>
+              <div class="kpi-value">3</div>
+              <span class="badge warning">Needs attention</span>
+            </article>
+            <article class="card kpi-card">
+              <p class="muted">Returning Clients</p>
+              <div class="kpi-value">64%</div>
+              <span class="badge success">Healthy</span>
+            </article>
+            <article class="card kpi-card">
+              <p class="muted">Revenue (Today)</p>
+              <div class="kpi-value">€1,240</div>
+              <span class="badge info">Projected €1,560</span>
+            </article>
+          </section>
+
+          <section class="crm-bottom">
+            <article class="card table-card">
+              <div class="card-head">
+                <div>
+                  <h3 style="font-size: 22px">Appointments Requiring Action</h3>
+                  <p class="muted" style="margin-top: 4px">Confirmation and no-show prevention</p>
+                </div>
+                <a class="button secondary" href="./crm-appointments.html" style="text-decoration: none">Open list</a>
+              </div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Client</th>
+                    <th>Service</th>
+                    <th>Status</th>
+                    <th>Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Olga D.</td>
+                    <td>Pedicure Classic</td>
+                    <td><span class="badge warning">Needs confirm</span></td>
+                    <td>11:00</td>
+                  </tr>
+                  <tr>
+                    <td>Lea M.</td>
+                    <td>Cut + Styling</td>
+                    <td><span class="badge success">Confirmed</span></td>
+                    <td>09:00</td>
+                  </tr>
+                  <tr>
+                    <td>Jana R.</td>
+                    <td>Manicure Premium</td>
+                    <td><span class="badge info">Reminder sent</span></td>
+                    <td>10:00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </article>
+
+            <aside class="card notify-card">
+              <div class="card-head">
+                <div>
+                  <h3 style="font-size: 22px">Quick Access</h3>
+                  <p class="muted" style="margin-top: 4px">Core v1 screens</p>
+                </div>
+              </div>
+              <div class="list">
+                <a class="list-item" href="./crm-calendar.html"><strong>Calendar</strong><p class="muted">Day/week schedule view</p></a>
+                <a class="list-item" href="./crm-services.html"><strong>Services</strong><p class="muted">Pricing, duration, buffers</p></a>
+                <a class="list-item" href="./crm-staff-schedule.html"><strong>Staff</strong><p class="muted">Working hours and time-off</p></a>
+                <a class="list-item" href="./crm-notifications.html"><strong>Notifications</strong><p class="muted">T-24h and T-2h email setup</p></a>
+              </div>
+            </aside>
+          </section>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CRM Mobile Notifications</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="prototype-shell">
+      <header class="prototype-header">
+        <div>
+          <span class="badge">Mobile CRM · Screen 7</span>
+          <h1 style="margin-top: 8px">Notifications</h1>
+        </div>
+        <a class="button secondary" href="./crm-mobile-prototype.html" style="text-decoration: none">Mobile index</a>
+      </header>
+
+      <div class="mobile-wrap">
+        <div class="mobile-screen">
+          <header class="mobile-topbar">
+            <p class="mini">Notifications</p>
+            <h2 style="font-size: 24px; margin-top: 4px">Reminder settings</h2>
+          </header>
+
+          <main class="mobile-content">
+            <section class="mobile-card">
+              <strong>Trigger setup</strong>
+              <div class="form-grid" style="margin-top: 8px">
+                <input class="input" value="T-24h" />
+                <input class="input" value="T-2h" />
+                <select class="select"><option>Email only (v1)</option></select>
+              </div>
+            </section>
+
+            <section class="mobile-card">
+              <strong>Delivery status</strong>
+              <div class="list" style="margin-top: 8px">
+                <div class="list-item"><strong>09:00 batch</strong><p class="mini muted">38 sent · 37 delivered</p></div>
+                <div class="list-item"><strong>11:00 batch</strong><p class="mini muted">22 sent · 22 delivered</p></div>
+              </div>
+              <div class="state-block success">Deliverability healthy: 98.7%</div>
+            </section>
+          </main>
+
+          <nav class="mobile-nav">
+            <a class="mobile-nav-item" href="./crm-mobile-dashboard.html">Today</a>
+            <a class="mobile-nav-item" href="./crm-mobile-calendar.html">Calendar</a>
+            <a class="mobile-nav-item" href="./crm-mobile-clients.html">Clients</a>
+            <a class="mobile-nav-item active" href="./crm-mobile-notifications.html">Notify</a>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Booking Step 5 - Contact and Consent</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <section class="booking-layout">
+      <main>
+        <section class="card booking-form" style="margin-top: 0">
+          <span class="badge">Step 5/8</span>
+          <h2 style="font-size: 30px; margin-top: 8px">Contact details</h2>
+          <p class="muted" style="margin-top: 4px">Used for appointment confirmation and reminders.</p>
+          <div class="form-grid two" style="margin-top: 12px">
+            <div class="field"><label>Name</label><input class="input" placeholder="Anna Müller" /></div>
+            <div class="field"><label>Email</label><input class="input" placeholder="anna@email.de" /></div>
+          </div>
+          <div class="field"><label>Reminder channel</label><select class="select"><option>Email (v1)</option></select></div>
+          <label class="mini muted"><input type="checkbox" checked /> I agree to receive reminder notifications and privacy terms.</label>
+          <div style="display:flex; gap:10px; margin-top:16px">
+            <a class="button secondary" href="./booking-step-04-datetime.html" style="text-decoration:none">Back</a>
+            <a class="button primary" href="./booking-step-06-otp.html" style="text-decoration:none">Send magic link + OTP</a>
+          </div>
+        </section>
+      </main>
+      <aside class="phone-mock">
+        <div class="phone-screen">
+          <header class="phone-top"><h3 style="font-size:22px">Consent</h3></header>
+          <section class="phone-section"><p class="mini">DE privacy text primary, EN fallback.</p></section>
+        </div>
+      </aside>
+    </section>
+  </body>
+</html>

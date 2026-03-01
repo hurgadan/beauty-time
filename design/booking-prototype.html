@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Booking Prototype Index</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="prototype-shell">
+      <header class="prototype-header">
+        <div>
+          <span class="badge">Booking v1 · Full flow</span>
+          <h1 style="margin-top: 8px">Beauty-Time booking steps</h1>
+          <p class="muted" style="margin-top: 4px">Complete client journey from landing to reminder confirmation</p>
+        </div>
+      </header>
+
+      <section class="prototype-grid three">
+        <a class="card panel" href="./booking-step-01-landing.html"><h3 style="font-size:22px">01 Landing</h3><p class="muted" style="margin-top:8px">Entry from booking link</p></a>
+        <a class="card panel" href="./booking-step-02-service.html"><h3 style="font-size:22px">02 Service</h3><p class="muted" style="margin-top:8px">Service selection</p></a>
+        <a class="card panel" href="./booking-step-03-specialist.html"><h3 style="font-size:22px">03 Specialist</h3><p class="muted" style="margin-top:8px">Any available or specific master</p></a>
+        <a class="card panel" href="./booking-step-04-datetime.html"><h3 style="font-size:22px">04 Date & Time</h3><p class="muted" style="margin-top:8px">Slot picker and availability</p></a>
+        <a class="card panel" href="./booking-step-05-contact.html"><h3 style="font-size:22px">05 Contact</h3><p class="muted" style="margin-top:8px">Contact and consent</p></a>
+        <a class="card panel" href="./booking-step-06-otp.html"><h3 style="font-size:22px">06 OTP</h3><p class="muted" style="margin-top:8px">Magic link + OTP verification</p></a>
+        <a class="card panel" href="./booking-step-07-success.html"><h3 style="font-size:22px">07 Success</h3><p class="muted" style="margin-top:8px">Booking confirmed</p></a>
+        <a class="card panel" href="./booking-step-08-reminder-confirm.html"><h3 style="font-size:22px">08 Reminder Confirm</h3><p class="muted" style="margin-top:8px">Confirmation from reminder email</p></a>
+      </section>
+
+      <section class="card panel" style="margin-top: 16px">
+        <div class="split">
+          <div>
+            <h3 style="font-size: 24px">Edge cases</h3>
+            <p class="muted" style="margin-top: 4px">No slots and OTP expired screens.</p>
+          </div>
+          <div style="display: flex; gap: 8px">
+            <a class="button secondary" href="./booking-step-09-no-slots.html" style="text-decoration:none">No slots</a>
+            <a class="button secondary" href="./booking-step-10-otp-expired.html" style="text-decoration:none">OTP expired</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

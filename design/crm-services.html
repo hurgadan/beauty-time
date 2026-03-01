@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CRM Services</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="crm-layout">
+        <aside class="crm-sidebar">
+          <div class="brand-block"><h1>Beauty-Time</h1><p>Salon cockpit</p></div>
+          <nav class="nav">
+            <a class="nav-item" href="./crm-dashboard.html">Dashboard</a>
+            <a class="nav-item" href="./crm-calendar.html">Calendar</a>
+            <a class="nav-item" href="./crm-appointments.html">Appointments</a>
+            <a class="nav-item" href="./crm-client-card.html">Clients</a>
+            <a class="nav-item active" href="./crm-services.html">Services</a>
+            <a class="nav-item" href="./crm-staff-schedule.html">Staff</a>
+            <a class="nav-item" href="./crm-notifications.html">Notifications</a>
+            <a class="nav-item" href="./crm-settings.html">Settings</a>
+          </nav>
+        </aside>
+
+        <main class="crm-main">
+          <section class="card crm-header">
+            <div>
+              <span class="badge">Services</span>
+              <h2 style="margin-top: 8px; font-size: 32px">Catalog, pricing, duration, buffers</h2>
+              <p class="muted" style="margin-top: 4px">Service-level controls that drive slot calculation</p>
+            </div>
+            <div class="header-actions">
+              <button class="button secondary">Import CSV</button>
+              <button class="button primary">+ New service</button>
+            </div>
+          </section>
+
+          <section class="prototype-grid two">
+            <article class="card panel">
+              <div class="card-head"><h3 style="font-size: 22px">Service list</h3></div>
+              <table>
+                <thead>
+                  <tr><th>Name</th><th>Duration</th><th>Price</th><th>Buffer</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Haircut + Styling</td><td>45m</td><td>€49</td><td>10m</td><td><span class="badge success">Active</span></td></tr>
+                  <tr><td>Manicure Premium</td><td>60m</td><td>€55</td><td>10m</td><td><span class="badge success">Active</span></td></tr>
+                  <tr><td>Pedicure Classic</td><td>45m</td><td>€42</td><td>10m</td><td><span class="badge warning">Paused</span></td></tr>
+                </tbody>
+              </table>
+            </article>
+
+            <article class="card panel">
+              <div class="card-head"><h3 style="font-size: 22px">Edit service</h3></div>
+              <div class="form-grid">
+                <div class="field"><label>Name</label><input class="input" value="Manicure Premium" /></div>
+                <div class="form-grid two">
+                  <div class="field"><label>Duration</label><input class="input" value="60" /></div>
+                  <div class="field"><label>Price (€)</label><input class="input" value="55" /></div>
+                </div>
+                <div class="form-grid two">
+                  <div class="field"><label>Buffer before (min)</label><input class="input" value="5" /></div>
+                  <div class="field"><label>Buffer after (min)</label><input class="input" value="10" /></div>
+                </div>
+                <div class="field">
+                  <label>Available for staff</label>
+                  <div class="chip-row">
+                    <span class="chip active">Anna</span>
+                    <span class="chip">Mila</span>
+                    <span class="chip">Rami</span>
+                  </div>
+                </div>
+                <button class="button primary">Save service</button>
+              </div>
+            </article>
+          </section>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

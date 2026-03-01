@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CRM Mobile Calendar</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="prototype-shell">
+      <header class="prototype-header">
+        <div>
+          <span class="badge">Mobile CRM · Screen 3</span>
+          <h1 style="margin-top: 8px">Calendar</h1>
+        </div>
+        <a class="button secondary" href="./crm-mobile-prototype.html" style="text-decoration: none">Mobile index</a>
+      </header>
+
+      <div class="mobile-wrap">
+        <div class="mobile-screen">
+          <header class="mobile-topbar">
+            <p class="mini">Calendar</p>
+            <h2 style="font-size: 24px; margin-top: 4px">Fri, 27 Feb</h2>
+          </header>
+
+          <main class="mobile-content">
+            <section class="mobile-card">
+              <div class="split">
+                <strong>Day slots</strong>
+                <span class="badge info">30m base</span>
+              </div>
+              <div class="list" style="margin-top: 8px">
+                <div class="list-item"><strong>09:00</strong><p class="muted mini">Lea M. · Cut + Styling</p></div>
+                <div class="list-item"><strong>10:00</strong><p class="muted mini">Jana R. · Manicure Premium</p></div>
+                <div class="list-item"><strong>11:00</strong><p class="muted mini">Sofia L. · Needs confirmation</p></div>
+                <div class="list-item"><strong>12:00</strong><p class="muted mini">Available</p></div>
+              </div>
+            </section>
+
+            <section class="mobile-card">
+              <strong>Conflict alert</strong>
+              <div class="state-block error">Cannot move 11:00 to 10:30 because of 10m service buffer overlap.</div>
+            </section>
+          </main>
+
+          <nav class="mobile-nav">
+            <a class="mobile-nav-item" href="./crm-mobile-dashboard.html">Today</a>
+            <a class="mobile-nav-item active" href="./crm-mobile-calendar.html">Calendar</a>
+            <a class="mobile-nav-item" href="./crm-mobile-clients.html">Clients</a>
+            <a class="mobile-nav-item" href="./crm-mobile-settings.html">More</a>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

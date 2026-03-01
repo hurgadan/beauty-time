@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CRM Mobile Dashboard</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="prototype-shell">
+      <header class="prototype-header">
+        <div>
+          <span class="badge">Mobile CRM · Screen 2</span>
+          <h1 style="margin-top: 8px">Today dashboard</h1>
+        </div>
+        <a class="button secondary" href="./crm-mobile-prototype.html" style="text-decoration: none">Mobile index</a>
+      </header>
+
+      <div class="mobile-wrap">
+        <div class="mobile-screen">
+          <header class="mobile-topbar">
+            <p class="mini">Today · Thu</p>
+            <h2 style="font-size: 24px; margin-top: 4px">6 appointments</h2>
+            <p class="mini" style="margin-top: 4px; color: #d6f2ef">2 need confirmation</p>
+          </header>
+
+          <main class="mobile-content">
+            <section class="mobile-card">
+              <div class="split"><strong>Next appointment</strong><span class="badge warning">Needs confirm</span></div>
+              <p style="margin-top: 8px">11:00 · Pedicure Classic · Sofia L.</p>
+              <div style="display: flex; gap: 8px; margin-top: 10px">
+                <button class="button ghost" style="padding: 10px 12px">Send reminder</button>
+                <button class="button secondary" style="padding: 10px 12px">Reschedule</button>
+              </div>
+            </section>
+
+            <section class="mobile-card">
+              <strong>Quick create</strong>
+              <div class="form-grid" style="margin-top: 8px">
+                <input class="input" placeholder="Client name" />
+                <select class="select"><option>Service</option><option>Haircut + Styling</option><option>Manicure Premium</option></select>
+                <div class="form-grid two">
+                  <input class="input" value="27 Feb" />
+                  <input class="input" value="12:30" />
+                </div>
+                <button class="button primary">Create appointment</button>
+              </div>
+            </section>
+
+            <section class="mobile-card">
+              <strong>Today list</strong>
+              <div class="list" style="margin-top: 8px">
+                <div class="list-item"><strong>09:00 · Lea M.</strong><p class="muted mini">Cut + Styling · confirmed</p></div>
+                <div class="list-item"><strong>10:00 · Jana R.</strong><p class="muted mini">Manicure Premium · reminder sent</p></div>
+                <div class="list-item"><strong>11:00 · Sofia L.</strong><p class="muted mini">Pedicure Classic · needs confirm</p></div>
+              </div>
+            </section>
+          </main>
+
+          <nav class="mobile-nav">
+            <a class="mobile-nav-item active" href="./crm-mobile-dashboard.html">Today</a>
+            <a class="mobile-nav-item" href="./crm-mobile-calendar.html">Calendar</a>
+            <a class="mobile-nav-item" href="./crm-mobile-clients.html">Clients</a>
+            <a class="mobile-nav-item" href="./crm-mobile-settings.html">More</a>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

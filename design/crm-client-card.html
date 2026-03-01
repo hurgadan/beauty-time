@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CRM Client Card</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="crm-layout">
+        <aside class="crm-sidebar">
+          <div class="brand-block"><h1>Beauty-Time</h1><p>Salon cockpit</p></div>
+          <nav class="nav">
+            <a class="nav-item" href="./crm-dashboard.html">Dashboard</a>
+            <a class="nav-item" href="./crm-calendar.html">Calendar</a>
+            <a class="nav-item" href="./crm-appointments.html">Appointments</a>
+            <a class="nav-item active" href="./crm-client-card.html">Clients</a>
+            <a class="nav-item" href="./crm-services.html">Services</a>
+            <a class="nav-item" href="./crm-staff-schedule.html">Staff</a>
+            <a class="nav-item" href="./crm-notifications.html">Notifications</a>
+            <a class="nav-item" href="./crm-settings.html">Settings</a>
+          </nav>
+        </aside>
+
+        <main class="crm-main">
+          <section class="card crm-header">
+            <div>
+              <span class="badge">Client profile</span>
+              <h2 style="margin-top: 8px; font-size: 32px">Sofia Ludwig</h2>
+              <p class="muted" style="margin-top: 4px">Returning client · verified by email OTP</p>
+            </div>
+            <div class="header-actions">
+              <button class="button secondary">Export data (GDPR)</button>
+              <button class="button ghost">Delete request</button>
+            </div>
+          </section>
+
+          <section class="prototype-grid two">
+            <article class="card panel">
+              <div class="card-head">
+                <h3 style="font-size: 22px">Client data</h3>
+                <span class="badge success">Returning</span>
+              </div>
+              <div class="form-grid two">
+                <div class="field"><label>Name</label><input class="input" value="Sofia Ludwig" /></div>
+                <div class="field"><label>Email</label><input class="input" value="sofia@example.de" /></div>
+                <div class="field"><label>Phone</label><input class="input" value="+49 152 3322 4411" /></div>
+                <div class="field"><label>Preferred channel</label><select class="select"><option>Email</option></select></div>
+              </div>
+              <button class="button primary">Save profile</button>
+            </article>
+
+            <article class="card panel">
+              <div class="card-head"><h3 style="font-size: 22px">Visit history</h3></div>
+              <table>
+                <thead><tr><th>Date</th><th>Service</th><th>Staff</th><th>Status</th><th>Price</th></tr></thead>
+                <tbody>
+                  <tr><td>20 Feb 2026</td><td>Pedicure Classic</td><td>Anna</td><td><span class="badge success">Completed</span></td><td>€42</td></tr>
+                  <tr><td>18 Jan 2026</td><td>Manicure Premium</td><td>Anna</td><td><span class="badge success">Completed</span></td><td>€55</td></tr>
+                  <tr><td>22 Dec 2025</td><td>Pedicure Classic</td><td>Anna</td><td><span class="badge warning">No-show</span></td><td>€0</td></tr>
+                </tbody>
+              </table>
+            </article>
+          </section>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Booking Edge - No Slots</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <section class="booking-layout">
+      <main>
+        <section class="card booking-form" style="margin-top: 0">
+          <span class="badge warning">Edge case</span>
+          <h2 style="font-size: 30px; margin-top: 8px">No slots available</h2>
+          <p class="muted" style="margin-top: 4px">Selected day is fully booked.</p>
+          <div class="state-block error">No available slots for Fri, 27 Feb. Please choose another date.</div>
+          <div style="display:flex; gap:10px; margin-top:16px">
+            <button class="button secondary">Prev day</button>
+            <button class="button secondary">Next day</button>
+            <a class="button primary" href="./booking-step-04-datetime.html" style="text-decoration:none">Back to date picker</a>
+          </div>
+        </section>
+      </main>
+      <aside class="phone-mock">
+        <div class="phone-screen">
+          <header class="phone-top"><h3 style="font-size:22px">No slots</h3></header>
+          <section class="phone-section"><p class="mini">Suggest nearest alternatives with one tap.</p></section>
+        </div>
+      </aside>
+    </section>
+  </body>
+</html>

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Booking Step 4 - Date and Time</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <section class="booking-layout">
+      <main>
+        <section class="card booking-form" style="margin-top: 0">
+          <span class="badge">Step 4/8</span>
+          <h2 style="font-size: 30px; margin-top: 8px">Choose date and time</h2>
+          <div class="field" style="margin-top: 10px">
+            <label>Date</label>
+            <input class="input" value="Fri, 27 Feb 2026" />
+          </div>
+          <label style="font-size:13px; font-weight:700">Available slots</label>
+          <div class="slot-grid">
+            <button class="slot">09:00</button>
+            <button class="slot">09:30</button>
+            <button class="slot active">10:00</button>
+            <button class="slot">10:30</button>
+            <button class="slot">11:00</button>
+            <button class="slot">11:30</button>
+            <button class="slot disabled">12:00</button>
+            <button class="slot">12:30</button>
+          </div>
+          <div style="display:flex; gap:10px; margin-top:16px">
+            <a class="button secondary" href="./booking-step-03-specialist.html" style="text-decoration:none">Back</a>
+            <a class="button primary" href="./booking-step-05-contact.html" style="text-decoration:none">Continue</a>
+          </div>
+        </section>
+      </main>
+      <aside class="phone-mock">
+        <div class="phone-screen">
+          <header class="phone-top"><h3 style="font-size:22px">Slot selected</h3></header>
+          <section class="phone-section"><strong>Fri 27 Feb · 10:00</strong><p class="mini muted">You can change this on next step.</p></section>
+        </div>
+      </aside>
+    </section>
+  </body>
+</html>

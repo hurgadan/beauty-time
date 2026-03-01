@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Booking Step 8 - Reminder Confirmation</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <section class="booking-layout">
+      <main>
+        <section class="card booking-form" style="margin-top: 0">
+          <span class="badge">Step 8/8</span>
+          <h2 style="font-size: 30px; margin-top: 8px">Reminder confirmation screen</h2>
+          <p class="muted" style="margin-top: 4px">Opened from T-24h or T-2h email CTA</p>
+          <div class="list" style="margin-top: 12px">
+            <div class="list-item"><strong>Appointment</strong><p class="muted">Fri, 27 Feb 2026 · 10:00 · Manicure Premium</p></div>
+            <div class="list-item"><strong>Client</strong><p class="muted">Anna Müller · anna@email.de</p></div>
+          </div>
+          <div style="display:flex; gap:10px; margin-top:16px">
+            <button class="button primary">Yes, I will come</button>
+            <button class="button secondary">Need to reschedule</button>
+            <button class="button ghost">Cancel appointment</button>
+          </div>
+          <div class="state-block success">Status updated: confirmed_by_reminder</div>
+        </section>
+      </main>
+      <aside class="phone-mock">
+        <div class="phone-screen">
+          <header class="phone-top"><h3 style="font-size:22px">Reminder action</h3></header>
+          <section class="phone-section"><p class="mini">Single-tap confirmation from email link.</p></section>
+        </div>
+      </aside>
+    </section>
+  </body>
+</html>

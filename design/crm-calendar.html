@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CRM Calendar</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="crm-layout">
+        <aside class="crm-sidebar">
+          <div class="brand-block"><h1>Beauty-Time</h1><p>Salon cockpit</p></div>
+          <nav class="nav">
+            <a class="nav-item" href="./crm-dashboard.html">Dashboard</a>
+            <a class="nav-item active" href="./crm-calendar.html">Calendar</a>
+            <a class="nav-item" href="./crm-appointments.html">Appointments</a>
+            <a class="nav-item" href="./crm-client-card.html">Clients</a>
+            <a class="nav-item" href="./crm-services.html">Services</a>
+            <a class="nav-item" href="./crm-staff-schedule.html">Staff</a>
+            <a class="nav-item" href="./crm-notifications.html">Notifications</a>
+            <a class="nav-item" href="./crm-settings.html">Settings</a>
+          </nav>
+        </aside>
+
+        <main class="crm-main">
+          <section class="card crm-header">
+            <div>
+              <span class="badge">Calendar</span>
+              <h2 style="margin-top: 8px; font-size: 32px">Day / Week Scheduling</h2>
+              <p class="muted" style="margin-top: 4px">30-min slot base, service-level overrides and buffers</p>
+            </div>
+            <div class="header-actions">
+              <button class="button ghost">Any available</button>
+              <button class="button secondary">Week</button>
+              <button class="button primary">+ Add booking</button>
+            </div>
+          </section>
+
+          <section class="card calendar-wrap">
+            <div class="calendar-grid">
+              <div></div>
+              <div class="col-head">Any available</div>
+              <div class="col-head">Mila (Hair)</div>
+              <div class="col-head">Anna (Nails)</div>
+              <div class="col-head">Rami (Massage)</div>
+
+              <div class="time-label">09:00</div>
+              <div class="time-slot"></div>
+              <div class="time-slot"><div class="appt booked">Cut + Styling<br />Lea M.</div></div>
+              <div class="time-slot"></div>
+              <div class="time-slot"></div>
+
+              <div class="time-label">09:30</div>
+              <div class="time-slot"></div>
+              <div class="time-slot"></div>
+              <div class="time-slot"></div>
+              <div class="time-slot"></div>
+
+              <div class="time-label">10:00</div>
+              <div class="time-slot"></div>
+              <div class="time-slot"></div>
+              <div class="time-slot"><div class="appt confirmed">Manicure Premium<br />Jana R.</div></div>
+              <div class="time-slot"></div>
+
+              <div class="time-label">10:30</div>
+              <div class="time-slot"></div>
+              <div class="time-slot"></div>
+              <div class="time-slot"></div>
+              <div class="time-slot"></div>
+
+              <div class="time-label">11:00</div>
+              <div class="time-slot"><div class="appt needs">Pedicure Classic<br />Sofia L. · needs confirm</div></div>
+              <div class="time-slot"></div>
+              <div class="time-slot"></div>
+              <div class="time-slot"><div class="appt booked">Deep Tissue 60m<br />Markus E.</div></div>
+
+              <div class="time-label">11:30</div>
+              <div class="time-slot"></div>
+              <div class="time-slot"></div>
+              <div class="time-slot"></div>
+              <div class="time-slot"></div>
+            </div>
+          </section>
+
+          <section class="prototype-grid two">
+            <article class="card panel">
+              <div class="card-head"><h3 style="font-size: 22px">Conflict detector</h3></div>
+              <div class="state-block error" style="margin-top: 0">Cannot move appointment to 10:00. Buffer overlap with Jana R. (10 min).</div>
+              <p class="mini muted" style="margin-top: 10px">Drag-and-drop should display conflict reasons before save.</p>
+            </article>
+            <article class="card panel">
+              <div class="card-head"><h3 style="font-size: 22px">Unconfirmed visits</h3></div>
+              <div class="list">
+                <div class="list-item"><strong>Sofia L. · 11:00</strong><p class="muted">T-24h sent, waiting for response</p></div>
+                <div class="list-item"><strong>Noah B. · 14:30</strong><p class="muted">T-2h pending</p></div>
+              </div>
+            </article>
+          </section>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

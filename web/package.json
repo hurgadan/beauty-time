@@ -1,0 +1,16 @@
+{
+  "name": "beauty-time-booking-web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "preview": "nuxt preview",
+    "lint": "echo \"Add eslint config\""
+  },
+  "dependencies": {
+    "nuxt": "^4.0.0",
+    "vue": "^3.5.13"
+  }
+}

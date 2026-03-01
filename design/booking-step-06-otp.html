@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Booking Step 6 - OTP</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <section class="booking-layout">
+      <main>
+        <section class="card booking-form" style="margin-top: 0">
+          <span class="badge">Step 6/8</span>
+          <h2 style="font-size: 30px; margin-top: 8px">Verify with OTP</h2>
+          <p class="muted" style="margin-top: 4px">Magic link sent to anna@email.de</p>
+          <div style="display:grid; grid-template-columns: repeat(6, 52px); gap:8px; margin-top: 14px">
+            <input class="input" value="1" />
+            <input class="input" value="7" />
+            <input class="input" value="4" />
+            <input class="input" value="9" />
+            <input class="input" />
+            <input class="input" />
+          </div>
+          <p class="mini muted" style="margin-top: 10px">Code expires in 08:42 · Resend</p>
+          <div style="display:flex; gap:10px; margin-top:16px">
+            <a class="button secondary" href="./booking-step-05-contact.html" style="text-decoration:none">Back</a>
+            <a class="button primary" href="./booking-step-07-success.html" style="text-decoration:none">Verify and confirm</a>
+          </div>
+        </section>
+      </main>
+      <aside class="phone-mock">
+        <div class="phone-screen">
+          <header class="phone-top"><h3 style="font-size:22px">Security</h3></header>
+          <section class="phone-section"><p class="mini">One-time code, short TTL, rate-limited attempts.</p></section>
+        </div>
+      </aside>
+    </section>
+  </body>
+</html>

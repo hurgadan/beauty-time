@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CRM Staff & Schedule</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="crm-layout">
+        <aside class="crm-sidebar">
+          <div class="brand-block"><h1>Beauty-Time</h1><p>Salon cockpit</p></div>
+          <nav class="nav">
+            <a class="nav-item" href="./crm-dashboard.html">Dashboard</a>
+            <a class="nav-item" href="./crm-calendar.html">Calendar</a>
+            <a class="nav-item" href="./crm-appointments.html">Appointments</a>
+            <a class="nav-item" href="./crm-client-card.html">Clients</a>
+            <a class="nav-item" href="./crm-services.html">Services</a>
+            <a class="nav-item active" href="./crm-staff-schedule.html">Staff</a>
+            <a class="nav-item" href="./crm-notifications.html">Notifications</a>
+            <a class="nav-item" href="./crm-settings.html">Settings</a>
+          </nav>
+        </aside>
+
+        <main class="crm-main">
+          <section class="card crm-header">
+            <div>
+              <span class="badge">Staff</span>
+              <h2 style="margin-top: 8px; font-size: 32px">People, roles, working hours, time-off</h2>
+              <p class="muted" style="margin-top: 4px">For salons and solo masters in same model</p>
+            </div>
+            <div class="header-actions">
+              <button class="button secondary">+ Time-off</button>
+              <button class="button primary">+ Add staff</button>
+            </div>
+          </section>
+
+          <section class="prototype-grid two">
+            <article class="card panel">
+              <div class="card-head"><h3 style="font-size: 22px">Team</h3></div>
+              <table>
+                <thead><tr><th>Name</th><th>Role</th><th>Services</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td>Mila</td><td>staff</td><td>Hair</td><td><span class="badge success">Active</span></td></tr>
+                  <tr><td>Anna</td><td>staff</td><td>Nails</td><td><span class="badge success">Active</span></td></tr>
+                  <tr><td>Rami</td><td>staff</td><td>Massage</td><td><span class="badge warning">On leave</span></td></tr>
+                </tbody>
+              </table>
+            </article>
+
+            <article class="card panel">
+              <div class="card-head"><h3 style="font-size: 22px">Working hours</h3></div>
+              <div class="form-grid">
+                <div class="form-grid two">
+                  <div class="field"><label>Mon-Fri Start</label><input class="input" value="09:00" /></div>
+                  <div class="field"><label>Mon-Fri End</label><input class="input" value="18:00" /></div>
+                </div>
+                <div class="form-grid two">
+                  <div class="field"><label>Sat Start</label><input class="input" value="10:00" /></div>
+                  <div class="field"><label>Sat End</label><input class="input" value="15:00" /></div>
+                </div>
+                <div class="field"><label>Time-off period</label><input class="input" value="01 Mar 2026 - 07 Mar 2026" /></div>
+                <button class="button primary">Save schedule</button>
+              </div>
+            </article>
+          </section>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

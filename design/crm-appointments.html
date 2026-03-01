@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CRM Appointments</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="crm-layout">
+        <aside class="crm-sidebar">
+          <div class="brand-block"><h1>Beauty-Time</h1><p>Salon cockpit</p></div>
+          <nav class="nav">
+            <a class="nav-item" href="./crm-dashboard.html">Dashboard</a>
+            <a class="nav-item" href="./crm-calendar.html">Calendar</a>
+            <a class="nav-item active" href="./crm-appointments.html">Appointments</a>
+            <a class="nav-item" href="./crm-client-card.html">Clients</a>
+            <a class="nav-item" href="./crm-services.html">Services</a>
+            <a class="nav-item" href="./crm-staff-schedule.html">Staff</a>
+            <a class="nav-item" href="./crm-notifications.html">Notifications</a>
+            <a class="nav-item" href="./crm-settings.html">Settings</a>
+          </nav>
+        </aside>
+
+        <main class="crm-main">
+          <section class="card crm-header">
+            <div>
+              <span class="badge">Appointments</span>
+              <h2 style="margin-top: 8px; font-size: 32px">Create, edit, cancel</h2>
+              <p class="muted" style="margin-top: 4px">Fast CRUD with confirmation status and reason tracking</p>
+            </div>
+            <div class="header-actions">
+              <button class="button secondary">Bulk actions</button>
+              <button class="button primary">+ New</button>
+            </div>
+          </section>
+
+          <section class="prototype-grid two">
+            <article class="card panel">
+              <div class="card-head">
+                <div>
+                  <h3 style="font-size: 22px">Appointment form</h3>
+                  <p class="muted" style="margin-top: 4px">With conflict checks and buffer awareness</p>
+                </div>
+              </div>
+              <div class="form-grid two">
+                <div class="field">
+                  <label>Client</label>
+                  <input class="input" value="Sofia Ludwig" />
+                </div>
+                <div class="field">
+                  <label>Service</label>
+                  <select class="select"><option>Pedicure Classic (45m)</option></select>
+                </div>
+                <div class="field">
+                  <label>Specialist</label>
+                  <select class="select"><option>Anna (Nails)</option></select>
+                </div>
+                <div class="field">
+                  <label>Date</label>
+                  <input class="input" value="27 Feb 2026" />
+                </div>
+                <div class="field">
+                  <label>Start</label>
+                  <input class="input" value="11:00" />
+                </div>
+                <div class="field">
+                  <label>Status</label>
+                  <select class="select">
+                    <option>booked</option>
+                    <option>confirmed_by_reminder</option>
+                    <option>cancelled_by_client</option>
+                  </select>
+                </div>
+              </div>
+              <div class="state-block error">Conflict at 11:00 due to overlap with "Manicure Premium" + 10m post-buffer.</div>
+              <div style="display: flex; gap: 8px; margin-top: 12px">
+                <button class="button secondary">Cancel appointment</button>
+                <button class="button primary">Save changes</button>
+              </div>
+            </article>
+
+            <article class="card panel">
+              <div class="card-head">
+                <h3 style="font-size: 22px">Today list</h3>
+                <span class="badge warning">2 no-show risk</span>
+              </div>
+              <table>
+                <thead>
+                  <tr><th>Time</th><th>Client</th><th>Service</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>09:00</td><td>Lea M.</td><td>Cut + Styling</td><td><span class="badge success">Confirmed</span></td></tr>
+                  <tr><td>10:00</td><td>Jana R.</td><td>Manicure Premium</td><td><span class="badge info">Reminder sent</span></td></tr>
+                  <tr><td>11:00</td><td>Sofia L.</td><td>Pedicure Classic</td><td><span class="badge warning">Needs confirm</span></td></tr>
+                </tbody>
+              </table>
+              <p class="mini muted" style="margin-top: 10px">Cancellation reason is mandatory for audit log.</p>
+            </article>
+          </section>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CRM Notifications</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="crm-layout">
+        <aside class="crm-sidebar">
+          <div class="brand-block"><h1>Beauty-Time</h1><p>Salon cockpit</p></div>
+          <nav class="nav">
+            <a class="nav-item" href="./crm-dashboard.html">Dashboard</a>
+            <a class="nav-item" href="./crm-calendar.html">Calendar</a>
+            <a class="nav-item" href="./crm-appointments.html">Appointments</a>
+            <a class="nav-item" href="./crm-client-card.html">Clients</a>
+            <a class="nav-item" href="./crm-services.html">Services</a>
+            <a class="nav-item" href="./crm-staff-schedule.html">Staff</a>
+            <a class="nav-item active" href="./crm-notifications.html">Notifications</a>
+            <a class="nav-item" href="./crm-settings.html">Settings</a>
+          </nav>
+        </aside>
+
+        <main class="crm-main">
+          <section class="card crm-header">
+            <div>
+              <span class="badge">Email only in v1</span>
+              <h2 style="margin-top: 8px; font-size: 32px">Reminders and confirmation templates</h2>
+              <p class="muted" style="margin-top: 4px">T-24h and T-2h with attendance confirmation CTA</p>
+            </div>
+            <div class="header-actions">
+              <button class="button secondary">Preview templates</button>
+              <button class="button primary">Save and publish</button>
+            </div>
+          </section>
+
+          <section class="prototype-grid two">
+            <article class="card panel">
+              <div class="card-head"><h3 style="font-size: 22px">Trigger policy</h3></div>
+              <div class="form-grid">
+                <div class="form-grid two">
+                  <div class="field"><label>Reminder 1</label><input class="input" value="T-24h" /></div>
+                  <div class="field"><label>Reminder 2</label><input class="input" value="T-2h" /></div>
+                </div>
+                <div class="field"><label>Unconfirmed handling</label><select class="select"><option>Mark appointment as needs_attention</option></select></div>
+                <div class="field"><label>Sender name</label><input class="input" value="Beauty Studio Berlin Mitte" /></div>
+                <div class="field"><label>Reply-to</label><input class="input" value="hello@studio-berlin.de" /></div>
+              </div>
+            </article>
+
+            <article class="card panel">
+              <div class="card-head"><h3 style="font-size: 22px">Delivery status</h3></div>
+              <div class="list">
+                <div class="list-item"><strong>09:00 batch</strong><p class="muted">38 sent · 37 delivered · 1 retry queued</p></div>
+                <div class="list-item"><strong>11:00 batch</strong><p class="muted">22 sent · 22 delivered</p></div>
+                <div class="list-item"><strong>Template locale</strong><p class="muted">DE primary, EN fallback active</p></div>
+              </div>
+              <div class="state-block success">System healthy: deliverability 98.7% (last 7 days).</div>
+            </article>
+          </section>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>
