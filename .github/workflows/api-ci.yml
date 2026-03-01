@@ -41,4 +41,5 @@ jobs:
         run: npm run test --if-present
 
       - name: E2E Smoke
+        if: ${{ hashFiles('api/docker-compose.e2e.yml', 'api/test/e2e/config/jest-e2e.json') != '' }}
         run: npm run test:e2e --if-present

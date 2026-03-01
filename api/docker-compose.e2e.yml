@@ -1,0 +1,17 @@
+services:
+  postgres-e2e:
+    image: postgres:18
+    container_name: beauty-time-api-postgres-e2e
+    environment:
+      POSTGRES_DB: beauty_time_e2e
+      POSTGRES_USER: beauty_time
+      POSTGRES_PASSWORD: beauty_time
+    ports:
+      - '55432:5432'
+    tmpfs:
+      - /var/lib/postgresql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U beauty_time -d beauty_time_e2e']
+      interval: 2s
+      timeout: 2s
+      retries: 30
