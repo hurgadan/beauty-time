@@ -1,3 +1,3 @@
 export enum NotificationChannel {
-  EMAIL = "email",
+  EMAIL = 'email',
 }

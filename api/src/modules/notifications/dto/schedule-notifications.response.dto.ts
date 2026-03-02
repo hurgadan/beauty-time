@@ -1,6 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger";
-
-import type { ScheduleNotificationsResponseDto as ScheduleNotificationsResponseDtoContract } from "../../../contracts";
+import type { ScheduleNotificationsResponseDto as ScheduleNotificationsResponseDtoContract } from '@contracts';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class ScheduleNotificationsResponseDto implements ScheduleNotificationsResponseDtoContract {
   @ApiProperty({ example: true })

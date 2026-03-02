@@ -1,4 +1,4 @@
-import type { AppointmentStatus } from "./enums/appointment-status.enum";
+import type { AppointmentStatus } from './enums';
 
 export interface ConfirmAppointmentResponseDto {
   id: string;

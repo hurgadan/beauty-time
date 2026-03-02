@@ -1,5 +1,5 @@
-import type { ClientGender } from "./enums";
-import type { ClientSalutation } from "./enums";
+import type { ClientGender } from './enums';
+import type { ClientSalutation } from './enums';
 
 export interface ClientListItemDto {
   id: string;

@@ -13,7 +13,7 @@ import {
   Req,
   UnauthorizedException,
   UseGuards,
-} from "@nestjs/common";
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -24,161 +24,179 @@ import {
   ApiParam,
   ApiQuery,
   ApiTags,
-} from "@nestjs/swagger";
+} from '@nestjs/swagger';
 
-import { CreateStaffRequestDto } from "./dto/create-staff.request.dto";
-import { CreateTimeOffRequestDto } from "./dto/create-time-off.request.dto";
-import { ListStaffQueryDto } from "./dto/list-staff.query.dto";
-import { ListStaffResponseDto } from "./dto/list-staff.response.dto";
-import { ListTimeOffResponseDto } from "./dto/list-time-off.response.dto";
-import { ListWorkingHoursResponseDto } from "./dto/list-working-hours.response.dto";
-import { StaffItemDto } from "./dto/staff-item.dto";
-import { TimeOffItemDto } from "./dto/time-off-item.dto";
-import { UpdateStaffRequestDto } from "./dto/update-staff.request.dto";
-import { UpsertWorkingHoursRequestDto } from "./dto/upsert-working-hours.request.dto";
-import { StaffService } from "./staff.service";
-import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
-import type { RequestWithUser } from "../auth/types/request-with-user.interface";
+import { CreateStaffRequestDto } from './dto/create-staff.request.dto';
+import { CreateTimeOffRequestDto } from './dto/create-time-off.request.dto';
+import { ListStaffQueryDto } from './dto/list-staff.query.dto';
+import { StaffItemDto } from './dto/staff-item.dto';
+import { TimeOffItemDto } from './dto/time-off-item.dto';
+import { UpdateStaffRequestDto } from './dto/update-staff.request.dto';
+import { UpsertWorkingHoursRequestDto } from './dto/upsert-working-hours.request.dto';
+import { WorkingHoursItemDto } from './dto/working-hours-item.dto';
+import { StaffService } from './staff.service';
+import { transformToDto } from '../../_common/transform-to-dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import type { RequestWithUser } from '../auth/types/request-with-user.interface';
 
-@ApiTags("staff")
+@ApiTags('staff')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
-@Controller("crm/staff")
+@Controller('crm/staff')
 export class StaffController {
   public constructor(private readonly staffService: StaffService) {}
 
-  @Get()
-  @ApiOperation({ summary: "List tenant staff" })
-  @ApiQuery({ name: "search", required: false, type: String })
-  @ApiQuery({ name: "role", required: false, type: String })
-  @ApiQuery({ name: "limit", required: false, type: Number })
-  @ApiOkResponse({ type: ListStaffResponseDto })
+  @Get('list')
+  @ApiOperation({ summary: 'List tenant staff' })
+  @ApiQuery({ name: 'search', required: false, type: String })
+  @ApiQuery({ name: 'role', required: false, type: String })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
+  @ApiOkResponse({ type: StaffItemDto, isArray: true })
   public async listStaff(
     @Req() request: RequestWithUser,
     @Query() query: ListStaffQueryDto,
-  ): Promise<ListStaffResponseDto> {
-    return this.staffService.listStaff(this.getTenantId(request), query);
+  ): Promise<StaffItemDto[]> {
+    const staffItems = await this.staffService.listStaff(this.getTenantId(request), query);
+
+    return staffItems.map((staffItem) => transformToDto(StaffItemDto, staffItem));
   }
 
   @Post()
-  @ApiOperation({ summary: "Create staff member" })
+  @ApiOperation({ summary: 'Create staff member' })
   @ApiBody({ type: CreateStaffRequestDto })
   @ApiCreatedResponse({ type: StaffItemDto })
   public async createStaff(
     @Req() request: RequestWithUser,
     @Body() payload: CreateStaffRequestDto,
   ): Promise<StaffItemDto> {
-    return this.staffService.createStaff(this.getTenantId(request), payload);
+    const staff = await this.staffService.createStaff(this.getTenantId(request), payload);
+
+    return transformToDto(StaffItemDto, staff);
   }
 
-  @Patch(":id")
-  @ApiOperation({ summary: "Update staff member" })
-  @ApiParam({ name: "id", type: String })
+  @Patch(':id')
+  @ApiOperation({ summary: 'Update staff member' })
+  @ApiParam({ name: 'id', type: String })
   @ApiBody({ type: UpdateStaffRequestDto })
   @ApiOkResponse({ type: StaffItemDto })
   public async updateStaff(
     @Req() request: RequestWithUser,
-    @Param("id", ParseUUIDPipe) id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() payload: UpdateStaffRequestDto,
   ): Promise<StaffItemDto> {
-    return this.staffService.updateStaff(
-      this.getTenantId(request),
-      id,
-      payload,
-    );
+    const staff = await this.staffService.updateStaff(this.getTenantId(request), id, payload);
+
+    return transformToDto(StaffItemDto, staff);
   }
 
-  @Delete(":id")
+  @Delete(':id')
   @HttpCode(204)
-  @ApiOperation({ summary: "Delete staff member" })
-  @ApiParam({ name: "id", type: String })
-  @ApiNoContentResponse({ description: "Staff deleted" })
+  @ApiOperation({ summary: 'Delete staff member' })
+  @ApiParam({ name: 'id', type: String })
+  @ApiNoContentResponse({ description: 'Staff deleted' })
   public async deleteStaff(
     @Req() request: RequestWithUser,
-    @Param("id", ParseUUIDPipe) id: string,
+    @Param('id', ParseUUIDPipe) id: string,
   ): Promise<void> {
     return this.staffService.deleteStaff(this.getTenantId(request), id);
   }
 
-  @Get(":id/working-hours")
-  @ApiOperation({ summary: "List staff working hours" })
-  @ApiParam({ name: "id", type: String })
-  @ApiOkResponse({ type: ListWorkingHoursResponseDto })
+  @Get(':id/working-hours')
+  @ApiOperation({ summary: 'List staff working hours' })
+  @ApiParam({ name: 'id', type: String })
+  @ApiOkResponse({ type: WorkingHoursItemDto, isArray: true })
   public async listWorkingHours(
     @Req() request: RequestWithUser,
-    @Param("id", ParseUUIDPipe) id: string,
-  ): Promise<ListWorkingHoursResponseDto> {
-    return this.staffService.listWorkingHours(this.getTenantId(request), id);
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<WorkingHoursItemDto[]> {
+    const workingHoursItems = await this.staffService.listWorkingHours(
+      this.getTenantId(request),
+      id,
+    );
+
+    return workingHoursItems.map((workingHoursItem) =>
+      transformToDto(WorkingHoursItemDto, workingHoursItem),
+    );
   }
 
-  @Put(":id/working-hours")
-  @ApiOperation({ summary: "Replace staff working hours" })
-  @ApiParam({ name: "id", type: String })
+  @Put(':id/working-hours')
+  @ApiOperation({ summary: 'Replace staff working hours' })
+  @ApiParam({ name: 'id', type: String })
   @ApiBody({ type: UpsertWorkingHoursRequestDto })
-  @ApiOkResponse({ type: ListWorkingHoursResponseDto })
+  @ApiOkResponse({ type: WorkingHoursItemDto, isArray: true })
   public async replaceWorkingHours(
     @Req() request: RequestWithUser,
-    @Param("id", ParseUUIDPipe) id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() payload: UpsertWorkingHoursRequestDto,
-  ): Promise<ListWorkingHoursResponseDto> {
-    return this.staffService.replaceWorkingHours(
+  ): Promise<WorkingHoursItemDto[]> {
+    const workingHoursItems = await this.staffService.replaceWorkingHours(
       this.getTenantId(request),
       id,
       payload,
     );
+
+    return workingHoursItems.map((workingHoursItem) =>
+      transformToDto(WorkingHoursItemDto, workingHoursItem),
+    );
   }
 
-  @Get(":id/time-off")
-  @ApiOperation({ summary: "List staff time-off periods" })
-  @ApiParam({ name: "id", type: String })
-  @ApiOkResponse({ type: ListTimeOffResponseDto })
+  @Get(':id/time-off')
+  @ApiOperation({ summary: 'List staff time-off periods' })
+  @ApiParam({ name: 'id', type: String })
+  @ApiOkResponse({ type: TimeOffItemDto, isArray: true })
   public async listTimeOff(
     @Req() request: RequestWithUser,
-    @Param("id", ParseUUIDPipe) id: string,
-  ): Promise<ListTimeOffResponseDto> {
-    return this.staffService.listTimeOff(this.getTenantId(request), id);
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<TimeOffItemDto[]> {
+    const timeOffItems = await this.staffService.listTimeOff(this.getTenantId(request), id);
+
+    return timeOffItems.map((timeOffItem) =>
+      transformToDto(TimeOffItemDto, {
+        ...timeOffItem,
+        startsAtIso: timeOffItem.startsAt.toISOString(),
+        endsAtIso: timeOffItem.endsAt.toISOString(),
+      }),
+    );
   }
 
-  @Post(":id/time-off")
-  @ApiOperation({ summary: "Create staff time-off period" })
-  @ApiParam({ name: "id", type: String })
+  @Post(':id/time-off')
+  @ApiOperation({ summary: 'Create staff time-off period' })
+  @ApiParam({ name: 'id', type: String })
   @ApiBody({ type: CreateTimeOffRequestDto })
   @ApiCreatedResponse({ type: TimeOffItemDto })
   public async createTimeOff(
     @Req() request: RequestWithUser,
-    @Param("id", ParseUUIDPipe) id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() payload: CreateTimeOffRequestDto,
   ): Promise<TimeOffItemDto> {
-    return this.staffService.createTimeOff(
-      this.getTenantId(request),
-      id,
-      payload,
-    );
+    const timeOff = await this.staffService.createTimeOff(this.getTenantId(request), id, payload);
+
+    return transformToDto(TimeOffItemDto, {
+      ...timeOff,
+      startsAtIso: timeOff.startsAt.toISOString(),
+      endsAtIso: timeOff.endsAt.toISOString(),
+    });
   }
 
-  @Delete(":staffId/time-off/:timeOffId")
+  @Delete(':staffId/time-off/:timeOffId')
   @HttpCode(204)
-  @ApiOperation({ summary: "Delete staff time-off period" })
-  @ApiParam({ name: "staffId", type: String })
-  @ApiParam({ name: "timeOffId", type: String })
-  @ApiNoContentResponse({ description: "Time-off entry deleted" })
+  @ApiOperation({ summary: 'Delete staff time-off period' })
+  @ApiParam({ name: 'staffId', type: String })
+  @ApiParam({ name: 'timeOffId', type: String })
+  @ApiNoContentResponse({ description: 'Time-off entry deleted' })
   public async deleteTimeOff(
     @Req() request: RequestWithUser,
-    @Param("staffId", ParseUUIDPipe) staffId: string,
-    @Param("timeOffId", ParseUUIDPipe) timeOffId: string,
+    @Param('staffId', ParseUUIDPipe) staffId: string,
+    @Param('timeOffId', ParseUUIDPipe) timeOffId: string,
   ): Promise<void> {
-    return this.staffService.deleteTimeOff(
-      this.getTenantId(request),
-      staffId,
-      timeOffId,
-    );
+    return this.staffService.deleteTimeOff(this.getTenantId(request), staffId, timeOffId);
   }
 
   private getTenantId(request: RequestWithUser): string {
     const tenantId = request.user?.tenantId;
 
     if (!tenantId) {
-      throw new UnauthorizedException("Missing tenant in token");
+      throw new UnauthorizedException('Missing tenant in token');
     }
 
     return tenantId;

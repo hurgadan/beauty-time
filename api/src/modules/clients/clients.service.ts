@@ -1,74 +1,57 @@
-import type {
-  ClientDto,
-  ClientHistoryItemDto,
-  ClientListItemDto,
-  ListClientHistoryResponseDto,
-  ListClientsResponseDto,
-} from "@contracts";
-import { Injectable, NotFoundException } from "@nestjs/common";
+import type { Client } from '@contracts';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { ClientsRepository } from "./clients.repository";
-import { ClientEntity } from "./dao/client.entity";
-import { ListClientsQueryDto } from "./dto/list-clients.query.dto";
-import { AppointmentEntity } from "../booking/dao/appointment.entity";
+import { ClientsRepository } from './clients.repository';
+import { ClientEntity } from './dao/client.entity';
+import { ListClientsQueryDto } from './dto/list-clients.query.dto';
+import { AppointmentEntity } from '../booking/dao/appointment.entity';
 
 @Injectable()
 export class ClientsService {
   public constructor(private readonly clientsRepository: ClientsRepository) {}
 
-  public async getClient(tenantId: string, id: string): Promise<ClientDto> {
+  public async getClient(
+    tenantId: string,
+    id: string,
+  ): Promise<{ client: ClientEntity; visitCount: number }> {
     const client = await this.clientsRepository.findClientById(tenantId, id);
 
     if (!client) {
-      throw new NotFoundException("Client not found");
+      throw new NotFoundException('Client not found');
     }
 
-    const visitCount = await this.clientsRepository.countClientAppointments(
-      tenantId,
-      id,
-    );
+    const visitCount = await this.clientsRepository.countClientAppointments(tenantId, id);
 
-    return this.mapClient(client, visitCount);
+    return { client, visitCount };
   }
 
   public async listClients(
     tenantId: string,
     query: ListClientsQueryDto,
-  ): Promise<ListClientsResponseDto> {
+  ): Promise<Array<{ client: ClientEntity; visitCount: number }>> {
     const clients = await this.clientsRepository.findClients(tenantId, query);
     const visitCountMap = await this.getVisitCountMap(
       tenantId,
       clients.map((client) => client.id),
     );
 
-    return {
-      items: clients.map((client) =>
-        this.mapClientListItem(client, visitCountMap.get(client.id) ?? 0),
-      ),
-    };
+    return clients.map((client) => ({
+      client,
+      visitCount: visitCountMap.get(client.id) ?? 0,
+    }));
   }
 
   public async listClientHistory(
     tenantId: string,
     id: string,
     limit: number,
-  ): Promise<ListClientHistoryResponseDto> {
+  ): Promise<AppointmentEntity[]> {
     const client = await this.clientsRepository.findClientById(tenantId, id);
     if (!client) {
-      throw new NotFoundException("Client not found");
+      throw new NotFoundException('Client not found');
     }
 
-    const appointments = await this.clientsRepository.findClientHistory(
-      tenantId,
-      id,
-      limit,
-    );
-
-    return {
-      items: appointments.map((appointment) =>
-        this.mapClientHistoryItem(appointment),
-      ),
-    };
+    return this.clientsRepository.findClientHistory(tenantId, id, limit);
   }
 
   private async getVisitCountMap(
@@ -79,10 +62,7 @@ export class ClientsService {
       return new Map<string, number>();
     }
 
-    const rows = await this.clientsRepository.findAppointmentsByClientIds(
-      tenantId,
-      clientIds,
-    );
+    const rows = await this.clientsRepository.findAppointmentsByClientIds(tenantId, clientIds);
 
     const counts = new Map<string, number>();
     for (const row of rows) {
@@ -92,7 +72,7 @@ export class ClientsService {
     return counts;
   }
 
-  private mapClient(client: ClientEntity, visitCount: number): ClientDto {
+  public toClientDto(client: ClientEntity, visitCount: number): Client {
     return {
       id: client.id,
       tenantId: client.tenantId,
@@ -103,37 +83,6 @@ export class ClientsService {
       email: client.email,
       phone: client.phone,
       isReturningClient: visitCount > 1,
-    };
-  }
-
-  private mapClientListItem(
-    client: ClientEntity,
-    visitCount: number,
-  ): ClientListItemDto {
-    return {
-      id: client.id,
-      tenantId: client.tenantId,
-      firstName: client.firstName,
-      lastName: client.lastName,
-      salutation: client.salutation,
-      gender: client.gender,
-      email: client.email,
-      phone: client.phone,
-      isReturningClient: visitCount > 1,
-    };
-  }
-
-  private mapClientHistoryItem(
-    appointment: AppointmentEntity,
-  ): ClientHistoryItemDto {
-    return {
-      appointmentId: appointment.id,
-      staffId: appointment.staffId,
-      serviceId: appointment.serviceId,
-      startsAtIso: appointment.startsAt.toISOString(),
-      endsAtIso: appointment.endsAt.toISOString(),
-      status: appointment.status,
-      notes: appointment.notes,
     };
   }
 }

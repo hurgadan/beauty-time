@@ -1,24 +1,31 @@
-import type { StaffItemDto as StaffItemDtoContract } from "@contracts";
-import { ApiProperty } from "@nestjs/swagger";
+import type { StaffItemDto as StaffItemDtoContract } from '@contracts';
+import { ApiProperty } from '@nestjs/swagger';
+import { Expose } from 'class-transformer';
 
-import { StaffRole } from "../enums/staff-role.enum";
+import { StaffRole } from '../enums/staff-role.enum';
 
 export class StaffItemDto implements StaffItemDtoContract {
-  @ApiProperty({ example: "a1234567-89ab-7def-8123-456789abcdef" })
+  @Expose()
+  @ApiProperty({ example: 'a1234567-89ab-7def-8123-456789abcdef' })
   public id!: string;
 
-  @ApiProperty({ example: "a1234567-89ab-7def-8123-456789abcdef" })
+  @Expose()
+  @ApiProperty({ example: 'a1234567-89ab-7def-8123-456789abcdef' })
   public tenantId!: string;
 
-  @ApiProperty({ example: "master@studio.de" })
+  @Expose()
+  @ApiProperty({ example: 'master@studio.de' })
   public email!: string;
 
-  @ApiProperty({ example: "Anna Muller" })
+  @Expose()
+  @ApiProperty({ example: 'Anna Muller' })
   public fullName!: string;
 
+  @Expose()
   @ApiProperty({ enum: StaffRole, example: StaffRole.STAFF })
-  public role!: "owner" | "staff";
+  public role!: 'owner' | 'staff';
 
+  @Expose()
   @ApiProperty({ example: true })
   public isActive!: boolean;
 }

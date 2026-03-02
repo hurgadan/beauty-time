@@ -1,7 +1,7 @@
-import type { ClientGender } from "./enums/client-gender.enum";
-import type { ClientSalutation } from "./enums/client-salutation.enum";
+import type { ClientGender } from './enums';
+import type { ClientSalutation } from './enums';
 
-export interface ClientDto {
+export interface Client {
   id: string;
   tenantId: string;
   firstName: string;
@@ -12,3 +12,5 @@ export interface ClientDto {
   phone: string | null;
   isReturningClient: boolean;
 }
+
+export type ClientDto = Client;

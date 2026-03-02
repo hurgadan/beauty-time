@@ -1,10 +1,10 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { type FindOptionsWhere, ILike, In, Repository } from "typeorm";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { type FindOptionsWhere, ILike, In, Repository } from 'typeorm';
 
-import { ClientEntity } from "./dao/client.entity";
-import { ListClientsQueryDto } from "./dto/list-clients.query.dto";
-import { AppointmentEntity } from "../booking/dao/appointment.entity";
+import { ClientEntity } from './dao/client.entity';
+import { ListClientsQueryDto } from './dto/list-clients.query.dto';
+import { AppointmentEntity } from '../booking/dao/appointment.entity';
 
 @Injectable()
 export class ClientsRepository {
@@ -15,31 +15,22 @@ export class ClientsRepository {
     private readonly appointmentRepository: Repository<AppointmentEntity>,
   ) {}
 
-  public async findClientById(
-    tenantId: string,
-    clientId: string,
-  ): Promise<ClientEntity | null> {
+  public async findClientById(tenantId: string, clientId: string): Promise<ClientEntity | null> {
     return this.clientRepository.findOneBy({ id: clientId, tenantId });
   }
 
-  public async countClientAppointments(
-    tenantId: string,
-    clientId: string,
-  ): Promise<number> {
+  public async countClientAppointments(tenantId: string, clientId: string): Promise<number> {
     return this.appointmentRepository.countBy({ tenantId, clientId });
   }
 
-  public async findClients(
-    tenantId: string,
-    query: ListClientsQueryDto,
-  ): Promise<ClientEntity[]> {
+  public async findClients(tenantId: string, query: ListClientsQueryDto): Promise<ClientEntity[]> {
     const limit = query.limit ?? 20;
     const search = query.search?.trim();
 
     if (!search) {
       return this.clientRepository.find({
         where: { tenantId },
-        order: { createdAt: "DESC" },
+        order: { createdAt: 'DESC' },
         take: limit,
       });
     }
@@ -54,7 +45,7 @@ export class ClientsRepository {
 
     return this.clientRepository.find({
       where: filters,
-      order: { createdAt: "DESC" },
+      order: { createdAt: 'DESC' },
       take: limit,
     });
   }
@@ -83,7 +74,7 @@ export class ClientsRepository {
   ): Promise<AppointmentEntity[]> {
     return this.appointmentRepository.find({
       where: { tenantId, clientId },
-      order: { startsAt: "DESC" },
+      order: { startsAt: 'DESC' },
       take: limit,
     });
   }

@@ -1,4 +1,4 @@
-import type { AvailabilitySlotDto } from "./availability-slot.type";
+import type { AvailabilitySlotDto } from './availability-slot.type';
 
 export interface AvailabilityQueryResponseDto {
   bookingSlug: string;

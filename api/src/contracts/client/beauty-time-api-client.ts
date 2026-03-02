@@ -1,8 +1,8 @@
-import { type ApiClientConfig, ApiHttpClient } from "./api-http-client";
-import { AuthApiClient } from "./auth-api-client";
-import { BookingApiClient } from "./booking-api-client";
-import { ClientsApiClient } from "./clients-api-client";
-import { CrmApiClient } from "./crm-api-client";
+import { type ApiClientConfig, ApiHttpClient } from './api-http-client';
+import { AuthApiClient } from './auth-api-client';
+import { BookingApiClient } from './booking-api-client';
+import { ClientsApiClient } from './clients-api-client';
+import { CrmApiClient } from './crm-api-client';
 
 export class BeautyTimeApiClient {
   public readonly auth: AuthApiClient;
@@ -19,4 +19,4 @@ export class BeautyTimeApiClient {
   }
 }
 
-export type { ApiClientConfig } from "./api-http-client";
+export type { ApiClientConfig } from './api-http-client';

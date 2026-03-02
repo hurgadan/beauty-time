@@ -1,4 +1,4 @@
-import type { AuthUser } from "./auth-user.interface";
+import type { AuthUser } from './auth-user.interface';
 
 export interface RequestWithUser {
   headers: Record<string, string | string[] | undefined>;

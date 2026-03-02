@@ -1,9 +1,6 @@
-import type {
-  CreateAppointmentRequestDto,
-  ListAppointmentsRequestDto,
-} from "@contracts";
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
+import type { CreateAppointmentRequestDto, ListAppointmentsRequestDto } from '@contracts';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import {
   Between,
   type FindOperator,
@@ -13,12 +10,12 @@ import {
   MoreThan,
   MoreThanOrEqual,
   Repository,
-} from "typeorm";
+} from 'typeorm';
 
-import { AppointmentEntity } from "./dao/appointment.entity";
-import { ClientEntity } from "../clients/dao/client.entity";
-import { ServiceEntity } from "../services/dao/service.entity";
-import { StaffEntity } from "../staff/dao/staff.entity";
+import { AppointmentEntity } from './dao/appointment.entity';
+import { ClientEntity } from '../clients/dao/client.entity';
+import { ServiceEntity } from '../services/dao/service.entity';
+import { StaffEntity } from '../staff/dao/staff.entity';
 
 @Injectable()
 export class BookingAppointmentsRepository {
@@ -48,7 +45,7 @@ export class BookingAppointmentsRepository {
 
     return this.appointmentRepository.find({
       where,
-      order: { startsAt: "DESC" },
+      order: { startsAt: 'DESC' },
       take: limit,
     });
   }
@@ -80,9 +77,7 @@ export class BookingAppointmentsRepository {
     });
   }
 
-  public async saveAppointment(
-    appointment: AppointmentEntity,
-  ): Promise<AppointmentEntity> {
+  public async saveAppointment(appointment: AppointmentEntity): Promise<AppointmentEntity> {
     return this.appointmentRepository.save(appointment);
   }
 
@@ -105,30 +100,19 @@ export class BookingAppointmentsRepository {
     return overlap !== null;
   }
 
-  public async findStaffById(
-    tenantId: string,
-    staffId: string,
-  ): Promise<StaffEntity | null> {
+  public async findStaffById(tenantId: string, staffId: string): Promise<StaffEntity | null> {
     return this.staffRepository.findOneBy({ id: staffId, tenantId });
   }
 
-  public async findServiceById(
-    tenantId: string,
-    serviceId: string,
-  ): Promise<ServiceEntity | null> {
+  public async findServiceById(tenantId: string, serviceId: string): Promise<ServiceEntity | null> {
     return this.serviceRepository.findOneBy({ id: serviceId, tenantId });
   }
 
-  public async findClientById(
-    tenantId: string,
-    clientId: string,
-  ): Promise<ClientEntity | null> {
+  public async findClientById(tenantId: string, clientId: string): Promise<ClientEntity | null> {
     return this.clientRepository.findOneBy({ id: clientId, tenantId });
   }
 
-  private buildStartsAtFilter(
-    query: ListAppointmentsRequestDto,
-  ): FindOperator<Date> | undefined {
+  private buildStartsAtFilter(query: ListAppointmentsRequestDto): FindOperator<Date> | undefined {
     if (query.fromIso && query.toIso) {
       return Between(new Date(query.fromIso), new Date(query.toIso));
     }

@@ -1,10 +1,9 @@
-import { ApiProperty } from "@nestjs/swagger";
-
-import type { ConfirmAppointmentResponseDto as ConfirmAppointmentResponseDtoContract } from "../../../contracts";
-import { AppointmentStatus } from "../../../contracts";
+import type { ConfirmAppointmentResponseDto as ConfirmAppointmentResponseDtoContract } from '@contracts';
+import { AppointmentStatus } from '@contracts';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class ConfirmAppointmentResponseDto implements ConfirmAppointmentResponseDtoContract {
-  @ApiProperty({ example: "appt_public_1" })
+  @ApiProperty({ example: 'appt_public_1' })
   public id!: string;
 
   @ApiProperty({

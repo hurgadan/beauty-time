@@ -1,6 +1,6 @@
 export interface UpdateStaffRequestDto {
   email?: string;
   fullName?: string;
-  role?: "owner" | "staff";
+  role?: 'owner' | 'staff';
   isActive?: boolean;
 }

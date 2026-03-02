@@ -1,8 +1,8 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsOptional, IsString, Max, Min } from "class-validator";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
 export class ListClientsQueryDto {
-  @ApiProperty({ required: false, example: "sofia" })
+  @ApiProperty({ required: false, example: 'sofia' })
   @IsOptional()
   @IsString()
   public search?: string;

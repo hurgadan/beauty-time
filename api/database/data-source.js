@@ -1,5 +1,6 @@
 require('reflect-metadata');
 require('ts-node/register/transpile-only');
+require('tsconfig-paths/register');
 
 const path = require('path');
 const { DataSource } = require('typeorm');

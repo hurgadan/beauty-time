@@ -1,20 +1,13 @@
-import type { CreateServiceRequestDto as CreateServiceRequestDtoContract } from "@contracts";
-import { ApiProperty } from "@nestjs/swagger";
-import {
-  IsBoolean,
-  IsInt,
-  IsOptional,
-  IsString,
-  Max,
-  Min,
-} from "class-validator";
+import type { CreateServiceRequestDto as CreateServiceRequestDtoContract } from '@contracts';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsBoolean, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
 export class CreateServiceRequestDto implements CreateServiceRequestDtoContract {
-  @ApiProperty({ example: "Haircut + Styling" })
+  @ApiProperty({ example: 'Haircut + Styling' })
   @IsString()
   public name!: string;
 
-  @ApiProperty({ required: false, example: "Wash, haircut and styling" })
+  @ApiProperty({ required: false, example: 'Wash, haircut and styling' })
   @IsOptional()
   @IsString()
   public description?: string;

@@ -15,6 +15,7 @@
     "strict": true,
     "moduleResolution": "node",
     "paths": {
+      "@contracts": ["src/contracts/index.ts"],
       "@contracts/*": ["src/contracts/*"],
       "@modules/*": ["src/modules/*"]
     }

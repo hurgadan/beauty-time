@@ -1,4 +1,4 @@
-export interface ServiceListItemDto {
+export interface Service {
   id: string;
   tenantId: string;
   name: string;

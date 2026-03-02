@@ -1,6 +1,6 @@
-import { Module } from "@nestjs/common";
+import { Module } from '@nestjs/common';
 
-import { NotificationsController } from "./notifications.controller";
+import { NotificationsController } from './notifications.controller';
 
 @Module({
   controllers: [NotificationsController],

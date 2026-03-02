@@ -10,10 +10,8 @@ export class ApiHttpClient {
     const response = await fetch(`${this.config.baseUrl}${path}`, {
       ...init,
       headers: {
-        "Content-Type": "application/json",
-        ...(this.config.accessToken
-          ? { Authorization: `Bearer ${this.config.accessToken}` }
-          : {}),
+        'Content-Type': 'application/json',
+        ...(this.config.accessToken ? { Authorization: `Bearer ${this.config.accessToken}` } : {}),
         ...(init.headers ?? {}),
       },
     });

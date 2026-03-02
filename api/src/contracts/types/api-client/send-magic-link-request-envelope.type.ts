@@ -1,4 +1,4 @@
-import type { SendMagicLinkRequestDto } from "../auth/send-magic-link-request.type";
+import type { SendMagicLinkRequestDto } from '../auth';
 
 export interface SendMagicLinkRequestEnvelopeDto {
   payload: SendMagicLinkRequestDto;

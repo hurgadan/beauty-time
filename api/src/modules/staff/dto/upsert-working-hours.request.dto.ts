@@ -1,9 +1,9 @@
 import type {
   UpsertWorkingHoursEntryDto as UpsertWorkingHoursEntryDtoContract,
   UpsertWorkingHoursRequestDto as UpsertWorkingHoursRequestDtoContract,
-} from "@contracts";
-import { ApiProperty } from "@nestjs/swagger";
-import { Type } from "class-transformer";
+} from '@contracts';
+import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   ArrayMinSize,
   IsArray,
@@ -13,7 +13,7 @@ import {
   Max,
   Min,
   ValidateNested,
-} from "class-validator";
+} from 'class-validator';
 
 export class UpsertWorkingHoursEntryDto implements UpsertWorkingHoursEntryDtoContract {
   @ApiProperty({ example: 1 })
@@ -22,12 +22,12 @@ export class UpsertWorkingHoursEntryDto implements UpsertWorkingHoursEntryDtoCon
   @Max(6)
   public dayOfWeek!: number;
 
-  @ApiProperty({ example: "09:00:00" })
+  @ApiProperty({ example: '09:00:00' })
   @IsString()
   @Matches(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/)
   public startTime!: string;
 
-  @ApiProperty({ example: "17:00:00" })
+  @ApiProperty({ example: '17:00:00' })
   @IsString()
   @Matches(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/)
   public endTime!: string;

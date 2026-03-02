@@ -6,5 +6,10 @@
     "^.+\\.(t|j)s$": "ts-jest"
   },
   "testEnvironment": "node",
-  "globalSetup": "<rootDir>/test/e2e/setup/global-setup.ts"
+  "globalSetup": "<rootDir>/test/e2e/setup/global-setup.ts",
+  "moduleNameMapper": {
+    "^@contracts$": "<rootDir>/src/contracts/index.ts",
+    "^@contracts/(.*)$": "<rootDir>/src/contracts/$1",
+    "^@modules/(.*)$": "<rootDir>/src/modules/$1"
+  }
 }

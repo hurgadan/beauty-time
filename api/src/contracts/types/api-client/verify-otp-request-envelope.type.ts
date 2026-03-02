@@ -1,4 +1,4 @@
-import type { VerifyOtpRequestDto } from "../auth/verify-otp-request.type";
+import type { VerifyOtpRequestDto } from '../auth';
 
 export interface VerifyOtpRequestEnvelopeDto {
   payload: VerifyOtpRequestDto;

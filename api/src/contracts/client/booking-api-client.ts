@@ -7,8 +7,8 @@ import type {
   CreatePublicAppointmentResponseDto,
   GetBookingConfigRequestDto,
   QueryAvailabilityRequestEnvelopeDto,
-} from "../types";
-import { ApiHttpClient } from "./api-http-client";
+} from '../types';
+import { ApiHttpClient } from './api-http-client';
 
 export class BookingApiClient {
   public constructor(private readonly http: ApiHttpClient) {}
@@ -16,10 +16,9 @@ export class BookingApiClient {
   public async getBookingConfig(
     payload: GetBookingConfigRequestDto,
   ): Promise<BookingConfigResponseDto> {
-    return this.http.request<BookingConfigResponseDto>(
-      `/api/book/${payload.bookingSlug}/config`,
-      { method: "GET" },
-    );
+    return this.http.request<BookingConfigResponseDto>(`/api/book/${payload.bookingSlug}/config`, {
+      method: 'GET',
+    });
   }
 
   public async queryAvailability(
@@ -28,7 +27,7 @@ export class BookingApiClient {
     return this.http.request<AvailabilityQueryResponseDto>(
       `/api/book/${payload.bookingSlug}/availability/query`,
       {
-        method: "POST",
+        method: 'POST',
         body: JSON.stringify(payload.payload),
       },
     );
@@ -40,7 +39,7 @@ export class BookingApiClient {
     return this.http.request<CreatePublicAppointmentResponseDto>(
       `/api/book/${payload.bookingSlug}/appointments`,
       {
-        method: "POST",
+        method: 'POST',
         body: JSON.stringify(payload.payload),
       },
     );
@@ -52,7 +51,7 @@ export class BookingApiClient {
     return this.http.request<ConfirmAppointmentResponseDto>(
       `/api/book/appointments/${payload.payload.id}/confirm`,
       {
-        method: "POST",
+        method: 'POST',
       },
     );
   }

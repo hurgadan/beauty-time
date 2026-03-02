@@ -1,5 +1,5 @@
 export interface ListStaffRequestDto {
   search?: string;
-  role?: "owner" | "staff";
+  role?: 'owner' | 'staff';
   limit?: number;
 }

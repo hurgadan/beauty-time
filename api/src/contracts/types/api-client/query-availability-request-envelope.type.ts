@@ -1,4 +1,4 @@
-import type { AvailabilityQueryRequestDto } from "../booking/availability-query-request.type";
+import type { AvailabilityQueryRequestDto } from '../booking';
 
 export interface QueryAvailabilityRequestEnvelopeDto {
   bookingSlug: string;

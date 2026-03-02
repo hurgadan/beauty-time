@@ -1,4 +1,4 @@
-import type { AppointmentStatus } from "../booking";
+import type { AppointmentStatus } from '../booking';
 
 export interface UpdateAppointmentRequestDto {
   status?: AppointmentStatus;

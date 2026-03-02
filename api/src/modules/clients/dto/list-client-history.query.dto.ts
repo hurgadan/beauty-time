@@ -1,5 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsOptional, Max, Min } from "class-validator";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsInt, IsOptional, Max, Min } from 'class-validator';
 
 export class ListClientHistoryQueryDto {
   @ApiProperty({ required: false, example: 20, minimum: 1, maximum: 100 })

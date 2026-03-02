@@ -4,15 +4,15 @@ import type {
   ListStaffRequestDto,
   UpdateStaffRequestDto,
   UpsertWorkingHoursRequestDto,
-} from "@contracts";
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { type FindOptionsWhere, ILike, Repository } from "typeorm";
+} from '@contracts';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { type FindOptionsWhere, ILike, Repository } from 'typeorm';
 
-import { StaffEntity } from "./dao/staff.entity";
-import { TimeOffEntity } from "./dao/time-off.entity";
-import { WorkingHoursEntity } from "./dao/working-hours.entity";
-import { StaffRole } from "./enums/staff-role.enum";
+import { StaffEntity } from './dao/staff.entity';
+import { TimeOffEntity } from './dao/time-off.entity';
+import { WorkingHoursEntity } from './dao/working-hours.entity';
+import { StaffRole } from './enums/staff-role.enum';
 
 @Injectable()
 export class StaffRepository {
@@ -50,7 +50,7 @@ export class StaffRepository {
 
       return this.staffRepository.find({
         where: filters,
-        order: { fullName: "ASC" },
+        order: { fullName: 'ASC' },
         take: limit,
       });
     }
@@ -60,20 +60,17 @@ export class StaffRepository {
         tenantId,
         ...(role ? { role } : {}),
       },
-      order: { fullName: "ASC" },
+      order: { fullName: 'ASC' },
       take: limit,
     });
   }
 
-  public createStaff(
-    tenantId: string,
-    payload: CreateStaffRequestDto,
-  ): StaffEntity {
+  public createStaff(tenantId: string, payload: CreateStaffRequestDto): StaffEntity {
     return this.staffRepository.create({
       tenantId,
       email: payload.email,
       fullName: payload.fullName,
-      role: this.mapRole(payload.role ?? "staff"),
+      role: this.mapRole(payload.role ?? 'staff'),
       isActive: payload.isActive ?? true,
     });
   }
@@ -82,17 +79,11 @@ export class StaffRepository {
     return this.staffRepository.save(staff);
   }
 
-  public async findStaffById(
-    tenantId: string,
-    staffId: string,
-  ): Promise<StaffEntity | null> {
+  public async findStaffById(tenantId: string, staffId: string): Promise<StaffEntity | null> {
     return this.staffRepository.findOneBy({ id: staffId, tenantId });
   }
 
-  public applyStaffUpdate(
-    staff: StaffEntity,
-    payload: UpdateStaffRequestDto,
-  ): StaffEntity {
+  public applyStaffUpdate(staff: StaffEntity, payload: UpdateStaffRequestDto): StaffEntity {
     if (payload.email !== undefined) {
       staff.email = payload.email;
     }
@@ -114,13 +105,10 @@ export class StaffRepository {
     return result.affected ?? 0;
   }
 
-  public async findWorkingHours(
-    tenantId: string,
-    staffId: string,
-  ): Promise<WorkingHoursEntity[]> {
+  public async findWorkingHours(tenantId: string, staffId: string): Promise<WorkingHoursEntity[]> {
     return this.workingHoursRepository.find({
       where: { tenantId, staffId },
-      order: { dayOfWeek: "ASC", startTime: "ASC" },
+      order: { dayOfWeek: 'ASC', startTime: 'ASC' },
     });
   }
 
@@ -152,13 +140,10 @@ export class StaffRepository {
     );
   }
 
-  public async findTimeOff(
-    tenantId: string,
-    staffId: string,
-  ): Promise<TimeOffEntity[]> {
+  public async findTimeOff(tenantId: string, staffId: string): Promise<TimeOffEntity[]> {
     return this.timeOffRepository.find({
       where: { tenantId, staffId },
-      order: { startsAt: "DESC" },
+      order: { startsAt: 'DESC' },
     });
   }
 
@@ -195,7 +180,7 @@ export class StaffRepository {
     return result.affected ?? 0;
   }
 
-  private mapRole(role: "owner" | "staff"): StaffRole {
-    return role === "owner" ? StaffRole.OWNER : StaffRole.STAFF;
+  private mapRole(role: 'owner' | 'staff'): StaffRole {
+    return role === 'owner' ? StaffRole.OWNER : StaffRole.STAFF;
   }
 }

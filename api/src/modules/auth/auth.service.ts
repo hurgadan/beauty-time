@@ -1,11 +1,10 @@
-import { Injectable } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
-
 import type {
   SendMagicLinkResponseDto,
   StaffLoginResponseDto,
   VerifyOtpResponseDto,
-} from "../../contracts";
+} from '@contracts';
+import { Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
@@ -14,8 +13,8 @@ export class AuthService {
   public staffLogin(email: string): StaffLoginResponseDto {
     const accessToken = this.jwtService.sign({
       sub: email,
-      tenantId: "tenant_demo_1",
-      role: "owner",
+      tenantId: 'tenant_demo_1',
+      role: 'owner',
     });
 
     return { accessToken };
@@ -29,7 +28,7 @@ export class AuthService {
     const verified = otp.length === 6;
     return {
       verified,
-      token: verified ? `session_${email}` : "",
+      token: verified ? `session_${email}` : '',
     };
   }
 }

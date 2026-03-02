@@ -1,1 +1,1 @@
-export * from "./health-check-response.type";
+export * from './health-check-response.type';

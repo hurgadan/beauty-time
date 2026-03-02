@@ -3,6 +3,6 @@ export interface StaffItemDto {
   tenantId: string;
   email: string;
   fullName: string;
-  role: "owner" | "staff";
+  role: 'owner' | 'staff';
   isActive: boolean;
 }

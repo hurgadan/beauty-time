@@ -1,4 +1,4 @@
 export enum StaffRole {
-  OWNER = "owner",
-  STAFF = "staff",
+  OWNER = 'owner',
+  STAFF = 'staff',
 }

@@ -1,4 +1,4 @@
-import type { ConfirmAppointmentRequestDto } from "../booking/confirm-appointment-request.type";
+import type { ConfirmAppointmentRequestDto } from '../booking';
 
 export interface ConfirmAppointmentRequestEnvelopeDto {
   payload: ConfirmAppointmentRequestDto;
