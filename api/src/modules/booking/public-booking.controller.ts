@@ -17,7 +17,7 @@ import { CreatePublicAppointmentResponseDto } from "./dto/create-public-appointm
 
 @ApiTags("book")
 @Controller("book")
-export class BookingController {
+export class PublicBookingController {
   public constructor(private readonly bookingService: BookingService) {}
 
   @Get(":bookingSlug/config")

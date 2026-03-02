@@ -1,3 +1,4 @@
+import { AppointmentStatus } from "@contracts";
 import {
   Column,
   CreateDateColumn,
@@ -9,10 +10,9 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 
-import { AppointmentStatus } from "../../../contracts/types/booking/enums/appointment-status.enum";
 import { ClientEntity } from "../../clients/dao/client.entity";
-import { ServiceEntity } from "../../crm/dao/service.entity";
-import { StaffEntity } from "../../crm/dao/staff.entity";
+import { ServiceEntity } from "../../services/dao/service.entity";
+import { StaffEntity } from "../../staff/dao/staff.entity";
 import { TenantEntity } from "../../tenant/dao/tenant.entity";
 
 @Entity({ name: "appointments" })

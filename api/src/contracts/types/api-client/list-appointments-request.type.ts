@@ -1,2 +1,9 @@
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export type ListAppointmentsRequestDto = {};
+import type { AppointmentStatus } from "../booking";
+
+export interface ListAppointmentsRequestDto {
+  staffId?: string;
+  status?: AppointmentStatus;
+  fromIso?: string;
+  toIso?: string;
+  limit?: number;
+}

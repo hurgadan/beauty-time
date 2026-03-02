@@ -8,7 +8,7 @@
     "start:dev": "nest start --watch",
     "build": "nest build",
     "lint": "eslint \"src/**/*.ts\"",
-    "test": "jest --passWithNoTests",
+    "test": "jest --config ./test/unit/config/jest-unit.json --passWithNoTests",
     "test:e2e:up": "docker compose -f docker-compose.e2e.yml up -d --wait",
     "test:e2e:down": "docker compose -f docker-compose.e2e.yml down -v",
     "test:e2e:run": "jest --config ./test/e2e/config/jest-e2e.json --runInBand",
