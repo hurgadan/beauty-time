@@ -1,4 +1,4 @@
-import type { AppointmentStatus } from '@contracts/types';
+import type { AppointmentStatus } from './enums/appointment-status.enum';
 
 export interface ListAppointmentsDto {
   staffId?: string;

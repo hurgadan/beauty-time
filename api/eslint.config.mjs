@@ -50,6 +50,23 @@ export default tseslint.config(
     },
   },
   {
+    files: ['src/contracts/types/**/*.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@contracts', '@contracts/*'],
+              message:
+                'Inside src/contracts/types use only relative imports to keep package builds independent from root tsconfig aliases.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     ignores: ['dist/**', '**/dist/**', 'node_modules/**', 'coverage/**'],
   },
 );

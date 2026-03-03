@@ -1,4 +1,4 @@
-import type { AppointmentStatus } from '../booking';
+import type { AppointmentStatus } from '../booking/enums/appointment-status.enum';
 
 export interface ClientHistoryItemDto {
   appointmentId: string;
