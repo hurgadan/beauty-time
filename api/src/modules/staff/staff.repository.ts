@@ -1,9 +1,9 @@
 import type {
-  CreateStaffRequestDto,
-  CreateTimeOffRequestDto,
-  ListStaffRequestDto,
-  UpdateStaffRequestDto,
-  UpsertWorkingHoursRequestDto,
+  CreateStaffDto,
+  CreateTimeOffDto,
+  ListStaffDto,
+  UpdateStaffDto,
+  UpsertWorkingHoursDto,
 } from '@contracts';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -25,10 +25,7 @@ export class StaffRepository {
     private readonly timeOffRepository: Repository<TimeOffEntity>,
   ) {}
 
-  public async findStaff(
-    tenantId: string,
-    query: ListStaffRequestDto = {},
-  ): Promise<StaffEntity[]> {
+  public async findStaff(tenantId: string, query: ListStaffDto = {}): Promise<StaffEntity[]> {
     const limit = query.limit ?? 200;
     const role = query.role ? this.mapRole(query.role) : undefined;
     const search = query.search?.trim();
@@ -65,7 +62,7 @@ export class StaffRepository {
     });
   }
 
-  public createStaff(tenantId: string, payload: CreateStaffRequestDto): StaffEntity {
+  public createStaff(tenantId: string, payload: CreateStaffDto): StaffEntity {
     return this.staffRepository.create({
       tenantId,
       email: payload.email,
@@ -83,7 +80,7 @@ export class StaffRepository {
     return this.staffRepository.findOneBy({ id: staffId, tenantId });
   }
 
-  public applyStaffUpdate(staff: StaffEntity, payload: UpdateStaffRequestDto): StaffEntity {
+  public applyStaffUpdate(staff: StaffEntity, payload: UpdateStaffDto): StaffEntity {
     if (payload.email !== undefined) {
       staff.email = payload.email;
     }
@@ -115,7 +112,7 @@ export class StaffRepository {
   public async replaceWorkingHours(
     tenantId: string,
     staffId: string,
-    payload: UpsertWorkingHoursRequestDto,
+    payload: UpsertWorkingHoursDto,
   ): Promise<WorkingHoursEntity[]> {
     return this.workingHoursRepository.manager.transaction(
       async (manager): Promise<WorkingHoursEntity[]> => {
@@ -150,7 +147,7 @@ export class StaffRepository {
   public createTimeOff(
     tenantId: string,
     staffId: string,
-    payload: CreateTimeOffRequestDto,
+    payload: CreateTimeOffDto,
     startsAt: Date,
     endsAt: Date,
   ): TimeOffEntity {

@@ -1,4 +1,4 @@
-import type { CreateAppointmentRequestDto, ListAppointmentsRequestDto } from '@contracts';
+import type { CreateAppointmentDto, ListAppointmentsDto } from '@contracts';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
@@ -32,7 +32,7 @@ export class BookingAppointmentsRepository {
 
   public async findAppointments(
     tenantId: string,
-    query: ListAppointmentsRequestDto = {},
+    query: ListAppointmentsDto = {},
   ): Promise<AppointmentEntity[]> {
     const limit = query.limit ?? 200;
     const startsAtFilter = this.buildStartsAtFilter(query);
@@ -62,7 +62,7 @@ export class BookingAppointmentsRepository {
 
   public createAppointment(
     tenantId: string,
-    payload: CreateAppointmentRequestDto,
+    payload: CreateAppointmentDto,
     startsAt: Date,
     endsAt: Date,
   ): AppointmentEntity {
@@ -112,7 +112,7 @@ export class BookingAppointmentsRepository {
     return this.clientRepository.findOneBy({ id: clientId, tenantId });
   }
 
-  private buildStartsAtFilter(query: ListAppointmentsRequestDto): FindOperator<Date> | undefined {
+  private buildStartsAtFilter(query: ListAppointmentsDto): FindOperator<Date> | undefined {
     if (query.fromIso && query.toIso) {
       return Between(new Date(query.fromIso), new Date(query.toIso));
     }

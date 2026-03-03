@@ -1,4 +1,4 @@
-import type { CreateServiceRequestDto, UpdateServiceRequestDto } from '@contracts';
+import type { CreateServiceDto, UpdateServiceDto } from '@contracts';
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 
 import { ServiceEntity } from './dao/service.entity';
@@ -12,10 +12,7 @@ export class ServicesService {
     return this.servicesRepository.findServices(tenantId);
   }
 
-  public async createService(
-    tenantId: string,
-    payload: CreateServiceRequestDto,
-  ): Promise<ServiceEntity> {
+  public async createService(tenantId: string, payload: CreateServiceDto): Promise<ServiceEntity> {
     return this.servicesRepository.save({
       tenantId,
       isActive: payload.isActive ?? true,
@@ -28,7 +25,7 @@ export class ServicesService {
   public async updateService(
     id: string,
     tenantId: string,
-    payload: UpdateServiceRequestDto,
+    payload: UpdateServiceDto,
   ): Promise<ServiceEntity> {
     let service = await this.servicesRepository.findServiceById(id);
 

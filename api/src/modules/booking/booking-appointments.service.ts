@@ -1,8 +1,4 @@
-import type {
-  CreateAppointmentRequestDto,
-  ListAppointmentsRequestDto,
-  UpdateAppointmentRequestDto,
-} from '@contracts';
+import type { CreateAppointmentDto, ListAppointmentsDto, UpdateAppointmentDto } from '@contracts';
 import {
   BadRequestException,
   ConflictException,
@@ -21,14 +17,14 @@ export class BookingAppointmentsService {
 
   public async listAppointments(
     tenantId: string,
-    query: ListAppointmentsRequestDto = {},
+    query: ListAppointmentsDto = {},
   ): Promise<AppointmentEntity[]> {
     return this.bookingAppointmentsRepository.findAppointments(tenantId, query);
   }
 
   public async createAppointment(
     tenantId: string,
-    payload: CreateAppointmentRequestDto,
+    payload: CreateAppointmentDto,
   ): Promise<AppointmentEntity> {
     const startsAt = new Date(payload.startsAtIso);
     const endsAt = new Date(payload.endsAtIso);
@@ -65,7 +61,7 @@ export class BookingAppointmentsService {
   public async updateAppointment(
     tenantId: string,
     appointmentId: string,
-    payload: UpdateAppointmentRequestDto,
+    payload: UpdateAppointmentDto,
   ): Promise<AppointmentEntity> {
     const appointment = await this.bookingAppointmentsRepository.findAppointmentById(
       tenantId,

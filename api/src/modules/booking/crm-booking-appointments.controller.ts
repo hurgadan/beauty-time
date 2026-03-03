@@ -18,7 +18,6 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiParam,
-  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 
@@ -26,10 +25,10 @@ import { BookingAppointmentsService } from './booking-appointments.service';
 import { transformToDto } from '../../_common/transform-to-dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import type { RequestWithUser } from '../auth/types/request-with-user.interface';
-import { AppointmentListItemDto } from './dto/management/appointment-list-item.dto';
-import { CreateAppointmentRequestDto } from './dto/management/create-appointment.request.dto';
+import { AppointmentDto } from './dto/management/appointment.dto';
+import { CreateAppointmentDto } from './dto/management/create-appointment.dto';
 import { ListAppointmentsQueryDto } from './dto/management/list-appointments.query.dto';
-import { UpdateAppointmentRequestDto } from './dto/management/update-appointment.request.dto';
+import { UpdateAppointmentDto } from './dto/management/update-appointment.dto';
 
 @ApiTags('appointments')
 @ApiBearerAuth()
@@ -40,23 +39,18 @@ export class CrmBookingAppointmentsController {
 
   @Get('list')
   @ApiOperation({ summary: 'List tenant appointments' })
-  @ApiQuery({ name: 'staffId', required: false, type: String })
-  @ApiQuery({ name: 'status', required: false, type: String })
-  @ApiQuery({ name: 'fromIso', required: false, type: String })
-  @ApiQuery({ name: 'toIso', required: false, type: String })
-  @ApiQuery({ name: 'limit', required: false, type: Number })
-  @ApiOkResponse({ type: AppointmentListItemDto, isArray: true })
+  @ApiOkResponse({ type: AppointmentDto, isArray: true })
   public async listAppointments(
     @Req() request: RequestWithUser,
     @Query() query: ListAppointmentsQueryDto,
-  ): Promise<AppointmentListItemDto[]> {
+  ): Promise<AppointmentDto[]> {
     const appointments = await this.bookingAppointmentsService.listAppointments(
       this.getTenantId(request),
       query,
     );
 
     return appointments.map((appointment) =>
-      transformToDto(AppointmentListItemDto, {
+      transformToDto(AppointmentDto, {
         ...appointment,
         startsAtIso: appointment.startsAt.toISOString(),
         endsAtIso: appointment.endsAt.toISOString(),
@@ -66,18 +60,18 @@ export class CrmBookingAppointmentsController {
 
   @Post()
   @ApiOperation({ summary: 'Create appointment from backoffice flow' })
-  @ApiBody({ type: CreateAppointmentRequestDto })
-  @ApiCreatedResponse({ type: AppointmentListItemDto })
+  @ApiBody({ type: CreateAppointmentDto })
+  @ApiCreatedResponse({ type: AppointmentDto })
   public async createAppointment(
     @Req() request: RequestWithUser,
-    @Body() payload: CreateAppointmentRequestDto,
-  ): Promise<AppointmentListItemDto> {
+    @Body() payload: CreateAppointmentDto,
+  ): Promise<AppointmentDto> {
     const appointment = await this.bookingAppointmentsService.createAppointment(
       this.getTenantId(request),
       payload,
     );
 
-    return transformToDto(AppointmentListItemDto, {
+    return transformToDto(AppointmentDto, {
       ...appointment,
       startsAtIso: appointment.startsAt.toISOString(),
       endsAtIso: appointment.endsAt.toISOString(),
@@ -87,20 +81,20 @@ export class CrmBookingAppointmentsController {
   @Patch(':id')
   @ApiOperation({ summary: 'Update appointment status/details' })
   @ApiParam({ name: 'id', type: String })
-  @ApiBody({ type: UpdateAppointmentRequestDto })
-  @ApiOkResponse({ type: AppointmentListItemDto })
+  @ApiBody({ type: UpdateAppointmentDto })
+  @ApiOkResponse({ type: AppointmentDto })
   public async updateAppointment(
     @Req() request: RequestWithUser,
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() payload: UpdateAppointmentRequestDto,
-  ): Promise<AppointmentListItemDto> {
+    @Body() payload: UpdateAppointmentDto,
+  ): Promise<AppointmentDto> {
     const appointment = await this.bookingAppointmentsService.updateAppointment(
       this.getTenantId(request),
       id,
       payload,
     );
 
-    return transformToDto(AppointmentListItemDto, {
+    return transformToDto(AppointmentDto, {
       ...appointment,
       startsAtIso: appointment.startsAt.toISOString(),
       endsAtIso: appointment.endsAt.toISOString(),

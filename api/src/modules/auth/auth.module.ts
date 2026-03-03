@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 
-import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { CrmAuthController } from './crm-auth.controller';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Module({
@@ -12,8 +12,8 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
       signOptions: { expiresIn: '12h' },
     }),
   ],
-  controllers: [AuthController],
+  controllers: [CrmAuthController],
   providers: [AuthService, JwtAuthGuard],
-  exports: [JwtAuthGuard, JwtModule],
+  exports: [AuthService, JwtAuthGuard, JwtModule],
 })
 export class AuthModule {}

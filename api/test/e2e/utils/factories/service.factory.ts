@@ -13,6 +13,9 @@ export async function createService(
     name?: string;
     priceCents?: number;
     durationMinutes?: number;
+    bufferBeforeMinutes?: number;
+    bufferAfterMinutes?: number;
+    isActive?: boolean;
   },
 ): Promise<ServiceSeed> {
   const result = await dataSource.query(
@@ -28,7 +31,7 @@ export async function createService(
         buffer_after_minutes,
         is_active
       )
-      VALUES (uuidv7(), $1::uuid, $2, NULL, $3, $4, 0, 0, true)
+      VALUES (uuidv7(), $1::uuid, $2, NULL, $3, $4, $5, $6, $7)
       RETURNING id, tenant_id AS "tenantId", name
     `,
     [
@@ -36,6 +39,9 @@ export async function createService(
       seed.name ?? "E2E Service",
       seed.priceCents ?? 3500,
       seed.durationMinutes ?? 30,
+      seed.bufferBeforeMinutes ?? 0,
+      seed.bufferAfterMinutes ?? 0,
+      seed.isActive ?? true,
     ],
   );
 

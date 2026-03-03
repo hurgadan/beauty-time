@@ -3,6 +3,7 @@ import { BookingModule } from '@modules/booking/booking.module';
 import { ClientsModule } from '@modules/clients/clients.module';
 import { HealthModule } from '@modules/health/health.module';
 import { NotificationsModule } from '@modules/notifications/notifications.module';
+import { PublicModule } from '@modules/public/public.module';
 import { ServicesModule } from '@modules/services/services.module';
 import { StaffModule } from '@modules/staff/staff.module';
 import { Module } from '@nestjs/common';
@@ -22,6 +23,7 @@ import { DB_ENTITIES } from './database/entities';
     }),
     HealthModule,
     AuthModule,
+    PublicModule,
     BookingModule,
     ClientsModule,
     StaffModule,

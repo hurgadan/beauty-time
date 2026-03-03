@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "rootDir": "..",
+    "outDir": "dist",
+    "declaration": true,
+    "emitDeclarationOnly": false,
+    "noEmit": false,
+    "strict": true,
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "lib": ["ES2020", "DOM"]
+  },
+  "include": ["index.ts"],
+  "exclude": ["dist", "node_modules"]
+}

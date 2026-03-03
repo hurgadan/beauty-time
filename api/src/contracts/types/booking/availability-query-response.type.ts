@@ -1,6 +1,6 @@
 import type { AvailabilitySlotDto } from './availability-slot.type';
 
 export interface AvailabilityQueryResponseDto {
-  bookingSlug: string;
+  tenantSlug: string;
   slots: AvailabilitySlotDto[];
 }

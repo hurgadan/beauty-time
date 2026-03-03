@@ -1,8 +1,4 @@
-import {
-  AppointmentStatus,
-  type CreateAppointmentRequestDto,
-  type ListAppointmentsRequestDto,
-} from '@contracts';
+import { AppointmentStatus, type CreateAppointmentDto, type ListAppointmentsDto } from '@contracts';
 import { BadRequestException, ConflictException } from '@nestjs/common';
 
 import { BookingAppointmentsRepository } from '../booking-appointments.repository';
@@ -37,7 +33,7 @@ describe('BookingAppointmentsService', () => {
 
   it('listAppointments passes query filters and limit to repository', async () => {
     bookingAppointmentsRepository.findAppointments!.mockResolvedValue([]);
-    const query: ListAppointmentsRequestDto = {
+    const query: ListAppointmentsDto = {
       staffId: 'staff-id',
       status: AppointmentStatus.BOOKED,
       fromIso: '2026-03-01T00:00:00Z',
@@ -51,7 +47,7 @@ describe('BookingAppointmentsService', () => {
   });
 
   it('createAppointment throws BadRequestException when start >= end', async () => {
-    const payload: CreateAppointmentRequestDto = {
+    const payload: CreateAppointmentDto = {
       staffId: 'staff-id',
       serviceId: 'service-id',
       clientId: 'client-id',
@@ -76,7 +72,7 @@ describe('BookingAppointmentsService', () => {
     });
     bookingAppointmentsRepository.hasAppointmentOverlap!.mockResolvedValue(true);
 
-    const payload: CreateAppointmentRequestDto = {
+    const payload: CreateAppointmentDto = {
       staffId: 'staff-id',
       serviceId: 'service-id',
       clientId: 'client-id',
@@ -121,7 +117,7 @@ describe('BookingAppointmentsService', () => {
       status: AppointmentStatus.BOOKED,
     }));
 
-    const payload: CreateAppointmentRequestDto = {
+    const payload: CreateAppointmentDto = {
       staffId: 'staff-id',
       serviceId: 'service-id',
       clientId: 'client-id',

@@ -37,6 +37,12 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Build Public Contracts Package
+        run: npm run contracts:build:public
+
+      - name: Build CRM Contracts Package
+        run: npm run contracts:build:crm
+
       - name: Test
         run: npm run test --if-present
 

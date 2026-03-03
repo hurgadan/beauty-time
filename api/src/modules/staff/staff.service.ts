@@ -1,9 +1,9 @@
 import type {
-  CreateStaffRequestDto,
-  CreateTimeOffRequestDto,
-  ListStaffRequestDto,
-  UpdateStaffRequestDto,
-  UpsertWorkingHoursRequestDto,
+  CreateStaffDto,
+  CreateTimeOffDto,
+  ListStaffDto,
+  UpdateStaffDto,
+  UpsertWorkingHoursDto,
 } from '@contracts';
 import {
   BadRequestException,
@@ -21,14 +21,11 @@ import { StaffRepository } from './staff.repository';
 export class StaffService {
   public constructor(private readonly staffRepository: StaffRepository) {}
 
-  public async listStaff(
-    tenantId: string,
-    query: ListStaffRequestDto = {},
-  ): Promise<StaffEntity[]> {
+  public async listStaff(tenantId: string, query: ListStaffDto = {}): Promise<StaffEntity[]> {
     return this.staffRepository.findStaff(tenantId, query);
   }
 
-  public async createStaff(tenantId: string, payload: CreateStaffRequestDto): Promise<StaffEntity> {
+  public async createStaff(tenantId: string, payload: CreateStaffDto): Promise<StaffEntity> {
     try {
       const staff = this.staffRepository.createStaff(tenantId, payload);
       return this.staffRepository.saveStaff(staff);
@@ -41,7 +38,7 @@ export class StaffService {
   public async updateStaff(
     tenantId: string,
     staffId: string,
-    payload: UpdateStaffRequestDto,
+    payload: UpdateStaffDto,
   ): Promise<StaffEntity> {
     const staff = await this.staffRepository.findStaffById(tenantId, staffId);
 
@@ -80,7 +77,7 @@ export class StaffService {
   public async replaceWorkingHours(
     tenantId: string,
     staffId: string,
-    payload: UpsertWorkingHoursRequestDto,
+    payload: UpsertWorkingHoursDto,
   ): Promise<WorkingHoursEntity[]> {
     await this.ensureStaff(tenantId, staffId);
 
@@ -109,7 +106,7 @@ export class StaffService {
   public async createTimeOff(
     tenantId: string,
     staffId: string,
-    payload: CreateTimeOffRequestDto,
+    payload: CreateTimeOffDto,
   ): Promise<TimeOffEntity> {
     await this.ensureStaff(tenantId, staffId);
 

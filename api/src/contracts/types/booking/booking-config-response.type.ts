@@ -1,5 +1,5 @@
 export interface BookingConfigResponseDto {
-  bookingSlug: string;
+  tenantSlug: string;
   timezone: string;
   reminderChannels: string[];
 }
