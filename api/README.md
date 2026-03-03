@@ -50,6 +50,12 @@ Contracts are defined in `src/contracts` and are split into two publishable pack
 - `QueryBuilder` is allowed only for genuinely complex queries where Repository API is not practical.
 4. Module placement:
 - repository providers are placed in the same module folder (`src/modules/<module>/*.repository.ts`).
+5. Cross-module access:
+- a module `repository` must not inject entities from other modules;
+- if module A needs data/logic from module B, module A service uses module B service (module import + provider export).
+Applied examples:
+- `AuthService` uses `TenantService` + `ClientsService`; `OtpSessionRepository` works only with `OtpSessionEntity`.
+- `BookingService` uses `TenantService`/`ServicesService`/`StaffService`/`ClientsService`; booking repositories are limited to appointment persistence/availability operations.
 
 ### Service and repository conventions
 1. Repository layer:
@@ -91,6 +97,17 @@ Public booking behavior (MVP):
 3. Public auth:
 - `POST /api/auth/client/send-magic-link`
 - `POST /api/auth/client/verify-otp`
+Public auth request payloads (MVP):
+- both endpoints require `tenantSlug` + `email`;
+- `verify-otp` also requires 6-digit `otp`.
+Public auth behavior (MVP):
+- tenant context is resolved by `tenantSlug` (not by headers/url tenantId);
+- OTP session is created in `otp_sessions` with TTL 10 minutes;
+- resend is rate-limited (max 3 sends per 15 minutes per `tenant+email`);
+- verify has attempt limit (max 5 attempts per session);
+- OTP session is one-time (consumed on successful verify or after limits/expiry);
+- on successful verify API returns client JWT token;
+- client is deduplicated by `tenant+email`; if not found, minimal client record is created.
 4. CRM auth:
 - `POST /api/auth/staff/login`
 5. Appointments:
@@ -119,7 +136,7 @@ Public booking behavior (MVP):
 
 Controller naming conventions:
 - CRM controllers use `crm-` file prefix (`crm-services.controller.ts`, `crm-staff.controller.ts`, `crm-clients.controller.ts`, `crm-booking-appointments.controller.ts`);
-- public controllers use `public-` file prefix and are located in `src/modules/public`.
+- public controllers use `public-` file prefix and are colocated in their domain modules (`auth`, `booking`).
 
 Query filters/pagination (MVP):
 1. `GET /api/crm/appointments/list`:
@@ -149,6 +166,8 @@ Query filters/pagination (MVP):
 4. Contracts package builds:
 - `npm run contracts:build:public`
 - `npm run contracts:build:crm`
+5. E2E tests:
+- `npm run test:e2e`
 
 ## Migrations
 1. Show pending/applied migrations:
@@ -177,7 +196,8 @@ E2E conventions:
   - helpers/factories: `test/e2e/utils`
 - E2E test specs are module-local:
   - `src/modules/<module>/tests/*.e2e-spec.ts`
-  - public booking flow: `src/modules/public/tests/public-booking.e2e-spec.ts`
+  - public booking flow: `src/modules/booking/tests/public-booking.e2e-spec.ts`
+  - public auth flow: `src/modules/auth/tests/public-auth.e2e-spec.ts`
 - Unit test specs are module-local:
   - `src/modules/<module>/tests/*.spec.ts`
 - Hooks are registered in each e2e spec via `registerE2eHooks()`.

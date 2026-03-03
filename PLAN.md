@@ -137,6 +137,9 @@
 - прямой доступ к TypeORM в `service` запрещен;
 - TypeORM `Repository` используется только в `*.repository.ts`;
 - `QueryBuilder` разрешен только как исключение для сложных запросов.
+ - межмодульный доступ выполняется через `service`-слой соответствующего модуля;
+ - `OtpSessionRepository` (auth) работает только с `otp_sessions`, tenant/client данные получаются через `TenantService`/`ClientsService`;
+ - booking-поток использует `TenantService`/`ServicesService`/`StaffService`/`ClientsService`, без `InjectRepository` чужих доменных entity в booking-репозиториях.
 9. [x] Удалить технический CRM-модуль:
 - `crm.controller` удален;
 - логика разнесена по доменным модулям `booking`, `services`, `staff`, `clients`;
@@ -148,8 +151,7 @@
 - в DTO для `transformToDto` используются `@Expose()`, `excludeExtraneousValues: true`;
 - list endpoints CRM стандартизированы как `GET .../list` и возвращают массивы (`T[]`), без `{ items: [...] }`.
 11. [x] Разделить публичный и CRM API на уровне контроллеров:
-- создан модуль `public` для публичных контроллеров и их DTO;
-- публичные контроллеры вынесены из доменных модулей в `src/modules/public`;
+- публичные и CRM контроллеры разделены в доменных модулях через отдельные controller-классы и префиксы (`public-*`, `crm-*`);
 - staff login вынесен в CRM-контроллер (`crm-auth.controller.ts`), client auth оставлен в public API;
 - CRM-контроллеры стандартизированы с префиксом `crm-` в имени файла (`crm-services.controller.ts`, `crm-staff.controller.ts`, `crm-clients.controller.ts`, `crm-booking-appointments.controller.ts`).
 12. [x] Разделить контракты и API-клиенты на public/crm пакеты:
@@ -175,11 +177,14 @@
 Результат этапа:
 - клиент может самостоятельно выбрать доступный слот и записаться без участия администратора.
 
-### 9. Этап 9. Auth клиента: OTP + magic link
-1. [ ] Реализовать `POST /auth/client/send-magic-link`.
-2. [ ] Реализовать `POST /auth/client/verify-otp`.
-3. [ ] Добавить TTL, лимиты на отправку и retry-политику.
-4. [ ] Реализовать дедупликацию клиента (повторные визиты в тот же tenant).
+### 9. (ВЫПОЛНЕНО) Этап 9. Auth клиента: OTP + magic link
+1. [x] Реализовать `POST /auth/client/send-magic-link`.
+2. [x] Реализовать `POST /auth/client/verify-otp`.
+3. [x] Добавить TTL, лимиты на отправку и retry-политику.
+4. [x] Реализовать дедупликацию клиента (повторные визиты в тот же tenant).
+5. [x] Добавить покрытие тестами для auth flow:
+- unit-тесты `src/modules/auth/tests/auth.service.spec.ts`;
+- e2e-тесты `src/modules/auth/tests/public-auth.e2e-spec.ts`.
 Результат этапа:
 - повторный клиент распознается корректно, а подтверждение записи безопасно.
 

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ClientsRepository } from './clients.repository';
@@ -9,8 +9,12 @@ import { ClientEntity } from './dao/client.entity';
 import { AppointmentEntity } from '../booking/dao/appointment.entity';
 
 @Module({
-  imports: [AuthModule, TypeOrmModule.forFeature([ClientEntity, AppointmentEntity])],
+  imports: [
+    forwardRef(() => AuthModule),
+    TypeOrmModule.forFeature([ClientEntity, AppointmentEntity]),
+  ],
   controllers: [CrmClientsController],
   providers: [ClientsRepository, ClientsService],
+  exports: [ClientsService],
 })
 export class ClientsModule {}

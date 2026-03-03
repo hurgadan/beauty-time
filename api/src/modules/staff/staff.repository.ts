@@ -7,7 +7,7 @@ import type {
 } from '@contracts';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { type FindOptionsWhere, ILike, Repository } from 'typeorm';
+import { type FindOptionsWhere, ILike, In, LessThan, MoreThan, Repository } from 'typeorm';
 
 import { StaffEntity } from './dao/staff.entity';
 import { TimeOffEntity } from './dao/time-off.entity';
@@ -80,6 +80,17 @@ export class StaffRepository {
     return this.staffRepository.findOneBy({ id: staffId, tenantId });
   }
 
+  public async findActiveStaffById(tenantId: string, staffId: string): Promise<StaffEntity | null> {
+    return this.staffRepository.findOneBy({ id: staffId, tenantId, isActive: true });
+  }
+
+  public async findActiveStaffByTenant(tenantId: string): Promise<StaffEntity[]> {
+    return this.staffRepository.find({
+      where: { tenantId, isActive: true },
+      order: { fullName: 'ASC' },
+    });
+  }
+
   public applyStaffUpdate(staff: StaffEntity, payload: UpdateStaffDto): StaffEntity {
     if (payload.email !== undefined) {
       staff.email = payload.email;
@@ -106,6 +117,25 @@ export class StaffRepository {
     return this.workingHoursRepository.find({
       where: { tenantId, staffId },
       order: { dayOfWeek: 'ASC', startTime: 'ASC' },
+    });
+  }
+
+  public async findWorkingHoursForDay(
+    tenantId: string,
+    staffIds: string[],
+    dayOfWeek: number,
+  ): Promise<WorkingHoursEntity[]> {
+    if (!staffIds.length) {
+      return [];
+    }
+
+    return this.workingHoursRepository.find({
+      where: {
+        tenantId,
+        dayOfWeek,
+        staffId: In(staffIds),
+      },
+      order: { staffId: 'ASC', startTime: 'ASC' },
     });
   }
 
@@ -141,6 +171,27 @@ export class StaffRepository {
     return this.timeOffRepository.find({
       where: { tenantId, staffId },
       order: { startsAt: 'DESC' },
+    });
+  }
+
+  public async findTimeOffInRange(
+    tenantId: string,
+    staffIds: string[],
+    rangeStart: Date,
+    rangeEnd: Date,
+  ): Promise<TimeOffEntity[]> {
+    if (!staffIds.length) {
+      return [];
+    }
+
+    return this.timeOffRepository.find({
+      where: {
+        tenantId,
+        staffId: In(staffIds),
+        startsAt: LessThan(rangeEnd),
+        endsAt: MoreThan(rangeStart),
+      },
+      order: { startsAt: 'ASC' },
     });
   }
 

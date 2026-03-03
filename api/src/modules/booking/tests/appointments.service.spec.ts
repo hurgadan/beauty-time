@@ -1,33 +1,63 @@
 import { AppointmentStatus, type CreateAppointmentDto, type ListAppointmentsDto } from '@contracts';
 import { BadRequestException, ConflictException } from '@nestjs/common';
 
+import { ClientsService } from '../../clients/clients.service';
+import { ServicesService } from '../../services/services.service';
+import { StaffService } from '../../staff/staff.service';
 import { BookingAppointmentsRepository } from '../booking-appointments.repository';
 import { BookingAppointmentsService } from '../booking-appointments.service';
 
 type BookingAppointmentsRepositoryMock = Partial<
   Record<keyof BookingAppointmentsRepository, jest.Mock>
 >;
+type StaffServiceMock = Partial<Record<keyof StaffService, jest.Mock>>;
+type ServicesServiceMock = Partial<Record<keyof ServicesService, jest.Mock>>;
+type ClientsServiceMock = Partial<Record<keyof ClientsService, jest.Mock>>;
 
 function createBookingAppointmentsRepositoryMock(): BookingAppointmentsRepositoryMock {
   return {
     findAppointments: jest.fn(),
-    findStaffById: jest.fn(),
-    findServiceById: jest.fn(),
-    findClientById: jest.fn(),
     hasAppointmentOverlap: jest.fn(),
     createAppointment: jest.fn(),
     saveAppointment: jest.fn(),
   };
 }
 
+function createStaffServiceMock(): StaffServiceMock {
+  return {
+    findActiveStaffById: jest.fn(),
+  };
+}
+
+function createServicesServiceMock(): ServicesServiceMock {
+  return {
+    findActiveServiceById: jest.fn(),
+  };
+}
+
+function createClientsServiceMock(): ClientsServiceMock {
+  return {
+    getClientOptional: jest.fn(),
+  };
+}
+
 describe('BookingAppointmentsService', () => {
   let service: BookingAppointmentsService;
   let bookingAppointmentsRepository: BookingAppointmentsRepositoryMock;
+  let staffService: StaffServiceMock;
+  let servicesService: ServicesServiceMock;
+  let clientsService: ClientsServiceMock;
 
   beforeEach(() => {
     bookingAppointmentsRepository = createBookingAppointmentsRepositoryMock();
+    staffService = createStaffServiceMock();
+    servicesService = createServicesServiceMock();
+    clientsService = createClientsServiceMock();
     service = new BookingAppointmentsService(
       bookingAppointmentsRepository as unknown as BookingAppointmentsRepository,
+      staffService as unknown as StaffService,
+      servicesService as unknown as ServicesService,
+      clientsService as unknown as ClientsService,
     );
   });
 
@@ -61,13 +91,13 @@ describe('BookingAppointmentsService', () => {
   });
 
   it('createAppointment throws ConflictException on overlapping slot', async () => {
-    bookingAppointmentsRepository.findStaffById!.mockResolvedValue({
+    staffService.findActiveStaffById!.mockResolvedValue({
       id: 'staff-id',
     });
-    bookingAppointmentsRepository.findServiceById!.mockResolvedValue({
+    servicesService.findActiveServiceById!.mockResolvedValue({
       id: 'service-id',
     });
-    bookingAppointmentsRepository.findClientById!.mockResolvedValue({
+    clientsService.getClientOptional!.mockResolvedValue({
       id: 'client-id',
     });
     bookingAppointmentsRepository.hasAppointmentOverlap!.mockResolvedValue(true);
@@ -86,13 +116,13 @@ describe('BookingAppointmentsService', () => {
   });
 
   it('createAppointment saves and returns mapped appointment', async () => {
-    bookingAppointmentsRepository.findStaffById!.mockResolvedValue({
+    staffService.findActiveStaffById!.mockResolvedValue({
       id: 'staff-id',
     });
-    bookingAppointmentsRepository.findServiceById!.mockResolvedValue({
+    servicesService.findActiveServiceById!.mockResolvedValue({
       id: 'service-id',
     });
-    bookingAppointmentsRepository.findClientById!.mockResolvedValue({
+    clientsService.getClientOptional!.mockResolvedValue({
       id: 'client-id',
     });
     bookingAppointmentsRepository.hasAppointmentOverlap!.mockResolvedValue(false);

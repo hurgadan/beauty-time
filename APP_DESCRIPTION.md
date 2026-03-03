@@ -131,6 +131,10 @@
 - Используется слоистая схема: `controller -> service -> repository`.
 - `service` слой не работает с TypeORM напрямую и не содержит SQL/запросов к БД.
 - Для каждого модуля есть отдельные `*.repository.ts` провайдеры, где инжектятся TypeORM `Repository<Entity>`.
+- Репозиторий модуля не должен работать с сущностями других модулей напрямую.
+- Если модулю A нужна логика/данные модуля B, это делается через `service` модуля B (через импорт модуля и экспорт провайдера), а не через `InjectRepository` чужой `Entity`.
+- Пример: в `auth` используется отдельный `OtpSessionRepository` только для `otp_sessions`, а данные tenant/client получаются через `TenantService` и `ClientsService`.
+- Пример: в `booking` tenant/service/staff/client резолвятся через соответствующие сервисы модулей, а booking-репозитории отвечают за операции с appointment-потоком.
 - По умолчанию используются типобезопасные методы TypeORM Repository (`find`, `findOneBy`, `save`, `delete`, `countBy` и т.д.).
 - `QueryBuilder` используется только как исключение для сложных запросов, где Repository API становится избыточно громоздким.
 - Отдельного технического модуля `CRM` нет: API разнесено по доменным модулям (`appointments`, `services`, `staff`, `clients`), а CRM-маршруты публикуются под префиксом `/crm/*`.
@@ -160,10 +164,9 @@
 
 ## 10.4. Разделение публичных и CRM контроллеров
 
-- Публичные точки API вынесены в отдельный модуль `src/modules/public`.
-- В `public` модуле лежат публичные контроллеры и их DTO:
-  - booking endpoints (`/book/*`);
-  - client auth endpoints (`/auth/client/*`).
+- Публичные точки API реализованы отдельными `public-*` контроллерами в доменных модулях:
+  - booking endpoints (`/book/*`) в `booking/public-booking.controller.ts`;
+  - client auth endpoints (`/auth/client/*`) в `auth/public-auth.controller.ts`.
 - CRM endpoints остаются в доменных модулях и работают под префиксом `/crm/*`.
 - Staff login (`/auth/staff/login`) относится к CRM и реализован отдельным CRM-контроллером.
 

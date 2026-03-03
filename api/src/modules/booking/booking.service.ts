@@ -15,18 +15,25 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { BookingPublicRepository } from './booking-public.repository';
+import { BookingPublicRepository, BusyInterval } from './booking-public.repository';
+import { ClientsService } from '../clients/clients.service';
+import { ServicesService } from '../services/services.service';
 import { StaffEntity } from '../staff/dao/staff.entity';
+import { StaffService } from '../staff/staff.service';
+import { TenantService } from '../tenant/tenant.service';
 
 @Injectable()
 export class BookingService {
-  public constructor(private readonly bookingPublicRepository: BookingPublicRepository) {}
+  public constructor(
+    private readonly bookingPublicRepository: BookingPublicRepository,
+    private readonly tenantService: TenantService,
+    private readonly servicesService: ServicesService,
+    private readonly staffService: StaffService,
+    private readonly clientsService: ClientsService,
+  ) {}
 
   public async getConfig(tenantSlug: string): Promise<BookingConfigResponseDto> {
-    const tenant = await this.bookingPublicRepository.findTenantBySlug(tenantSlug);
-    if (!tenant) {
-      throw new NotFoundException('Tenant slug not found');
-    }
+    const tenant = await this.tenantService.getBySlugOrThrow(tenantSlug);
 
     return {
       tenantSlug,
@@ -39,15 +46,8 @@ export class BookingService {
     tenantSlug: string,
     payload: AvailabilityQueryDto,
   ): Promise<AvailabilitySlotDto[]> {
-    const tenant = await this.bookingPublicRepository.findTenantBySlug(tenantSlug);
-    if (!tenant) {
-      throw new NotFoundException('Tenant slug not found');
-    }
-
-    const service = await this.bookingPublicRepository.findActiveServiceById(
-      tenant.id,
-      payload.serviceId,
-    );
+    const tenant = await this.tenantService.getBySlugOrThrow(tenantSlug);
+    const service = await this.servicesService.findActiveServiceById(tenant.id, payload.serviceId);
     if (!service) {
       throw new NotFoundException('Service not found');
     }
@@ -65,14 +65,9 @@ export class BookingService {
     const dayEndUtc = zonedDateTimeToUtc(nextDate, 0, 0, tenant.timezone);
 
     const staffIds = staff.map((item) => item.id);
-    const [workingHours, timeOffIntervals, appointmentIntervals] = await Promise.all([
-      this.bookingPublicRepository.findWorkingHoursForDay(tenant.id, staffIds, dayOfWeek),
-      this.bookingPublicRepository.findTimeOffIntervals(
-        tenant.id,
-        staffIds,
-        dayStartUtc,
-        dayEndUtc,
-      ),
+    const [workingHours, timeOffEntries, appointmentIntervals] = await Promise.all([
+      this.staffService.findWorkingHoursForDay(tenant.id, staffIds, dayOfWeek),
+      this.staffService.findTimeOffInRange(tenant.id, staffIds, dayStartUtc, dayEndUtc),
       this.bookingPublicRepository.findAppointmentBusyIntervals(
         tenant.id,
         staffIds,
@@ -81,6 +76,7 @@ export class BookingService {
       ),
     ]);
 
+    const timeOffIntervals = toBusyIntervals(timeOffEntries);
     const workingHoursByStaff = groupByStaff(workingHours);
     const busyIntervals = [...timeOffIntervals, ...appointmentIntervals];
     const busyByStaff = groupByStaff(busyIntervals);
@@ -136,15 +132,8 @@ export class BookingService {
     tenantSlug: string,
     payload: CreatePublicAppointmentDto,
   ): Promise<CreatePublicAppointmentResponseDto> {
-    const tenant = await this.bookingPublicRepository.findTenantBySlug(tenantSlug);
-    if (!tenant) {
-      throw new NotFoundException('Tenant slug not found');
-    }
-
-    const service = await this.bookingPublicRepository.findActiveServiceById(
-      tenant.id,
-      payload.serviceId,
-    );
+    const tenant = await this.tenantService.getBySlugOrThrow(tenantSlug);
+    const service = await this.servicesService.findActiveServiceById(tenant.id, payload.serviceId);
     if (!service) {
       throw new NotFoundException('Service not found');
     }
@@ -176,15 +165,11 @@ export class BookingService {
     }
 
     const clientEmail = payload.clientEmail.trim().toLowerCase();
-    let client = await this.bookingPublicRepository.findClientByEmail(tenant.id, clientEmail);
-    if (!client) {
-      const newClient = this.bookingPublicRepository.createClient(
-        tenant.id,
-        payload.clientName,
-        clientEmail,
-      );
-      client = await this.bookingPublicRepository.saveClient(newClient);
-    }
+    const client = await this.clientsService.findOrCreateByEmail(
+      tenant.id,
+      clientEmail,
+      payload.clientName,
+    );
 
     for (const staffMember of candidateStaff) {
       const staffHasHours = await this.isWithinWorkingHours(
@@ -244,11 +229,11 @@ export class BookingService {
 
   private async resolveStaff(tenantId: string, staffId?: string): Promise<StaffEntity[]> {
     if (staffId) {
-      const staff = await this.bookingPublicRepository.findActiveStaffById(tenantId, staffId);
+      const staff = await this.staffService.findActiveStaffById(tenantId, staffId);
       return staff ? [staff] : [];
     }
 
-    return this.bookingPublicRepository.findActiveStaffByTenant(tenantId);
+    return this.staffService.findActiveStaffByTenant(tenantId);
   }
 
   private async isWithinWorkingHours(
@@ -258,7 +243,7 @@ export class BookingService {
     startMinute: number,
     endMinute: number,
   ): Promise<boolean> {
-    const workingHours = await this.bookingPublicRepository.findWorkingHoursForDay(
+    const workingHours = await this.staffService.findWorkingHoursForDay(
       tenantId,
       [staffId],
       dayOfWeek,
@@ -296,6 +281,16 @@ function groupByStaff<T extends { staffId: string }>(items: T[]): Map<string, T[
   }
 
   return grouped;
+}
+
+function toBusyIntervals(
+  entries: Array<{ staffId: string; startsAt: Date; endsAt: Date }>,
+): BusyInterval[] {
+  return entries.map((entry) => ({
+    staffId: entry.staffId,
+    blockedStart: entry.startsAt,
+    blockedEnd: entry.endsAt,
+  }));
 }
 
 function addMinutes(value: Date, minutes: number): Date {

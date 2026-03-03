@@ -1,15 +1,9 @@
-import { AppointmentStatus, ClientGender, ClientSalutation } from '@contracts';
+import { AppointmentStatus } from '@contracts';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, In, LessThan, MoreThan, Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 
 import { AppointmentEntity } from './dao/appointment.entity';
-import { ClientEntity } from '../clients/dao/client.entity';
-import { ServiceEntity } from '../services/dao/service.entity';
-import { StaffEntity } from '../staff/dao/staff.entity';
-import { TimeOffEntity } from '../staff/dao/time-off.entity';
-import { WorkingHoursEntity } from '../staff/dao/working-hours.entity';
-import { TenantEntity } from '../tenant/dao/tenant.entity';
 
 export interface BusyInterval {
   staffId: string;
@@ -33,97 +27,9 @@ export interface CreatePublicAppointmentInput {
 export class BookingPublicRepository {
   public constructor(
     private readonly dataSource: DataSource,
-    @InjectRepository(TenantEntity)
-    private readonly tenantRepository: Repository<TenantEntity>,
-    @InjectRepository(ServiceEntity)
-    private readonly serviceRepository: Repository<ServiceEntity>,
-    @InjectRepository(StaffEntity)
-    private readonly staffRepository: Repository<StaffEntity>,
-    @InjectRepository(WorkingHoursEntity)
-    private readonly workingHoursRepository: Repository<WorkingHoursEntity>,
-    @InjectRepository(TimeOffEntity)
-    private readonly timeOffRepository: Repository<TimeOffEntity>,
     @InjectRepository(AppointmentEntity)
     private readonly appointmentRepository: Repository<AppointmentEntity>,
-    @InjectRepository(ClientEntity)
-    private readonly clientRepository: Repository<ClientEntity>,
   ) {}
-
-  public async findTenantBySlug(slug: string): Promise<TenantEntity | null> {
-    return this.tenantRepository.findOneBy({ slug });
-  }
-
-  public async findActiveServiceById(
-    tenantId: string,
-    serviceId: string,
-  ): Promise<ServiceEntity | null> {
-    return this.serviceRepository.findOneBy({
-      id: serviceId,
-      tenantId,
-      isActive: true,
-    });
-  }
-
-  public async findActiveStaffById(tenantId: string, staffId: string): Promise<StaffEntity | null> {
-    return this.staffRepository.findOneBy({
-      id: staffId,
-      tenantId,
-      isActive: true,
-    });
-  }
-
-  public async findActiveStaffByTenant(tenantId: string): Promise<StaffEntity[]> {
-    return this.staffRepository.find({
-      where: { tenantId, isActive: true },
-      order: { fullName: 'ASC' },
-    });
-  }
-
-  public async findWorkingHoursForDay(
-    tenantId: string,
-    staffIds: string[],
-    dayOfWeek: number,
-  ): Promise<WorkingHoursEntity[]> {
-    if (!staffIds.length) {
-      return [];
-    }
-
-    return this.workingHoursRepository.find({
-      where: {
-        tenantId,
-        dayOfWeek,
-        staffId: In(staffIds),
-      },
-      order: { staffId: 'ASC', startTime: 'ASC' },
-    });
-  }
-
-  public async findTimeOffIntervals(
-    tenantId: string,
-    staffIds: string[],
-    rangeStart: Date,
-    rangeEnd: Date,
-  ): Promise<BusyInterval[]> {
-    if (!staffIds.length) {
-      return [];
-    }
-
-    const entries = await this.timeOffRepository.find({
-      where: {
-        tenantId,
-        staffId: In(staffIds),
-        startsAt: LessThan(rangeEnd),
-        endsAt: MoreThan(rangeStart),
-      },
-      order: { startsAt: 'ASC' },
-    });
-
-    return entries.map((entry) => ({
-      staffId: entry.staffId,
-      blockedStart: entry.startsAt,
-      blockedEnd: entry.endsAt,
-    }));
-  }
 
   public async findAppointmentBusyIntervals(
     tenantId: string,
@@ -166,42 +72,21 @@ export class BookingPublicRepository {
     }));
   }
 
-  public async findClientByEmail(tenantId: string, email: string): Promise<ClientEntity | null> {
-    return this.clientRepository.findOneBy({ tenantId, email });
-  }
-
-  public createClient(tenantId: string, fullName: string, email: string): ClientEntity {
-    const { firstName, lastName } = splitClientName(fullName);
-
-    return this.clientRepository.create({
-      tenantId,
-      email,
-      firstName,
-      lastName,
-      salutation: ClientSalutation.NONE,
-      gender: ClientGender.UNSPECIFIED,
-      phone: null,
-    });
-  }
-
-  public async saveClient(client: ClientEntity): Promise<ClientEntity> {
-    return this.clientRepository.save(client);
-  }
-
   public async tryCreatePublicAppointment(
     input: CreatePublicAppointmentInput,
   ): Promise<AppointmentEntity | null> {
     return this.dataSource.transaction(async (manager): Promise<AppointmentEntity | null> => {
-      const staff = await manager.findOne(StaffEntity, {
-        where: {
-          id: input.staffId,
-          tenantId: input.tenantId,
-          isActive: true,
-        },
-        lock: { mode: 'pessimistic_write' },
-      });
+      const lockedStaff = (await manager.query(
+        `
+          SELECT id
+          FROM staff
+          WHERE id = $1::uuid AND tenant_id = $2::uuid AND is_active = TRUE
+          FOR UPDATE
+        `,
+        [input.staffId, input.tenantId],
+      )) as Array<{ id: string }>;
 
-      if (!staff) {
+      if (!lockedStaff.length) {
         return null;
       }
 
@@ -231,17 +116,26 @@ export class BookingPublicRepository {
         return null;
       }
 
-      const timeOffConflict = await manager.findOne(TimeOffEntity, {
-        where: {
-          tenantId: input.tenantId,
-          staffId: input.staffId,
-          startsAt: LessThan(addMinutes(input.endsAt, input.bufferAfterMinutes)),
-          endsAt: MoreThan(addMinutes(input.startsAt, -input.bufferBeforeMinutes)),
-        },
-        select: { id: true },
-      });
+      const timeOffConflict = (await manager.query(
+        `
+          SELECT 1
+          FROM time_off
+          WHERE
+            tenant_id = $1::uuid
+            AND staff_id = $2::uuid
+            AND starts_at < $3::timestamptz
+            AND ends_at > $4::timestamptz
+          LIMIT 1
+        `,
+        [
+          input.tenantId,
+          input.staffId,
+          addMinutes(input.endsAt, input.bufferAfterMinutes).toISOString(),
+          addMinutes(input.startsAt, -input.bufferBeforeMinutes).toISOString(),
+        ],
+      )) as unknown[];
 
-      if (timeOffConflict) {
+      if (timeOffConflict.length > 0) {
         return null;
       }
 
@@ -270,17 +164,4 @@ export class BookingPublicRepository {
 
 function addMinutes(input: Date, minutes: number): Date {
   return new Date(input.getTime() + minutes * 60_000);
-}
-
-function splitClientName(fullName: string): { firstName: string; lastName: string } {
-  const normalized = fullName.trim().replace(/\s+/g, ' ');
-  if (!normalized) {
-    return { firstName: 'Client', lastName: '-' };
-  }
-
-  const parts = normalized.split(' ');
-  const firstName = parts[0];
-  const lastName = parts.slice(1).join(' ') || '-';
-
-  return { firstName, lastName };
 }

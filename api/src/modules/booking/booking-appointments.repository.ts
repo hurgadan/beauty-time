@@ -13,21 +13,12 @@ import {
 } from 'typeorm';
 
 import { AppointmentEntity } from './dao/appointment.entity';
-import { ClientEntity } from '../clients/dao/client.entity';
-import { ServiceEntity } from '../services/dao/service.entity';
-import { StaffEntity } from '../staff/dao/staff.entity';
 
 @Injectable()
 export class BookingAppointmentsRepository {
   public constructor(
     @InjectRepository(AppointmentEntity)
     private readonly appointmentRepository: Repository<AppointmentEntity>,
-    @InjectRepository(ServiceEntity)
-    private readonly serviceRepository: Repository<ServiceEntity>,
-    @InjectRepository(ClientEntity)
-    private readonly clientRepository: Repository<ClientEntity>,
-    @InjectRepository(StaffEntity)
-    private readonly staffRepository: Repository<StaffEntity>,
   ) {}
 
   public async findAppointments(
@@ -98,18 +89,6 @@ export class BookingAppointmentsRepository {
     });
 
     return overlap !== null;
-  }
-
-  public async findStaffById(tenantId: string, staffId: string): Promise<StaffEntity | null> {
-    return this.staffRepository.findOneBy({ id: staffId, tenantId });
-  }
-
-  public async findServiceById(tenantId: string, serviceId: string): Promise<ServiceEntity | null> {
-    return this.serviceRepository.findOneBy({ id: serviceId, tenantId });
-  }
-
-  public async findClientById(tenantId: string, clientId: string): Promise<ClientEntity | null> {
-    return this.clientRepository.findOneBy({ id: clientId, tenantId });
   }
 
   private buildStartsAtFilter(query: ListAppointmentsDto): FindOperator<Date> | undefined {

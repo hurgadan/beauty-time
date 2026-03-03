@@ -7,28 +7,23 @@ import { BookingPublicRepository } from './booking-public.repository';
 import { BookingService } from './booking.service';
 import { CrmBookingAppointmentsController } from './crm-booking-appointments.controller';
 import { AppointmentEntity } from './dao/appointment.entity';
+import { PublicBookingController } from './public-booking.controller';
 import { AuthModule } from '../auth/auth.module';
-import { ClientEntity } from '../clients/dao/client.entity';
-import { ServiceEntity } from '../services/dao/service.entity';
-import { StaffEntity } from '../staff/dao/staff.entity';
-import { TimeOffEntity } from '../staff/dao/time-off.entity';
-import { WorkingHoursEntity } from '../staff/dao/working-hours.entity';
-import { TenantEntity } from '../tenant/dao/tenant.entity';
+import { ClientsModule } from '../clients/clients.module';
+import { ServicesModule } from '../services/services.module';
+import { StaffModule } from '../staff/staff.module';
+import { TenantModule } from '../tenant/tenant.module';
 
 @Module({
   imports: [
     AuthModule,
-    TypeOrmModule.forFeature([
-      AppointmentEntity,
-      ServiceEntity,
-      ClientEntity,
-      StaffEntity,
-      TenantEntity,
-      WorkingHoursEntity,
-      TimeOffEntity,
-    ]),
+    ClientsModule,
+    ServicesModule,
+    StaffModule,
+    TenantModule,
+    TypeOrmModule.forFeature([AppointmentEntity]),
   ],
-  controllers: [CrmBookingAppointmentsController],
+  controllers: [CrmBookingAppointmentsController, PublicBookingController],
   providers: [
     BookingService,
     BookingPublicRepository,

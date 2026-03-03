@@ -25,6 +25,10 @@ export class ClientsService {
     return { client, visitCount };
   }
 
+  public async getClientOptional(tenantId: string, id: string): Promise<ClientEntity | null> {
+    return this.clientsRepository.findClientById(tenantId, id);
+  }
+
   public async listClients(
     tenantId: string,
     query: ListClientsQueryDto,
@@ -52,6 +56,24 @@ export class ClientsService {
     }
 
     return this.clientsRepository.findClientHistory(tenantId, id, limit);
+  }
+
+  public async findByEmail(tenantId: string, email: string): Promise<ClientEntity | null> {
+    return this.clientsRepository.findClientByEmail(tenantId, email);
+  }
+
+  public async findOrCreateByEmail(
+    tenantId: string,
+    email: string,
+    fullName?: string,
+  ): Promise<ClientEntity> {
+    const existing = await this.clientsRepository.findClientByEmail(tenantId, email);
+    if (existing) {
+      return existing;
+    }
+
+    const created = this.clientsRepository.createClient(tenantId, email, fullName);
+    return this.clientsRepository.saveClient(created);
   }
 
   private async getVisitCountMap(

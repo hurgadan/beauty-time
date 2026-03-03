@@ -35,6 +35,14 @@ export class StaffService {
     }
   }
 
+  public async findActiveStaffById(tenantId: string, staffId: string): Promise<StaffEntity | null> {
+    return this.staffRepository.findActiveStaffById(tenantId, staffId);
+  }
+
+  public async findActiveStaffByTenant(tenantId: string): Promise<StaffEntity[]> {
+    return this.staffRepository.findActiveStaffByTenant(tenantId);
+  }
+
   public async updateStaff(
     tenantId: string,
     staffId: string,
@@ -74,6 +82,14 @@ export class StaffService {
     return this.staffRepository.findWorkingHours(tenantId, staffId);
   }
 
+  public async findWorkingHoursForDay(
+    tenantId: string,
+    staffIds: string[],
+    dayOfWeek: number,
+  ): Promise<WorkingHoursEntity[]> {
+    return this.staffRepository.findWorkingHoursForDay(tenantId, staffIds, dayOfWeek);
+  }
+
   public async replaceWorkingHours(
     tenantId: string,
     staffId: string,
@@ -101,6 +117,15 @@ export class StaffService {
     await this.ensureStaff(tenantId, staffId);
 
     return this.staffRepository.findTimeOff(tenantId, staffId);
+  }
+
+  public async findTimeOffInRange(
+    tenantId: string,
+    staffIds: string[],
+    rangeStart: Date,
+    rangeEnd: Date,
+  ): Promise<TimeOffEntity[]> {
+    return this.staffRepository.findTimeOffInRange(tenantId, staffIds, rangeStart, rangeEnd);
   }
 
   public async createTimeOff(

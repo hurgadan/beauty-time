@@ -8,11 +8,17 @@ import {
 
 import { BookingAppointmentsRepository } from './booking-appointments.repository';
 import { AppointmentEntity } from './dao/appointment.entity';
+import { ClientsService } from '../clients/clients.service';
+import { ServicesService } from '../services/services.service';
+import { StaffService } from '../staff/staff.service';
 
 @Injectable()
 export class BookingAppointmentsService {
   public constructor(
     private readonly bookingAppointmentsRepository: BookingAppointmentsRepository,
+    private readonly staffService: StaffService,
+    private readonly servicesService: ServicesService,
+    private readonly clientsService: ClientsService,
   ) {}
 
   public async listAppointments(
@@ -103,7 +109,7 @@ export class BookingAppointmentsService {
   }
 
   private async ensureStaff(tenantId: string, staffId: string): Promise<void> {
-    const staff = await this.bookingAppointmentsRepository.findStaffById(tenantId, staffId);
+    const staff = await this.staffService.findActiveStaffById(tenantId, staffId);
 
     if (!staff) {
       throw new NotFoundException('Staff not found');
@@ -111,7 +117,7 @@ export class BookingAppointmentsService {
   }
 
   private async ensureService(tenantId: string, serviceId: string): Promise<void> {
-    const service = await this.bookingAppointmentsRepository.findServiceById(tenantId, serviceId);
+    const service = await this.servicesService.findActiveServiceById(tenantId, serviceId);
 
     if (!service) {
       throw new NotFoundException('Service not found');
@@ -119,7 +125,7 @@ export class BookingAppointmentsService {
   }
 
   private async ensureClient(tenantId: string, clientId: string): Promise<void> {
-    const client = await this.bookingAppointmentsRepository.findClientById(tenantId, clientId);
+    const client = await this.clientsService.getClientOptional(tenantId, clientId);
 
     if (!client) {
       throw new NotFoundException('Client not found');

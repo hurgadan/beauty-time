@@ -30,6 +30,17 @@ export class ServicesRepository {
     return this.serviceRepository.findOneBy({ id });
   }
 
+  public async findActiveServiceById(
+    tenantId: string,
+    serviceId: string,
+  ): Promise<ServiceEntity | null> {
+    return this.serviceRepository.findOneBy({
+      id: serviceId,
+      tenantId,
+      isActive: true,
+    });
+  }
+
   public async deleteService(id: string): Promise<number> {
     const result = await this.serviceRepository.delete({
       id,

@@ -2,12 +2,12 @@ import { BookingService } from '@modules/booking/booking.service';
 import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
-import { AvailabilityQueryDto } from './dto/booking/availability-query.dto';
-import { AvailabilityQueryResponseDto } from './dto/booking/availability-query.response.dto';
-import { BookingConfigResponseDto } from './dto/booking/booking-config.response.dto';
-import { ConfirmAppointmentResponseDto } from './dto/booking/confirm-appointment.response.dto';
-import { CreatePublicAppointmentDto } from './dto/booking/create-public-appointment.dto';
-import { CreatePublicAppointmentResponseDto } from './dto/booking/create-public-appointment.response.dto';
+import { AvailabilityQueryDto } from './dto/public/availability-query.dto';
+import { AvailabilityQueryResponseDto } from './dto/public/availability-query.response.dto';
+import { BookingConfigResponseDto } from './dto/public/booking-config.response.dto';
+import { ConfirmAppointmentResponseDto } from './dto/public/confirm-appointment.response.dto';
+import { CreatePublicAppointmentDto } from './dto/public/create-public-appointment.dto';
+import { CreatePublicAppointmentResponseDto } from './dto/public/create-public-appointment.response.dto';
 
 @ApiTags('book')
 @Controller('book')

@@ -22,6 +22,13 @@ export class ServicesService {
     });
   }
 
+  public async findActiveServiceById(
+    tenantId: string,
+    serviceId: string,
+  ): Promise<ServiceEntity | null> {
+    return this.servicesRepository.findActiveServiceById(tenantId, serviceId);
+  }
+
   public async updateService(
     id: string,
     tenantId: string,
