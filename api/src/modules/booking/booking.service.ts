@@ -17,6 +17,7 @@ import {
 
 import { BookingPublicRepository, BusyInterval } from './booking-public.repository';
 import { ClientsService } from '../clients/clients.service';
+import { NotificationsService } from '../notifications/notifications.service';
 import { ServicesService } from '../services/services.service';
 import { StaffEntity } from '../staff/dao/staff.entity';
 import { StaffService } from '../staff/staff.service';
@@ -30,6 +31,7 @@ export class BookingService {
     private readonly servicesService: ServicesService,
     private readonly staffService: StaffService,
     private readonly clientsService: ClientsService,
+    private readonly notificationsService: NotificationsService,
   ) {}
 
   public async getConfig(tenantSlug: string): Promise<BookingConfigResponseDto> {
@@ -197,6 +199,14 @@ export class BookingService {
       });
 
       if (created) {
+        await this.notificationsService.scheduleAppointmentNotifications({
+          tenantId: tenant.id,
+          tenantSlug,
+          appointmentId: created.id,
+          recipientEmail: client.email,
+          startsAt,
+        });
+
         return { id: created.id, tenantSlug };
       }
     }

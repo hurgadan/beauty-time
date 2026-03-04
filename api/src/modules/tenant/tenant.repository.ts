@@ -14,4 +14,8 @@ export class TenantRepository {
   public async findTenantBySlug(slug: string): Promise<TenantEntity | null> {
     return this.tenantRepository.findOneBy({ slug });
   }
+
+  public async findTenantById(id: string): Promise<TenantEntity | null> {
+    return this.tenantRepository.findOneBy({ id });
+  }
 }

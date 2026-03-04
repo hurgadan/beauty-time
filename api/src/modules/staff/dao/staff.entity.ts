@@ -34,9 +34,8 @@ export class StaffEntity {
 
   @Column({
     name: 'role',
-    type: 'enum',
+    type: 'varchar',
     enum: StaffRole,
-    enumName: 'staff_role_enum',
     default: StaffRole.STAFF,
     nullable: false,
   })

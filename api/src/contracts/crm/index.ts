@@ -1,4 +1,5 @@
 export * from '../types/clients';
+export * from '../types/_common';
 export * from '../types/booking/appointment.type';
 export * from '../types/booking/create-appointment.type';
 export * from '../types/booking/list-appointments.type';

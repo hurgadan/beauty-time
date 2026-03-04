@@ -10,6 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 
 import { OtpSessionRepository } from './otp-session.repository';
 import { ClientsService } from '../clients/clients.service';
+import { NotificationsService } from '../notifications/notifications.service';
 import { TenantService } from '../tenant/tenant.service';
 
 @Injectable()
@@ -19,6 +20,7 @@ export class AuthService {
     private readonly otpSessionRepository: OtpSessionRepository,
     private readonly tenantService: TenantService,
     private readonly clientsService: ClientsService,
+    private readonly notificationsService: NotificationsService,
   ) {}
 
   public staffLogin(email: string): StaffLoginResponseDto {
@@ -76,8 +78,7 @@ export class AuthService {
 
     await this.otpSessionRepository.saveOtpSession(otpSession);
 
-    // TODO(stage-10): hand off to notifications queue (email channel).
-    void otpCode;
+    await this.notificationsService.sendOtpEmail(tenant.id, tenant.slug, normalizedEmail, otpCode);
 
     return { sent: true, email: normalizedEmail };
   }

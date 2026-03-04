@@ -35,9 +35,8 @@ export class ClientEntity {
 
   @Column({
     name: 'salutation',
-    type: 'enum',
+    type: 'varchar',
     enum: ClientSalutation,
-    enumName: 'client_salutation_enum',
     default: ClientSalutation.NONE,
     nullable: false,
   })
@@ -45,9 +44,8 @@ export class ClientEntity {
 
   @Column({
     name: 'gender',
-    type: 'enum',
+    type: 'varchar',
     enum: ClientGender,
-    enumName: 'client_gender_enum',
     default: ClientGender.UNSPECIFIED,
     nullable: false,
   })

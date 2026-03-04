@@ -9,12 +9,14 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { OtpSessionRepository } from './otp-session.repository';
 import { PublicAuthController } from './public-auth.controller';
 import { ClientsModule } from '../clients/clients.module';
+import { NotificationsModule } from '../notifications/notifications.module';
 import { TenantModule } from '../tenant/tenant.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([OtpSessionEntity]),
     forwardRef(() => ClientsModule),
+    NotificationsModule,
     TenantModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET ?? 'dev-secret',

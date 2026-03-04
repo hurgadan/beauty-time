@@ -20,6 +20,8 @@
     "typeorm:migration:show": "typeorm migration:show -d database/data-source.js"
   },
   "dependencies": {
+    "bullmq": "^5.58.5",
+    "ioredis": "^5.8.0",
     "@nestjs/common": "^11.0.0",
     "@nestjs/config": "^4.0.0",
     "@nestjs/core": "^11.0.0",
@@ -29,6 +31,7 @@
     "@nestjs/typeorm": "^11.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "handlebars": "^4.7.8",
     "pg": "^8.13.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",

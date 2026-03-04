@@ -2,8 +2,10 @@ import { AppointmentStatus, type CreateAppointmentDto, type ListAppointmentsDto 
 import { BadRequestException, ConflictException } from '@nestjs/common';
 
 import { ClientsService } from '../../clients/clients.service';
+import { NotificationsService } from '../../notifications/notifications.service';
 import { ServicesService } from '../../services/services.service';
 import { StaffService } from '../../staff/staff.service';
+import { TenantService } from '../../tenant/tenant.service';
 import { BookingAppointmentsRepository } from '../booking-appointments.repository';
 import { BookingAppointmentsService } from '../booking-appointments.service';
 
@@ -13,6 +15,8 @@ type BookingAppointmentsRepositoryMock = Partial<
 type StaffServiceMock = Partial<Record<keyof StaffService, jest.Mock>>;
 type ServicesServiceMock = Partial<Record<keyof ServicesService, jest.Mock>>;
 type ClientsServiceMock = Partial<Record<keyof ClientsService, jest.Mock>>;
+type NotificationsServiceMock = Partial<Record<keyof NotificationsService, jest.Mock>>;
+type TenantServiceMock = Partial<Record<keyof TenantService, jest.Mock>>;
 
 function createBookingAppointmentsRepositoryMock(): BookingAppointmentsRepositoryMock {
   return {
@@ -41,23 +45,41 @@ function createClientsServiceMock(): ClientsServiceMock {
   };
 }
 
+function createNotificationsServiceMock(): NotificationsServiceMock {
+  return {
+    scheduleAppointmentNotifications: jest.fn(),
+  };
+}
+
+function createTenantServiceMock(): TenantServiceMock {
+  return {
+    getByIdOrThrow: jest.fn(),
+  };
+}
+
 describe('BookingAppointmentsService', () => {
   let service: BookingAppointmentsService;
   let bookingAppointmentsRepository: BookingAppointmentsRepositoryMock;
   let staffService: StaffServiceMock;
   let servicesService: ServicesServiceMock;
   let clientsService: ClientsServiceMock;
+  let notificationsService: NotificationsServiceMock;
+  let tenantService: TenantServiceMock;
 
   beforeEach(() => {
     bookingAppointmentsRepository = createBookingAppointmentsRepositoryMock();
     staffService = createStaffServiceMock();
     servicesService = createServicesServiceMock();
     clientsService = createClientsServiceMock();
+    notificationsService = createNotificationsServiceMock();
+    tenantService = createTenantServiceMock();
     service = new BookingAppointmentsService(
       bookingAppointmentsRepository as unknown as BookingAppointmentsRepository,
       staffService as unknown as StaffService,
       servicesService as unknown as ServicesService,
       clientsService as unknown as ClientsService,
+      notificationsService as unknown as NotificationsService,
+      tenantService as unknown as TenantService,
     );
   });
 
@@ -99,6 +121,7 @@ describe('BookingAppointmentsService', () => {
     });
     clientsService.getClientOptional!.mockResolvedValue({
       id: 'client-id',
+      email: 'client@example.com',
     });
     bookingAppointmentsRepository.hasAppointmentOverlap!.mockResolvedValue(true);
 
@@ -124,8 +147,11 @@ describe('BookingAppointmentsService', () => {
     });
     clientsService.getClientOptional!.mockResolvedValue({
       id: 'client-id',
+      email: 'client@example.com',
     });
     bookingAppointmentsRepository.hasAppointmentOverlap!.mockResolvedValue(false);
+    tenantService.getByIdOrThrow!.mockResolvedValue({ slug: 'tenant-slug' });
+    notificationsService.scheduleAppointmentNotifications!.mockResolvedValue(4);
     bookingAppointmentsRepository.createAppointment!.mockReturnValue({
       tenantId: 'tenant-id',
       staffId: 'staff-id',

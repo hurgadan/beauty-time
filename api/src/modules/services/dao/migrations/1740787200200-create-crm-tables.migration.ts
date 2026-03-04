@@ -18,9 +18,7 @@ export class CreateCrmTables1740787200200 implements MigrationInterface {
           { name: 'full_name', type: 'varchar', isNullable: false },
           {
             name: 'role',
-            type: 'enum',
-            enumName: 'staff_role_enum',
-            enum: ['owner', 'staff'],
+            type: 'varchar',
             default: "'staff'",
             isNullable: false,
           },

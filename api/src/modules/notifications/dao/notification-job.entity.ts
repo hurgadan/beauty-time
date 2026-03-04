@@ -13,6 +13,7 @@ import { AppointmentEntity } from '../../booking/dao/appointment.entity';
 import { TenantEntity } from '../../tenant/dao/tenant.entity';
 import { NotificationChannel } from '../enums/notification-channel.enum';
 import { NotificationJobStatus } from '../enums/notification-job-status.enum';
+import { NotificationTemplate } from '../enums/notification-template.enum';
 
 @Entity({ name: 'notification_jobs' })
 @Index('idx_notification_jobs_tenant', ['tenantId'])
@@ -38,18 +39,25 @@ export class NotificationJobEntity {
 
   @Column({
     name: 'channel',
-    type: 'enum',
+    type: 'varchar',
     enum: NotificationChannel,
-    enumName: 'notification_channel_enum',
     nullable: false,
   })
   public channel!: NotificationChannel;
 
   @Column({ name: 'template', type: 'varchar', nullable: false })
-  public template!: string;
+  public template!: NotificationTemplate;
 
   @Column({ name: 'recipient', type: 'varchar', nullable: false })
   public recipient!: string;
+
+  @Column({
+    name: 'payload',
+    type: 'jsonb',
+    nullable: false,
+    default: () => "'{}'::jsonb",
+  })
+  public payload!: Record<string, unknown>;
 
   @Column({ name: 'scheduled_at', type: 'timestamptz', nullable: false })
   public scheduledAt!: Date;
@@ -59,9 +67,8 @@ export class NotificationJobEntity {
 
   @Column({
     name: 'status',
-    type: 'enum',
+    type: 'varchar',
     enum: NotificationJobStatus,
-    enumName: 'notification_job_status_enum',
     default: NotificationJobStatus.PENDING,
     nullable: false,
   })

@@ -108,6 +108,7 @@ Public auth behavior (MVP):
 - OTP session is one-time (consumed on successful verify or after limits/expiry);
 - on successful verify API returns client JWT token;
 - client is deduplicated by `tenant+email`; if not found, minimal client record is created.
+- OTP delivery is delegated to notifications module (`auth_otp` template, email channel).
 4. CRM auth:
 - `POST /api/auth/staff/login`
 5. Appointments:
@@ -133,6 +134,17 @@ Public auth behavior (MVP):
 - `GET /api/crm/clients/list`
 - `GET /api/crm/clients/:id`
 - `GET /api/crm/clients/:id/history`
+9. Internal notifications:
+- `POST /api/internal/notifications/schedule`
+- `POST /api/internal/notifications/send`
+
+Booking + notifications behavior (MVP):
+- on public booking create and CRM appointment create API schedules:
+  - `booking_created` (immediate);
+  - `booking_confirmation_action` (immediate);
+  - `booking_reminder_24h` (delayed);
+  - `booking_reminder_2h` (delayed).
+- reminders are persisted in `notification_jobs` and sent by provider pipeline.
 
 Controller naming conventions:
 - CRM controllers use `crm-` file prefix (`crm-services.controller.ts`, `crm-staff.controller.ts`, `crm-clients.controller.ts`, `crm-booking-appointments.controller.ts`);
@@ -147,6 +159,47 @@ Query filters/pagination (MVP):
 - `search`, `limit`
 4. `GET /api/crm/clients/:id/history`:
 - `limit`
+
+## Notifications architecture
+1. Layering:
+- `notifications.controller -> notifications.service -> notifications.repository`.
+2. Providers:
+- common provider contract (`NotificationProvider`) with `send(...)`;
+- provider registry/factory resolves concrete provider by channel + env config:
+  - `EMAIL_PROVIDER` (supported: `mailgun`, `noop`);
+  - `SMS_PROVIDER` (currently `noop`);
+  - `TELEGRAM_PROVIDER` (currently `noop`).
+ - email content is rendered via Handlebars templates (`.hbs`) for both `subject` and `body`.
+3. Queue and retries:
+- if `REDIS_URL` is set and BullMQ dependencies are available, delayed jobs are enqueued and consumed by worker;
+- retry with exponential backoff;
+- after max attempts job is marked `failed` and mirrored to DLQ queue.
+4. Fallback mode:
+- when Redis/BullMQ is unavailable, immediate jobs are still processed synchronously;
+- internal endpoints allow manual schedule/send operation for pending jobs.
+5. Persistence:
+- `notification_jobs.payload` stores template context (`jsonb`);
+- channels support `email`, `sms`, `telegram`.
+6. Templates and i18n:
+- templates are stored in `src/modules/notifications/templates/<lang>/*.hbs`;
+- supported languages: `en`, `de`;
+- renderer: `src/modules/notifications/utils/render-template.ts`.
+
+## Notifications configuration
+1. Queue:
+- `REDIS_URL` - Redis connection for BullMQ queue/worker.
+2. Provider selection:
+- `EMAIL_PROVIDER` - `mailgun` or `noop` (default).
+- `SMS_PROVIDER` - currently `noop` (future providers).
+- `TELEGRAM_PROVIDER` - currently `noop`.
+3. Mailgun (if `EMAIL_PROVIDER=mailgun`):
+- `MAILGUN_API_KEY`
+- `MAILGUN_DOMAIN`
+- `MAILGUN_FROM`
+4. Public confirm links in email templates:
+- `PUBLIC_BOOKING_BASE_URL` (used to build `.../book/appointments/:id/confirm` URL).
+5. Template locale:
+- `DEFAULT_NOTIFICATION_LANG` - fallback language (`en` by default, `de` supported).
 
 ## Local run
 1. Install dependencies:
@@ -198,6 +251,7 @@ E2E conventions:
   - `src/modules/<module>/tests/*.e2e-spec.ts`
   - public booking flow: `src/modules/booking/tests/public-booking.e2e-spec.ts`
   - public auth flow: `src/modules/auth/tests/public-auth.e2e-spec.ts`
+  - notifications API: `src/modules/notifications/tests/notifications.e2e-spec.ts`
 - Unit test specs are module-local:
   - `src/modules/<module>/tests/*.spec.ts`
 - Hooks are registered in each e2e spec via `registerE2eHooks()`.

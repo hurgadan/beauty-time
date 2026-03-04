@@ -60,9 +60,8 @@ export class AppointmentEntity {
 
   @Column({
     name: 'status',
-    type: 'enum',
+    type: 'varchar',
     enum: AppointmentStatus,
-    enumName: 'appointment_status_enum',
     default: AppointmentStatus.BOOKED,
     nullable: false,
   })

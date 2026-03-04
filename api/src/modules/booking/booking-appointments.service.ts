@@ -9,8 +9,11 @@ import {
 import { BookingAppointmentsRepository } from './booking-appointments.repository';
 import { AppointmentEntity } from './dao/appointment.entity';
 import { ClientsService } from '../clients/clients.service';
+import { ClientEntity } from '../clients/dao/client.entity';
+import { NotificationsService } from '../notifications/notifications.service';
 import { ServicesService } from '../services/services.service';
 import { StaffService } from '../staff/staff.service';
+import { TenantService } from '../tenant/tenant.service';
 
 @Injectable()
 export class BookingAppointmentsService {
@@ -19,6 +22,8 @@ export class BookingAppointmentsService {
     private readonly staffService: StaffService,
     private readonly servicesService: ServicesService,
     private readonly clientsService: ClientsService,
+    private readonly notificationsService: NotificationsService,
+    private readonly tenantService: TenantService,
   ) {}
 
   public async listAppointments(
@@ -41,7 +46,7 @@ export class BookingAppointmentsService {
 
     await this.ensureStaff(tenantId, payload.staffId);
     await this.ensureService(tenantId, payload.serviceId);
-    await this.ensureClient(tenantId, payload.clientId);
+    const client = await this.ensureClient(tenantId, payload.clientId);
 
     const overlap = await this.bookingAppointmentsRepository.hasAppointmentOverlap(
       tenantId,
@@ -61,7 +66,18 @@ export class BookingAppointmentsService {
       endsAt,
     );
 
-    return this.bookingAppointmentsRepository.saveAppointment(appointment);
+    const saved = await this.bookingAppointmentsRepository.saveAppointment(appointment);
+    const tenant = await this.tenantService.getByIdOrThrow(tenantId);
+
+    await this.notificationsService.scheduleAppointmentNotifications({
+      tenantId,
+      tenantSlug: tenant.slug,
+      appointmentId: saved.id,
+      recipientEmail: client.email,
+      startsAt: saved.startsAt,
+    });
+
+    return saved;
   }
 
   public async updateAppointment(
@@ -124,11 +140,13 @@ export class BookingAppointmentsService {
     }
   }
 
-  private async ensureClient(tenantId: string, clientId: string): Promise<void> {
+  private async ensureClient(tenantId: string, clientId: string): Promise<ClientEntity> {
     const client = await this.clientsService.getClientOptional(tenantId, clientId);
 
     if (!client) {
       throw new NotFoundException('Client not found');
     }
+
+    return client;
   }
 }

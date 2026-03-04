@@ -10,6 +10,7 @@ import { AppointmentEntity } from './dao/appointment.entity';
 import { PublicBookingController } from './public-booking.controller';
 import { AuthModule } from '../auth/auth.module';
 import { ClientsModule } from '../clients/clients.module';
+import { NotificationsModule } from '../notifications/notifications.module';
 import { ServicesModule } from '../services/services.module';
 import { StaffModule } from '../staff/staff.module';
 import { TenantModule } from '../tenant/tenant.module';
@@ -18,6 +19,7 @@ import { TenantModule } from '../tenant/tenant.module';
   imports: [
     AuthModule,
     ClientsModule,
+    NotificationsModule,
     ServicesModule,
     StaffModule,
     TenantModule,

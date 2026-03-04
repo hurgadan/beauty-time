@@ -2,6 +2,7 @@ export * from '../types/auth/send-magic-link.type';
 export * from '../types/auth/send-magic-link-response.type';
 export * from '../types/auth/verify-otp.type';
 export * from '../types/auth/verify-otp-response.type';
+export * from '../types/_common';
 export * from '../types/booking/booking-config-response.type';
 export * from '../types/booking/availability-query.type';
 export * from '../types/booking/availability-slot.type';

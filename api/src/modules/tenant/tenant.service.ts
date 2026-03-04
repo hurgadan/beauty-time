@@ -19,4 +19,13 @@ export class TenantService {
 
     return tenant;
   }
+
+  public async getByIdOrThrow(id: string): Promise<TenantEntity> {
+    const tenant = await this.tenantRepository.findTenantById(id);
+    if (!tenant) {
+      throw new NotFoundException('Tenant not found');
+    }
+
+    return tenant;
+  }
 }

@@ -19,16 +19,7 @@ export class CreateAppointmentsTable1740787200400 implements MigrationInterface 
           { name: 'client_id', type: 'uuid', isNullable: false },
           {
             name: 'status',
-            type: 'enum',
-            enumName: 'appointment_status_enum',
-            enum: [
-              'booked',
-              'confirmed_by_reminder',
-              'completed',
-              'cancelled_by_client',
-              'cancelled_by_staff',
-              'no_show',
-            ],
+            type: 'varchar',
             default: "'booked'",
             isNullable: false,
           },

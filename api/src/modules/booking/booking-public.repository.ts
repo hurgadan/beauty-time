@@ -52,7 +52,7 @@ export class BookingPublicRepository {
         WHERE
           a.tenant_id = $1::uuid
           AND a.staff_id = ANY($2::uuid[])
-          AND a.status <> ALL($3::appointment_status_enum[])
+          AND a.status <> ALL($3::varchar[])
           AND (a.starts_at - make_interval(mins => s.buffer_before_minutes)) < $4::timestamptz
           AND (a.ends_at + make_interval(mins => s.buffer_after_minutes)) > $5::timestamptz
       `,
@@ -98,7 +98,7 @@ export class BookingPublicRepository {
           WHERE
             a.tenant_id = $1::uuid
             AND a.staff_id = $2::uuid
-            AND a.status <> ALL($3::appointment_status_enum[])
+            AND a.status <> ALL($3::varchar[])
             AND (a.starts_at - make_interval(mins => s.buffer_before_minutes)) < $4::timestamptz
             AND (a.ends_at + make_interval(mins => s.buffer_after_minutes)) > $5::timestamptz
           LIMIT 1

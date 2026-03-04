@@ -2,6 +2,7 @@ import { NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 import { ClientsService } from '../../clients/clients.service';
+import { NotificationsService } from '../../notifications/notifications.service';
 import { TenantService } from '../../tenant/tenant.service';
 import { AuthService } from '../auth.service';
 import { OtpSessionRepository } from '../otp-session.repository';
@@ -10,6 +11,7 @@ type OtpSessionRepositoryMock = Partial<Record<keyof OtpSessionRepository, jest.
 type JwtServiceMock = Partial<Record<keyof JwtService, jest.Mock>>;
 type TenantServiceMock = Partial<Record<keyof TenantService, jest.Mock>>;
 type ClientsServiceMock = Partial<Record<keyof ClientsService, jest.Mock>>;
+type NotificationsServiceMock = Partial<Record<keyof NotificationsService, jest.Mock>>;
 
 function createOtpSessionRepositoryMock(): OtpSessionRepositoryMock {
   return {
@@ -41,23 +43,32 @@ function createClientsServiceMock(): ClientsServiceMock {
   };
 }
 
+function createNotificationsServiceMock(): NotificationsServiceMock {
+  return {
+    sendOtpEmail: jest.fn(),
+  };
+}
+
 describe('AuthService', () => {
   let service: AuthService;
   let otpSessionRepository: OtpSessionRepositoryMock;
   let jwtService: JwtServiceMock;
   let tenantService: TenantServiceMock;
   let clientsService: ClientsServiceMock;
+  let notificationsService: NotificationsServiceMock;
 
   beforeEach(() => {
     otpSessionRepository = createOtpSessionRepositoryMock();
     jwtService = createJwtServiceMock();
     tenantService = createTenantServiceMock();
     clientsService = createClientsServiceMock();
+    notificationsService = createNotificationsServiceMock();
     service = new AuthService(
       jwtService as unknown as JwtService,
       otpSessionRepository as unknown as OtpSessionRepository,
       tenantService as unknown as TenantService,
       clientsService as unknown as ClientsService,
+      notificationsService as unknown as NotificationsService,
     );
   });
 
