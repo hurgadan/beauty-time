@@ -1,6 +1,6 @@
 {
   "name": "@hurgadan/beauty-time-crm-contracts",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "CRM contracts and API client for beauty-time",
   "private": false,
   "main": "dist/crm/index.js",

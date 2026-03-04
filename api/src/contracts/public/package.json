@@ -1,6 +1,6 @@
 {
   "name": "@hurgadan/beauty-time-public-contracts",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Public booking/auth contracts and API client for beauty-time",
   "private": false,
   "main": "dist/public/index.js",
