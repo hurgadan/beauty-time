@@ -192,15 +192,19 @@
 1. [x] Настроить очередь уведомлений (Redis + BullMQ, с fallback без Redis в локальной среде).
 2. [x] Реализовать шаблоны писем:
 - подтверждение после записи;
-- напоминание `T-24h`;
+- напоминание `T-24h` (включает ссылку/действие подтверждения визита);
 - напоминание `T-2h`;
-- письмо для подтверждения визита.
-3. [x] Реализовать retry, backoff и DLQ/ошибочные джобы.
-4. [x] Подготовить абстракцию канала уведомлений для будущих SMS/WhatsApp/Telegram.
-5. [x] Интегрировать notifications flow в доменные сценарии:
+3. [x] Вынести рендер сообщений в шаблоны Handlebars (`subject` + `body`) с локалями `en/de`.
+4. [x] Реализовать retry, backoff и DLQ/ошибочные джобы.
+5. [x] Подготовить абстракцию канала уведомлений для будущих SMS/WhatsApp/Telegram.
+6. [x] Интегрировать notifications flow в доменные сценарии:
 - `POST /auth/client/send-magic-link` ставит OTP email-уведомление;
-- создание записи в public booking и CRM appointment API ставит confirmation/reminder jobs.
-6. [x] Добавить покрытие тестами этапа:
+- создание записи в public booking и CRM appointment API ставит `booking_created` и reminder jobs (`T-24h`, `T-2h`).
+7. [x] Разделить сервисы уведомлений:
+- `NotificationsService` для публичных методов планирования/отправки;
+- `NotificationsProcessingService` для worker/очереди/рекавери.
+8. [x] Перенести системный enum языка уведомлений в shared contracts (`types/_common`).
+9. [x] Добавить покрытие тестами этапа:
 - unit: `src/modules/notifications/tests/notifications.service.spec.ts`;
 - e2e: `src/modules/notifications/tests/notifications.e2e-spec.ts`.
 Результат этапа:

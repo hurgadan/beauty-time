@@ -19,6 +19,7 @@ Contracts are defined in `src/contracts` and are split into two publishable pack
 ### Contracts conventions
 1. Location:
 - `src/contracts/types/<module>` for shared types.
+- `src/contracts/types/_common` for cross-domain shared enums/types (for example notification language).
 - `src/contracts/public/clients` for public API clients.
 - `src/contracts/crm/clients` for CRM API clients.
 - `src/contracts/public/index.ts` as public package entrypoint.
@@ -141,8 +142,7 @@ Public auth behavior (MVP):
 Booking + notifications behavior (MVP):
 - on public booking create and CRM appointment create API schedules:
   - `booking_created` (immediate);
-  - `booking_confirmation_action` (immediate);
-  - `booking_reminder_24h` (delayed);
+  - `booking_reminder_24h` (delayed, includes confirm action link);
   - `booking_reminder_2h` (delayed).
 - reminders are persisted in `notification_jobs` and sent by provider pipeline.
 
@@ -162,7 +162,10 @@ Query filters/pagination (MVP):
 
 ## Notifications architecture
 1. Layering:
-- `notifications.controller -> notifications.service -> notifications.repository`.
+- public/internal API scheduling methods:
+  - `notifications.controller -> notifications.service -> notifications.repository`;
+- background queue and worker processing:
+  - `notifications-processing.service -> notifications.repository -> provider/factory`.
 2. Providers:
 - common provider contract (`NotificationProvider`) with `send(...)`;
 - provider registry/factory resolves concrete provider by channel + env config:
@@ -174,15 +177,19 @@ Query filters/pagination (MVP):
 - if `REDIS_URL` is set and BullMQ dependencies are available, delayed jobs are enqueued and consumed by worker;
 - retry with exponential backoff;
 - after max attempts job is marked `failed` and mirrored to DLQ queue.
-4. Fallback mode:
+4. Recovery on startup:
+- app startup does not block on notifications recovery;
+- recovery runs in background and re-enqueues overdue `pending` jobs in batches.
+5. Fallback mode:
 - when Redis/BullMQ is unavailable, immediate jobs are still processed synchronously;
 - internal endpoints allow manual schedule/send operation for pending jobs.
-5. Persistence:
+6. Persistence:
 - `notification_jobs.payload` stores template context (`jsonb`);
 - channels support `email`, `sms`, `telegram`.
-6. Templates and i18n:
+7. Templates and i18n:
 - templates are stored in `src/modules/notifications/templates/<lang>/*.hbs`;
 - supported languages: `en`, `de`;
+- language enum is shared in contracts: `src/contracts/types/_common/notification-language.enum.ts`;
 - renderer: `src/modules/notifications/utils/render-template.ts`.
 
 ## Notifications configuration
