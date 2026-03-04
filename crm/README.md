@@ -13,7 +13,26 @@ Nuxt 4 CRM frontend for Beauty-Time.
 - `/notifications`
 - `/settings`
 
-Mobile and desktop variants are expected to be functionally equivalent.
+## Current CRM implementation status
+1. Integrated API layer:
+- composable `useCrmApi` uses `@beauty-time/crm-contracts` client and types;
+- auth login writes JWT into `crm_access_token` cookie;
+- page data loads through contracts client with safe fallback to local demo data.
+2. Connected screens:
+- `dashboard`, `calendar`, `appointments`, `services`, `staff`, `clients/:id` read from CRM API client.
+3. CRM module actions:
+- `services`: list/create/update/delete;
+- `appointments`: list/create/update status/cancel;
+- `staff`: list/create/update/delete + working-hours replace + time-off create/delete;
+- `clients/:id`: profile + visit history.
+4. Mobile parity:
+- mobile navigation contains all CRM sections (not reduced subset), so feature access matches desktop.
+
+## Contracts wiring
+1. `@beauty-time/crm-contracts` is aliased in `nuxt.config.ts` to local source:
+- `../api/src/contracts/crm/index.ts`
+2. API base URL is configurable via runtime env:
+- `NUXT_PUBLIC_API_BASE_URL` (default: `http://localhost:4000`)
 
 ## Local run
 1. Install dependencies:

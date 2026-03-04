@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 import { NotificationChannel } from './enums/notification-channel.enum';
 import { EmailMailgunProvider } from './providers/email-mailgun.provider';
@@ -12,6 +13,7 @@ export class NotificationProviderRegistry {
   private readonly providersByKey = new Map<string, NotificationProvider>();
 
   public constructor(
+    private readonly configService: ConfigService,
     emailMailgunProvider: EmailMailgunProvider,
     emailNoopProvider: EmailNoopProvider,
     smsNoopProvider: SmsNoopProvider,
@@ -42,11 +44,11 @@ export class NotificationProviderRegistry {
   private resolveProviderName(channel: NotificationChannel): string {
     switch (channel) {
       case NotificationChannel.EMAIL:
-        return (process.env.EMAIL_PROVIDER ?? 'noop').toLowerCase();
+        return this.configService.get<string>('notifications.providers.email') ?? 'noop';
       case NotificationChannel.SMS:
-        return (process.env.SMS_PROVIDER ?? 'noop').toLowerCase();
+        return this.configService.get<string>('notifications.providers.sms') ?? 'noop';
       case NotificationChannel.TELEGRAM:
-        return (process.env.TELEGRAM_PROVIDER ?? 'noop').toLowerCase();
+        return this.configService.get<string>('notifications.providers.telegram') ?? 'noop';
       default:
         return 'noop';
     }

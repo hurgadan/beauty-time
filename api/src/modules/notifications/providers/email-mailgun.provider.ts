@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 import type { NotificationSendInput } from './notification-provider.interface';
 import { NotificationProvider } from './notification-provider.interface';
@@ -10,11 +11,14 @@ import { renderTemplate } from '../utils/render-template';
 export class EmailMailgunProvider extends NotificationProvider {
   public readonly channel = NotificationChannel.EMAIL;
   public readonly name = 'mailgun';
+  public constructor(private readonly configService: ConfigService) {
+    super();
+  }
 
   public async send(input: NotificationSendInput): Promise<void> {
-    const apiKey = process.env.MAILGUN_API_KEY;
-    const domain = process.env.MAILGUN_DOMAIN;
-    const from = process.env.MAILGUN_FROM;
+    const apiKey = this.configService.get<string>('notifications.mailgun.apiKey');
+    const domain = this.configService.get<string>('notifications.mailgun.domain');
+    const from = this.configService.get<string>('notifications.mailgun.from');
 
     if (!apiKey || !domain || !from) {
       throw new Error('MAILGUN_API_KEY, MAILGUN_DOMAIN and MAILGUN_FROM are required');

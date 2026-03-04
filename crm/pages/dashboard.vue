@@ -1,6 +1,20 @@
 <script setup lang="ts">
 import CrmShell from '~/components/composed/CrmShell.vue';
-const { appointments } = useCrmMockData();
+
+const crmApi = useCrmApi();
+const { data: appointments, pending } = await useAsyncData('dashboard-appointments', () =>
+  crmApi.listAppointments({ limit: 20 }),
+);
+
+const revenueCents = computed(() => {
+  const rows = appointments.value ?? [];
+  return rows.length * 4900;
+});
+
+const needsConfirmation = computed(() => {
+  const rows = appointments.value ?? [];
+  return rows.filter((item) => item.status === 'booked').length;
+});
 </script>
 
 <template>
@@ -8,13 +22,15 @@ const { appointments } = useCrmMockData();
     <section class="card">
       <span class="badge">Europe/Berlin</span>
       <h1 class="h1">Today dashboard</h1>
-      <p class="muted">6 appointments, 2 need confirmation.</p>
+      <p class="muted">
+        {{ appointments?.length ?? 0 }} appointments, {{ needsConfirmation }} need confirmation.
+      </p>
     </section>
 
     <section class="grid-3">
-      <article class="card"><strong>Booked</strong><p class="h1">18</p></article>
-      <article class="card"><strong>No-show risk</strong><p class="h1">3</p></article>
-      <article class="card"><strong>Revenue</strong><p class="h1">€1,240</p></article>
+      <article class="card"><strong>Booked</strong><p class="h1">{{ appointments?.length ?? 0 }}</p></article>
+      <article class="card"><strong>No-show risk</strong><p class="h1">{{ needsConfirmation }}</p></article>
+      <article class="card"><strong>Revenue</strong><p class="h1">€{{ (revenueCents / 100).toFixed(0) }}</p></article>
     </section>
 
     <section class="card">
@@ -23,12 +39,15 @@ const { appointments } = useCrmMockData();
         <button class="btn">Send reminder</button>
       </div>
       <table class="table">
-        <thead><tr><th>Time</th><th>Client</th><th>Service</th><th>Status</th></tr></thead>
+        <thead><tr><th>Time</th><th>Client ID</th><th>Service ID</th><th>Status</th></tr></thead>
         <tbody>
+          <tr v-if="pending">
+            <td colspan="4">Loading appointments...</td>
+          </tr>
           <tr v-for="item in appointments" :key="item.id">
-            <td>{{ item.time }}</td>
-            <td>{{ item.client }}</td>
-            <td>{{ item.service }}</td>
+            <td>{{ new Date(item.startsAtIso).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) }}</td>
+            <td>{{ item.clientId }}</td>
+            <td>{{ item.serviceId }}</td>
             <td>{{ item.status }}</td>
           </tr>
         </tbody>

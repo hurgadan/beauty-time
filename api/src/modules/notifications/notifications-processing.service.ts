@@ -2,6 +2,7 @@ import { URL } from 'node:url';
 
 import { NotificationLanguage } from '@contracts';
 import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { type Job, Queue, Worker } from 'bullmq';
 
 import { NotificationJobEntity } from './dao/notification-job.entity';
@@ -32,12 +33,13 @@ export class NotificationsProcessingService implements OnModuleInit, OnModuleDes
   private worker: Worker<NotificationQueueJobData> | null = null;
 
   public constructor(
+    private readonly configService: ConfigService,
     private readonly notificationsRepository: NotificationsRepository,
     private readonly providerRegistry: NotificationProviderRegistry,
   ) {}
 
   public async onModuleInit(): Promise<void> {
-    const redisUrl = process.env.REDIS_URL;
+    const redisUrl = this.configService.get<string>('notifications.redisUrl');
     if (!redisUrl) {
       this.logger.warn('REDIS_URL is not configured; BullMQ queue is disabled');
       return;
@@ -179,10 +181,13 @@ export class NotificationsProcessingService implements OnModuleInit, OnModuleDes
 
     try {
       const provider = this.providerRegistry.getProvider(job.channel);
+      const defaultLanguage = this.configService.get<NotificationLanguage>(
+        'notifications.defaultLanguage',
+      );
       await provider.send({
         tenantId: job.tenantId,
         recipient: job.recipient,
-        lang: resolveNotificationLanguage(job.payload.lang),
+        lang: resolveNotificationLanguage(job.payload.lang, defaultLanguage),
         template: job.template,
         payload: job.payload ?? {},
       });
@@ -249,7 +254,10 @@ function calculateRetryDelayMs(attempt: number): number {
   return baseMs * Math.pow(2, attempt - 1);
 }
 
-function resolveNotificationLanguage(value: unknown): NotificationLanguage {
+function resolveNotificationLanguage(
+  value: unknown,
+  defaultLanguage?: NotificationLanguage,
+): NotificationLanguage {
   if (value === NotificationLanguage.DE) {
     return NotificationLanguage.DE;
   }
@@ -257,8 +265,7 @@ function resolveNotificationLanguage(value: unknown): NotificationLanguage {
     return NotificationLanguage.EN;
   }
 
-  const defaultLang = process.env.DEFAULT_NOTIFICATION_LANG;
-  if (defaultLang === NotificationLanguage.DE) {
+  if (defaultLanguage === NotificationLanguage.DE) {
     return NotificationLanguage.DE;
   }
 

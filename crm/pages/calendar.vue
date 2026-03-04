@@ -1,5 +1,14 @@
 <script setup lang="ts">
 import CrmShell from '~/components/composed/CrmShell.vue';
+
+const crmApi = useCrmApi();
+const { data: appointments, pending } = await useAsyncData('calendar-appointments', () =>
+  crmApi.listAppointments({ limit: 30 }),
+);
+
+const sortedAppointments = computed(() =>
+  [...(appointments.value ?? [])].sort((a, b) => a.startsAtIso.localeCompare(b.startsAtIso)),
+);
 </script>
 
 <template>
@@ -10,16 +19,19 @@ import CrmShell from '~/components/composed/CrmShell.vue';
       <p class="muted">30-minute slots, service-level buffer handling.</p>
     </section>
 
-    <section class="card grid-2">
-      <article class="card">
-        <strong>09:00</strong>
-        <p>Lea M. · Cut + Styling</p>
-      </article>
-      <article class="card">
-        <strong>11:00</strong>
-        <p>Sofia L. · Pedicure Classic</p>
-        <span class="badge warn">Needs confirm</span>
-      </article>
+    <section class="card">
+      <p v-if="pending" class="muted">Loading schedule...</p>
+      <table v-else class="table">
+        <thead><tr><th>Start</th><th>End</th><th>Staff</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr v-for="item in sortedAppointments" :key="item.id">
+            <td>{{ new Date(item.startsAtIso).toLocaleString('de-DE') }}</td>
+            <td>{{ new Date(item.endsAtIso).toLocaleString('de-DE') }}</td>
+            <td>{{ item.staffId }}</td>
+            <td>{{ item.status }}</td>
+          </tr>
+        </tbody>
+      </table>
     </section>
   </CrmShell>
 </template>

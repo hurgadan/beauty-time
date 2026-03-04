@@ -211,7 +211,7 @@
 - напоминания уходят автоматически и снижают no-show.
 
 ### 11. Этап 11. Frontend CRM (Nuxt 4, desktop + mobile parity)
-1. [ ] Реализовать маршруты:
+1. [x] Реализовать маршруты:
 - `/login`;
 - `/dashboard`;
 - `/calendar`;
@@ -221,14 +221,14 @@
 - `/clients/:id`;
 - `/notifications`;
 - `/settings`.
-2. [ ] Реализовать модули CRM:
-- управление услугами;
-- управление мастерами и расписанием;
-- календарь с созданием/изменением записи;
-- клиентская карточка и история.
-3. [ ] Обеспечить functional parity desktop/mobile:
+2. [x] Реализовать модули CRM:
+- управление услугами (list/create/update/delete);
+- управление мастерами и расписанием (staff list/create/update/delete + working-hours/time-off управление);
+- календарь и записи (list/create/update status/cancel);
+- клиентская карточка и история (read-flow).
+3. [x] Обеспечить functional parity desktop/mobile:
 - на мобильной версии доступны те же ключевые сценарии, включая `Staff & Schedule`.
-4. [ ] Интегрировать `@beauty-time/crm-contracts` в composables/store/actions CRM.
+4. [x] Интегрировать `@beauty-time/crm-contracts` в composables/store/actions CRM.
 Результат этапа:
 - мастер может полноценно вести бизнес как с desktop, так и только с телефона.
 

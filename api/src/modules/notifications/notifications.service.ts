@@ -1,5 +1,6 @@
 import { NotificationLanguage } from '@contracts';
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 import { NotificationJobEntity } from './dao/notification-job.entity';
 import { NotificationChannel } from './enums/notification-channel.enum';
@@ -29,6 +30,7 @@ export interface ScheduleAppointmentNotificationsInput {
 @Injectable()
 export class NotificationsService {
   public constructor(
+    private readonly configService: ConfigService,
     private readonly notificationsRepository: NotificationsRepository,
     private readonly notificationsProcessingService: NotificationsProcessingService,
   ) {}
@@ -36,7 +38,10 @@ export class NotificationsService {
   public async scheduleNotification(
     input: ScheduleNotificationInput,
   ): Promise<NotificationJobEntity> {
-    const lang = input.lang ?? resolveNotificationLanguage(undefined);
+    const defaultLanguage = this.configService.get<NotificationLanguage>(
+      'notifications.defaultLanguage',
+    );
+    const lang = input.lang ?? resolveNotificationLanguage(undefined, defaultLanguage);
     const job = this.notificationsRepository.createNotificationJob({
       ...input,
       payload: {
@@ -54,7 +59,9 @@ export class NotificationsService {
     input: ScheduleAppointmentNotificationsInput,
   ): Promise<number> {
     const now = new Date();
-    const confirmUrl = `${trimTrailingSlash(process.env.PUBLIC_BOOKING_BASE_URL ?? '')}/book/appointments/${input.appointmentId}/confirm`;
+    const publicBookingBaseUrl =
+      this.configService.get<string>('notifications.publicBookingBaseUrl') ?? '';
+    const confirmUrl = `${trimTrailingSlash(publicBookingBaseUrl)}/book/appointments/${input.appointmentId}/confirm`;
 
     const jobs = [
       this.scheduleNotification({
@@ -149,7 +156,10 @@ function trimTrailingSlash(url: string): string {
   return url.endsWith('/') ? url.slice(0, -1) : url;
 }
 
-function resolveNotificationLanguage(value: unknown): NotificationLanguage {
+function resolveNotificationLanguage(
+  value: unknown,
+  defaultLanguage?: NotificationLanguage,
+): NotificationLanguage {
   if (value === NotificationLanguage.DE) {
     return NotificationLanguage.DE;
   }
@@ -157,8 +167,7 @@ function resolveNotificationLanguage(value: unknown): NotificationLanguage {
     return NotificationLanguage.EN;
   }
 
-  const defaultLang = process.env.DEFAULT_NOTIFICATION_LANG;
-  if (defaultLang === NotificationLanguage.DE) {
+  if (defaultLanguage === NotificationLanguage.DE) {
     return NotificationLanguage.DE;
   }
 

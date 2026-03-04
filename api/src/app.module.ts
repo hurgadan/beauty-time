@@ -6,19 +6,26 @@ import { NotificationsModule } from '@modules/notifications/notifications.module
 import { ServicesModule } from '@modules/services/services.module';
 import { StaffModule } from '@modules/staff/staff.module';
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { config } from './config/config';
 import { DB_ENTITIES } from './database/entities';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      url: process.env.DATABASE_URL,
-      entities: [...DB_ENTITIES],
-      synchronize: false,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [config],
+    }),
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        url: configService.get<string>('database.url'),
+        entities: [...DB_ENTITIES],
+        synchronize: false,
+      }),
     }),
     HealthModule,
     AuthModule,

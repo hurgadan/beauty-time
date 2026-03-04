@@ -5,21 +5,18 @@ const nav = [
   { to: '/dashboard', label: 'Dashboard' },
   { to: '/calendar', label: 'Calendar' },
   { to: '/appointments', label: 'Appointments' },
-  { to: '/clients/sofia-ludwig', label: 'Clients' },
+  { to: '/clients/a1234567-89ab-7def-8123-456789abc203', label: 'Clients' },
   { to: '/staff', label: 'Staff' },
   { to: '/services', label: 'Services' },
   { to: '/notifications', label: 'Notifications' },
   { to: '/settings', label: 'Settings' },
 ];
 
-const mobileNav = [
-  { to: '/dashboard', label: 'Today' },
-  { to: '/calendar', label: 'Calendar' },
-  { to: '/clients/sofia-ludwig', label: 'Clients' },
-  { to: '/settings', label: 'More' },
-];
-
 function isActive(path: string): boolean {
+  if (path.startsWith('/clients')) {
+    return route.path.startsWith('/clients');
+  }
+
   return route.path === path;
 }
 </script>
@@ -39,7 +36,7 @@ function isActive(path: string): boolean {
     <main class="main">
       <slot />
       <nav class="mobile-nav">
-        <NuxtLink v-for="item in mobileNav" :key="item.to" :to="item.to" :class="{ active: route.path.startsWith(item.to) }">
+        <NuxtLink v-for="item in nav" :key="item.to" :to="item.to" :class="{ active: isActive(item.to) }">
           {{ item.label }}
         </NuxtLink>
       </nav>

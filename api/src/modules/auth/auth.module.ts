@@ -1,4 +1,5 @@
 import { forwardRef, Module } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -18,9 +19,12 @@ import { TenantModule } from '../tenant/tenant.module';
     forwardRef(() => ClientsModule),
     NotificationsModule,
     TenantModule,
-    JwtModule.register({
-      secret: process.env.JWT_SECRET ?? 'dev-secret',
-      signOptions: { expiresIn: '12h' },
+    JwtModule.registerAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<string>('auth.jwtSecret') ?? 'dev-secret',
+        signOptions: { expiresIn: '12h' },
+      }),
     }),
   ],
   controllers: [CrmAuthController, PublicAuthController],
