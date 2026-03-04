@@ -2,46 +2,22 @@ import {
   ApiHttpClient,
   AuthApiClient,
   BookingApiClient,
+  ClientsApiClient,
 } from "@hurgadan/beauty-time-public-contracts";
 import type {
+  AnonymizeClientResponseDto,
   AvailabilityQueryDto,
   AvailabilitySlotDto,
   BookingConfigResponseDto,
   ConfirmAppointmentResponseDto,
   CreatePublicAppointmentDto,
   CreatePublicAppointmentResponseDto,
+  ExportClientDataResponseDto,
   SendMagicLinkDto,
   SendMagicLinkResponseDto,
   VerifyOtpDto,
   VerifyOtpResponseDto,
 } from "@hurgadan/beauty-time-public-contracts";
-
-export interface ExportPersonalDataResponse {
-  client: {
-    id: string;
-    tenantId: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string | null;
-    isReturningClient: boolean;
-  };
-  history: Array<{
-    appointmentId: string;
-    staffId: string;
-    serviceId: string;
-    startsAtIso: string;
-    endsAtIso: string;
-    status: string;
-    notes: string | null;
-  }>;
-  exportedAtIso: string;
-}
-
-export interface AnonymizePersonalDataResponse {
-  id: string;
-  anonymized: boolean;
-}
 
 export function useBookingApi(): {
   getBookingConfig: (tenantSlug: string) => Promise<BookingConfigResponseDto>;
@@ -63,14 +39,18 @@ export function useBookingApi(): {
   exportPersonalData: (
     accessToken: string,
     limit?: number,
-  ) => Promise<ExportPersonalDataResponse>;
+  ) => Promise<ExportClientDataResponseDto>;
   anonymizePersonalData: (
     accessToken: string,
-  ) => Promise<AnonymizePersonalDataResponse>;
+  ) => Promise<AnonymizeClientResponseDto>;
 } {
   const runtimeConfig = useRuntimeConfig();
 
-  function createClients(): { auth: AuthApiClient; booking: BookingApiClient } {
+  function createClients(): {
+    auth: AuthApiClient;
+    booking: BookingApiClient;
+    clients: ClientsApiClient;
+  } {
     const http = new ApiHttpClient({
       baseUrl: runtimeConfig.public.apiBaseUrl,
     });
@@ -78,6 +58,7 @@ export function useBookingApi(): {
     return {
       auth: new AuthApiClient(http),
       booking: new BookingApiClient(http),
+      clients: new ClientsApiClient(http),
     };
   }
 
@@ -124,38 +105,25 @@ export function useBookingApi(): {
     async exportPersonalData(
       accessToken: string,
       limit?: number,
-    ): Promise<ExportPersonalDataResponse> {
-      const params = new URLSearchParams();
-      if (limit !== undefined) {
-        params.set("limit", String(limit));
-      }
+    ): Promise<ExportClientDataResponseDto> {
+      const http = new ApiHttpClient({
+        baseUrl: runtimeConfig.public.apiBaseUrl,
+        accessToken,
+      });
 
-      const queryString = params.toString();
-      const path = queryString
-        ? `/api/public/me/personal-data-export?${queryString}`
-        : "/api/public/me/personal-data-export";
-
-      return await $fetch<ExportPersonalDataResponse>(path, {
-        baseURL: runtimeConfig.public.apiBaseUrl,
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+      return new ClientsApiClient(http).exportPersonalData({
+        ...(limit !== undefined ? { limit } : {}),
       });
     },
     async anonymizePersonalData(
       accessToken: string,
-    ): Promise<AnonymizePersonalDataResponse> {
-      return await $fetch<AnonymizePersonalDataResponse>(
-        "/api/public/me/personal-data",
-        {
-          baseURL: runtimeConfig.public.apiBaseUrl,
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
+    ): Promise<AnonymizeClientResponseDto> {
+      const http = new ApiHttpClient({
+        baseUrl: runtimeConfig.public.apiBaseUrl,
+        accessToken,
+      });
+
+      return new ClientsApiClient(http).anonymizePersonalData();
     },
   };
 }

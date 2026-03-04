@@ -24,9 +24,11 @@ Nuxt 4 CRM frontend for Beauty-Time.
 - `services`: list/create/update/delete;
 - `appointments`: list/create/update status/cancel;
 - `staff`: list/create/update/delete + working-hours replace + time-off create/delete;
-- `clients/:id`: profile + visit history.
+- `clients/:id`: profile + visit history + GDPR export/anonymize actions.
 4. Mobile parity:
 - mobile navigation contains all CRM sections (not reduced subset), so feature access matches desktop.
+5. Contracts coverage:
+- `useCrmApi` exposes `exportClientData` and `anonymizeClientData` using `CrmApiClient` from contracts package (no manual fetch).
 
 ## Contracts wiring
 1. `@hurgadan/beauty-time-crm-contracts` is installed as npm dependency from GitHub Packages.
