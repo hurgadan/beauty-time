@@ -298,6 +298,7 @@ E2E conventions:
   - `src/modules/<module>/tests/*.e2e-spec.ts`
   - public booking flow: `src/modules/booking/tests/public-booking.e2e-spec.ts`
   - public auth flow: `src/modules/auth/tests/public-auth.e2e-spec.ts`
+  - CRM client-card smoke flow: `src/modules/clients/tests/crm-client-card-smoke.e2e-spec.ts`
   - notifications API: `src/modules/notifications/tests/notifications.e2e-spec.ts`
 - Unit test specs are module-local:
   - `src/modules/<module>/tests/*.spec.ts`

@@ -14,6 +14,50 @@ const { data: history, pending: pendingHistory } = await useAsyncData(
   () => `client-history-${clientId.value}`,
   () => crmApi.getClientHistory(clientId.value, 20),
 );
+
+const exporting = ref(false);
+const anonymizing = ref(false);
+const actionMessage = ref("");
+const actionError = ref("");
+
+async function exportClientData(): Promise<void> {
+  exporting.value = true;
+  actionMessage.value = "";
+  actionError.value = "";
+
+  try {
+    const exported = await crmApi.exportClientData(clientId.value, 100);
+    actionMessage.value = `Exported ${exported.history.length} history records.`;
+  } catch {
+    actionError.value = "Failed to export client data.";
+  } finally {
+    exporting.value = false;
+  }
+}
+
+async function anonymizeClientData(): Promise<void> {
+  const proceed = window.confirm(
+    "Anonymize personal data for this client? This action cannot be undone.",
+  );
+  if (!proceed) {
+    return;
+  }
+
+  anonymizing.value = true;
+  actionMessage.value = "";
+  actionError.value = "";
+
+  try {
+    await crmApi.anonymizeClientData(clientId.value);
+    actionMessage.value = "Client personal data has been anonymized.";
+    await refreshNuxtData(`client-${clientId.value}`);
+    await refreshNuxtData(`client-history-${clientId.value}`);
+  } catch {
+    actionError.value = "Failed to anonymize client data.";
+  } finally {
+    anonymizing.value = false;
+  }
+}
 </script>
 
 <template>
@@ -24,6 +68,16 @@ const { data: history, pending: pendingHistory } = await useAsyncData(
       </span>
       <h1 class="h1">Client: {{ client?.firstName }} {{ client?.lastName }}</h1>
       <p class="muted">Verified with magic link + OTP.</p>
+      <div class="btn-row" style="margin-top: 10px">
+        <button class="btn" :disabled="exporting" @click="exportClientData">
+          {{ exporting ? "Exporting..." : "Export GDPR data" }}
+        </button>
+        <button class="btn" :disabled="anonymizing" @click="anonymizeClientData">
+          {{ anonymizing ? "Anonymizing..." : "Anonymize personal data" }}
+        </button>
+      </div>
+      <p v-if="actionMessage" class="badge ok" style="margin-top: 10px">{{ actionMessage }}</p>
+      <p v-if="actionError" class="badge warn" style="margin-top: 10px">{{ actionError }}</p>
     </section>
 
     <section class="card grid-2">

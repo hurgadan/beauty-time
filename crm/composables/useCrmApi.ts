@@ -3,6 +3,7 @@ import {
   CrmApiClient,
 } from "@hurgadan/beauty-time-crm-contracts";
 import type {
+  AnonymizeClientResponseDto,
   AppointmentDto,
   Client,
   ClientHistoryItemDto,
@@ -11,6 +12,7 @@ import type {
   CreateServiceDto,
   CreateStaffDto,
   CreateTimeOffDto,
+  ExportClientDataResponseDto,
   ListAppointmentsDto,
   ListClientsDto,
   ListStaffDto,
@@ -67,6 +69,11 @@ export function useCrmApi(): {
     id: string,
     limit?: number,
   ) => Promise<ClientHistoryItemDto[]>;
+  exportClientData: (
+    id: string,
+    limit?: number,
+  ) => Promise<ExportClientDataResponseDto>;
+  anonymizeClientData: (id: string) => Promise<AnonymizeClientResponseDto>;
   hasToken: () => boolean;
 } {
   const config = useRuntimeConfig();
@@ -169,6 +176,15 @@ export function useCrmApi(): {
       limit?: number,
     ): Promise<ClientHistoryItemDto[]> {
       return client().getClientHistory(id, limit);
+    },
+    async exportClientData(
+      id: string,
+      limit?: number,
+    ): Promise<ExportClientDataResponseDto> {
+      return client().exportClientData(id, limit);
+    },
+    async anonymizeClientData(id: string): Promise<AnonymizeClientResponseDto> {
+      return client().anonymizeClientData(id);
     },
     hasToken(): boolean {
       return Boolean(token.value);
