@@ -146,8 +146,8 @@
 
 - Контракты хранятся в `api/src/contracts`.
 - Контракты разделены на 2 пакетных entrypoint'а:
-  - `api/src/contracts/public/index.ts` (`@beauty-time/public-contracts`);
-  - `api/src/contracts/crm/index.ts` (`@beauty-time/crm-contracts`).
+  - `api/src/contracts/public/index.ts` (`@hurgadan/beauty-time-public-contracts`);
+  - `api/src/contracts/crm/index.ts` (`@hurgadan/beauty-time-crm-contracts`).
 - Типы организованы по модулям: `src/contracts/types/<module>`.
 - Каждый тип хранится в отдельном файле `*.type.ts`.
 - API-клиенты разделены по пакетам:

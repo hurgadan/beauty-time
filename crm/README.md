@@ -15,7 +15,7 @@ Nuxt 4 CRM frontend for Beauty-Time.
 
 ## Current CRM implementation status
 1. Integrated API layer:
-- composable `useCrmApi` uses `@beauty-time/crm-contracts` client and types;
+- composable `useCrmApi` uses `@hurgadan/beauty-time-crm-contracts` client and types;
 - auth login writes JWT into `crm_access_token` cookie;
 - page data loads through contracts client with safe fallback to local demo data.
 2. Connected screens:
@@ -29,11 +29,11 @@ Nuxt 4 CRM frontend for Beauty-Time.
 - mobile navigation contains all CRM sections (not reduced subset), so feature access matches desktop.
 
 ## Contracts wiring
-1. `@beauty-time/crm-contracts` is installed as npm dependency from GitHub Packages.
+1. `@hurgadan/beauty-time-crm-contracts` is installed as npm dependency from GitHub Packages.
 2. API base URL is configurable via runtime env:
 - `NUXT_PUBLIC_API_BASE_URL` (default: `http://localhost:4000`)
 3. Local/CI install requires npm auth for GitHub Packages (`NODE_AUTH_TOKEN`).
-4. Scope registry is configured in `.npmrc` (`@beauty-time -> npm.pkg.github.com`).
+4. Scope registry is configured in `.npmrc` (`@hurgadan -> npm.pkg.github.com`).
 
 ## Local run
 1. Install dependencies:

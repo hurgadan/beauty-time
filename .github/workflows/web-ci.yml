@@ -27,9 +27,13 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: web/package-lock.json
+          registry-url: https://npm.pkg.github.com
+          scope: '@hurgadan'
 
       - name: Install
         run: npm install
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Lint
         run: npm run lint

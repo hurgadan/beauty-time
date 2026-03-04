@@ -25,8 +25,8 @@ cd ../web && npm run dev
 ## 3) Immediate implementation priorities
 
 1. Wire CRM and Booking pages to package-specific client methods:
-- CRM -> `@beauty-time/crm-contracts`;
-- Booking -> `@beauty-time/public-contracts`.
+- CRM -> `@hurgadan/beauty-time-crm-contracts`;
+- Booking -> `@hurgadan/beauty-time-public-contracts`.
 2. Replace mock data in `crm` and `web` with real API calls.
 3. Finish Booking API stage (`/book/:tenantSlug/config`, availability query, create/confirm appointment).
 4. Complete client auth flow (`send-magic-link`, `verify-otp`) and connect to booking frontend.
@@ -41,8 +41,8 @@ cd ../web && npm run dev
   - `src/contracts/public/clients`;
   - `src/contracts/crm/clients`;
 - package entrypoint'ы разделены:
-  - `src/contracts/public` -> `@beauty-time/public-contracts`;
-  - `src/contracts/crm` -> `@beauty-time/crm-contracts`.
+  - `src/contracts/public` -> `@hurgadan/beauty-time-public-contracts`;
+  - `src/contracts/crm` -> `@hurgadan/beauty-time-crm-contracts`.
 2. DTO:
 - DTO classes live in module `dto` folders;
 - request DTOs use `class-validator`;

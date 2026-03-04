@@ -1,5 +1,5 @@
 {
-  "name": "@beauty-time/public-contracts",
+  "name": "@hurgadan/beauty-time-public-contracts",
   "version": "0.1.0",
   "description": "Public booking/auth contracts and API client for beauty-time",
   "private": false,

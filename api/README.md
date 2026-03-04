@@ -13,8 +13,8 @@ NestJS + TypeORM backend for Beauty-Time.
 
 ## Contracts
 Contracts are defined in `src/contracts` and are split into two publishable packages:
-- `@beauty-time/public-contracts`
-- `@beauty-time/crm-contracts`
+- `@hurgadan/beauty-time-public-contracts`
+- `@hurgadan/beauty-time-crm-contracts`
 
 ### Contracts conventions
 1. Location:
@@ -37,19 +37,26 @@ Contracts are defined in `src/contracts` and are split into two publishable pack
 5. DTO integration:
 - request/response DTO classes in modules implement corresponding contracts from `@contracts`.
 6. Package boundaries:
-- `@beauty-time/public-contracts` exports only public clients and public-required domain types;
-- `@beauty-time/crm-contracts` exports only CRM clients and CRM-required domain types.
+- `@hurgadan/beauty-time-public-contracts` exports only public clients and public-required domain types;
+- `@hurgadan/beauty-time-crm-contracts` exports only CRM clients and CRM-required domain types.
 
 ### Contracts publish workflow
 1. GitHub Actions workflow:
-- `.github/workflows/contracts-publish.yml`
-2. Trigger:
-- manual (`workflow_dispatch`) or push tag matching `contracts-v*`.
-3. Behavior:
-- builds both packages (`public` and `crm`);
-- publishes both to GitHub Packages using `GITHUB_TOKEN`.
-4. Requirement:
-- package versions in `src/contracts/public/package.json` and `src/contracts/crm/package.json` must be bumped before next publish.
+- `.github/workflows/api-ci.yml`
+2. Stages:
+- `quality`: lint + build + tests (+ e2e smoke when configured);
+- `contracts-build`: builds `public` and `crm` contracts packages;
+- `contracts-publish`: publishes both packages to GitHub Packages.
+3. Publish condition:
+- runs only on `push` to `main` after successful previous stages.
+4. Versioning automation:
+- before publish, workflow runs `.github/scripts/bump-contracts-version.sh`;
+- script bumps both package versions together:
+  - `feat:` in last commit message -> `MINOR`;
+  - `fix:` or any other commit type -> `PATCH`;
+- script commits bumped versions, pushes tag `contracts-v<version>`, then publishes packages.
+5. Requirement:
+- contract package versions are auto-bumped by CI; both packages must always stay aligned.
 
 ## Data access architecture
 1. Layering:

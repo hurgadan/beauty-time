@@ -137,8 +137,8 @@ Feedback and state:
 ## 6) API Contract Integration (frontend)
 
 Use npm packages from backend CI:
-- `@beauty-time/crm-contracts` (для CRM фронта)
-- `@beauty-time/public-contracts` (для booking фронта)
+- `@hurgadan/beauty-time-crm-contracts` (для CRM фронта)
+- `@hurgadan/beauty-time-public-contracts` (для booking фронта)
 
 Required endpoint groups for first frontend milestone:
 

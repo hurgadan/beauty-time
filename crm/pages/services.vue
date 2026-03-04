@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import CrmShell from '~/components/composed/CrmShell.vue';
-import type { CreateServiceDto, Service, UpdateServiceDto } from '@beauty-time/crm-contracts';
+import type { CreateServiceDto, Service, UpdateServiceDto } from '@hurgadan/beauty-time-crm-contracts';
 
 const crmApi = useCrmApi();
 const { data: services, pending, refresh } = await useAsyncData('services-list', () => crmApi.listServices());

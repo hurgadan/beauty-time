@@ -1,4 +1,7 @@
-import { ApiHttpClient, CrmApiClient } from "@beauty-time/crm-contracts";
+import {
+  ApiHttpClient,
+  CrmApiClient,
+} from "@hurgadan/beauty-time-crm-contracts";
 import type {
   AppointmentDto,
   Client,
@@ -21,7 +24,7 @@ import type {
   UpdateStaffDto,
   UpsertWorkingHoursDto,
   WorkingHoursItemDto,
-} from "@beauty-time/crm-contracts";
+} from "@hurgadan/beauty-time-crm-contracts";
 
 export function useCrmApi(): {
   staffLogin: (payload: StaffLoginDto) => Promise<StaffLoginResponseDto>;

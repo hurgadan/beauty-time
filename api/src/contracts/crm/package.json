@@ -1,5 +1,5 @@
 {
-  "name": "@beauty-time/crm-contracts",
+  "name": "@hurgadan/beauty-time-crm-contracts",
   "version": "0.1.0",
   "description": "CRM contracts and API client for beauty-time",
   "private": false,

@@ -12,6 +12,11 @@ Nuxt 4 booking frontend for Beauty-Time.
 - `/book/:slug/success`
 - `/book/confirm/:token`
 
+## Contracts wiring
+1. `@hurgadan/beauty-time-public-contracts` is installed as npm dependency from GitHub Packages.
+2. Local/CI install requires npm auth for GitHub Packages (`NODE_AUTH_TOKEN`).
+3. Scope registry is configured in `.npmrc` (`@hurgadan -> npm.pkg.github.com`).
+
 ## Local run
 1. Install dependencies:
 - `npm install`

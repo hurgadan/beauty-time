@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import CrmShell from '~/components/composed/CrmShell.vue';
-import { AppointmentStatus } from '@beauty-time/crm-contracts';
+import { AppointmentStatus } from '@hurgadan/beauty-time-crm-contracts';
 
 const crmApi = useCrmApi();
 const { data: appointments, pending, refresh } = await useAsyncData('appointments-list', () =>

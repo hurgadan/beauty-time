@@ -156,7 +156,7 @@
 - CRM-контроллеры стандартизированы с префиксом `crm-` в имени файла (`crm-services.controller.ts`, `crm-staff.controller.ts`, `crm-clients.controller.ts`, `crm-booking-appointments.controller.ts`).
 12. [x] Разделить контракты и API-клиенты на public/crm пакеты:
 - добавлены entrypoint'ы `src/contracts/public/index.ts` и `src/contracts/crm/index.ts`;
-- добавлены пакетные конфиги `@beauty-time/public-contracts` и `@beauty-time/crm-contracts`;
+- добавлены пакетные конфиги `@hurgadan/beauty-time-public-contracts` и `@hurgadan/beauty-time-crm-contracts`;
 - CI собирает оба пакетных артефакта независимо;
 - клиенты разделены по зонам (`src/contracts/public/clients`, `src/contracts/crm/clients`) с общим `ApiHttpClient`;
 - контракты очищены от `types/crm` и `api-client`-envelope слоев, используются прямые доменные типы по модулям.
@@ -228,7 +228,7 @@
 - клиентская карточка и история (read-flow).
 3. [x] Обеспечить functional parity desktop/mobile:
 - на мобильной версии доступны те же ключевые сценарии, включая `Staff & Schedule`.
-4. [x] Интегрировать `@beauty-time/crm-contracts` в composables/store/actions CRM.
+4. [x] Интегрировать `@hurgadan/beauty-time-crm-contracts` в composables/store/actions CRM.
 Результат этапа:
 - мастер может полноценно вести бизнес как с desktop, так и только с телефона.
 
@@ -249,7 +249,7 @@
 3. [ ] Оптимизировать публичную часть:
 - минимальный JS;
 - быстрая загрузка на мобильной сети.
-4. [ ] Интегрировать `@beauty-time/public-contracts` в composables/store/actions booking frontend.
+4. [ ] Интегрировать `@hurgadan/beauty-time-public-contracts` в composables/store/actions booking frontend.
 Результат этапа:
 - клиент может записаться и подтвердить визит за 1-2 минуты.
 

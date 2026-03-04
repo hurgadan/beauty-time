@@ -1,4 +1,4 @@
-import { AppointmentStatus } from "@beauty-time/crm-contracts";
+import { AppointmentStatus } from "@hurgadan/beauty-time-crm-contracts";
 import type {
   AppointmentDto,
   Client,
@@ -6,7 +6,7 @@ import type {
   ClientListItemDto,
   Service,
   StaffItemDto,
-} from "@beauty-time/crm-contracts";
+} from "@hurgadan/beauty-time-crm-contracts";
 
 const tenantId = "a1234567-89ab-7def-8123-456789abcdef";
 

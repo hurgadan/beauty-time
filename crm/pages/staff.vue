@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import CrmShell from '~/components/composed/CrmShell.vue';
-import type { StaffItemDto, UpdateStaffDto } from '@beauty-time/crm-contracts';
+import type { StaffItemDto, UpdateStaffDto } from '@hurgadan/beauty-time-crm-contracts';
 
 const crmApi = useCrmApi();
 const { data: staff, pending, refresh } = await useAsyncData('staff-list', () => crmApi.listStaff({ limit: 50 }));
