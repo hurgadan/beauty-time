@@ -99,7 +99,7 @@ jobs:
           cache-dependency-path: api/package-lock.json
 
       - name: Bump contracts version
-        run: ../.github/scripts/bump-contracts-version.sh
+        run: ./.github/scripts/bump-contracts-version.sh
         working-directory: .
 
       - name: Install
