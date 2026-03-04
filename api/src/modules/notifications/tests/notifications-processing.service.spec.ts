@@ -1,3 +1,5 @@
+import { ConfigService } from '@nestjs/config';
+
 import { NotificationJobEntity } from '../dao/notification-job.entity';
 import { NotificationChannel } from '../enums/notification-channel.enum';
 import { NotificationJobStatus } from '../enums/notification-job-status.enum';
@@ -10,6 +12,7 @@ type NotificationsRepositoryMock = Partial<Record<keyof NotificationsRepository,
 type NotificationProviderRegistryMock = Partial<
   Record<keyof NotificationProviderRegistry, jest.Mock>
 >;
+type ConfigServiceMock = Partial<Record<keyof ConfigService, jest.Mock>>;
 
 function createNotificationsRepositoryMock(): NotificationsRepositoryMock {
   return {
@@ -26,16 +29,31 @@ function createNotificationProviderRegistryMock(): NotificationProviderRegistryM
   };
 }
 
+function createConfigServiceMock(): ConfigServiceMock {
+  return {
+    get: jest.fn().mockImplementation((key: string) => {
+      if (key === 'notifications.defaultLanguage') {
+        return 'en';
+      }
+
+      return undefined;
+    }),
+  };
+}
+
 describe('NotificationsProcessingService', () => {
   let service: NotificationsProcessingService;
   let notificationsRepository: NotificationsRepositoryMock;
   let providerRegistry: NotificationProviderRegistryMock;
+  let configService: ConfigServiceMock;
 
   beforeEach(() => {
     notificationsRepository = createNotificationsRepositoryMock();
     providerRegistry = createNotificationProviderRegistryMock();
+    configService = createConfigServiceMock();
 
     service = new NotificationsProcessingService(
+      configService as unknown as ConfigService,
       notificationsRepository as unknown as NotificationsRepository,
       providerRegistry as unknown as NotificationProviderRegistry,
     );
