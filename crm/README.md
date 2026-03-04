@@ -29,10 +29,11 @@ Nuxt 4 CRM frontend for Beauty-Time.
 - mobile navigation contains all CRM sections (not reduced subset), so feature access matches desktop.
 
 ## Contracts wiring
-1. `@beauty-time/crm-contracts` is aliased in `nuxt.config.ts` to local source:
-- `../api/src/contracts/crm/index.ts`
+1. `@beauty-time/crm-contracts` is installed as npm dependency from GitHub Packages.
 2. API base URL is configurable via runtime env:
 - `NUXT_PUBLIC_API_BASE_URL` (default: `http://localhost:4000`)
+3. Local/CI install requires npm auth for GitHub Packages (`NODE_AUTH_TOKEN`).
+4. Scope registry is configured in `.npmrc` (`@beauty-time -> npm.pkg.github.com`).
 
 ## Local run
 1. Install dependencies:

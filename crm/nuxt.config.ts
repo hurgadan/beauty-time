@@ -1,16 +1,7 @@
-import { fileURLToPath } from "node:url";
-
 import { defineNuxtConfig } from "nuxt/config";
-
-const crmContractsPath = fileURLToPath(
-  new URL("../api/src/contracts/crm/index.ts", import.meta.url),
-);
 
 export default defineNuxtConfig({
   css: ["~/assets/css/main.css"],
-  alias: {
-    "@beauty-time/crm-contracts": crmContractsPath,
-  },
   runtimeConfig: {
     public: {
       apiBaseUrl:
@@ -23,13 +14,6 @@ export default defineNuxtConfig({
       meta: [
         { name: "viewport", content: "width=device-width, initial-scale=1" },
       ],
-    },
-  },
-  vite: {
-    server: {
-      fs: {
-        allow: [".."],
-      },
     },
   },
   compatibilityDate: "2026-02-27",

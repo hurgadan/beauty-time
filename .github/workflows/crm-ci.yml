@@ -27,9 +27,13 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: crm/package-lock.json
+          registry-url: https://npm.pkg.github.com
+          scope: '@beauty-time'
 
       - name: Install
         run: npm install
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Lint
         run: npm run lint

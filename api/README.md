@@ -40,6 +40,17 @@ Contracts are defined in `src/contracts` and are split into two publishable pack
 - `@beauty-time/public-contracts` exports only public clients and public-required domain types;
 - `@beauty-time/crm-contracts` exports only CRM clients and CRM-required domain types.
 
+### Contracts publish workflow
+1. GitHub Actions workflow:
+- `.github/workflows/contracts-publish.yml`
+2. Trigger:
+- manual (`workflow_dispatch`) or push tag matching `contracts-v*`.
+3. Behavior:
+- builds both packages (`public` and `crm`);
+- publishes both to GitHub Packages using `GITHUB_TOKEN`.
+4. Requirement:
+- package versions in `src/contracts/public/package.json` and `src/contracts/crm/package.json` must be bumped before next publish.
+
 ## Data access architecture
 1. Layering:
 - `controller -> service -> repository`.
