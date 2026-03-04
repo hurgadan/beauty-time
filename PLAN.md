@@ -233,7 +233,7 @@
 - мастер может полноценно вести бизнес как с desktop, так и только с телефона.
 
 ### 12. Этап 12. Frontend Booking (Nuxt 4)
-1. [ ] Реализовать пошаговый сценарий:
+1. [x] Реализовать пошаговый сценарий:
 - landing;
 - service;
 - specialist;
@@ -242,14 +242,14 @@
 - OTP;
 - success;
 - reminder confirm.
-2. [ ] Реализовать edge states:
+2. [x] Реализовать edge states:
 - нет доступных слотов;
 - OTP просрочен;
 - повторная отправка OTP.
 3. [ ] Оптимизировать публичную часть:
 - минимальный JS;
 - быстрая загрузка на мобильной сети.
-4. [ ] Интегрировать `@hurgadan/beauty-time-public-contracts` в composables/store/actions booking frontend.
+4. [x] Интегрировать `@hurgadan/beauty-time-public-contracts` в composables/store/actions booking frontend.
 Результат этапа:
 - клиент может записаться и подтвердить визит за 1-2 минуты.
 

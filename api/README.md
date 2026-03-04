@@ -108,7 +108,7 @@ Applied examples:
 - `POST /api/book/:tenantSlug/appointments`
 - `POST /api/book/appointments/:id/confirm`
 Public booking behavior (MVP):
-- booking config is resolved by tenant `slug` and returns tenant timezone;
+- booking config is resolved by tenant `slug` and returns tenant timezone + public catalog (`services`, `staff`);
 - availability is calculated from working hours + time-off + existing appointments + service duration/buffers;
 - slot step is 30 minutes;
 - public appointment creation auto-deduplicates client by `tenant+email` and creates client on first visit;

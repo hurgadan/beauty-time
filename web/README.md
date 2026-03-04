@@ -12,6 +12,20 @@ Nuxt 4 booking frontend for Beauty-Time.
 - `/book/:slug/success`
 - `/book/confirm/:token`
 
+## Current booking implementation status
+1. Public contracts integration:
+- composable `useBookingApi` uses `@hurgadan/beauty-time-public-contracts` clients/types;
+- uses API endpoints for booking config, availability query, create appointment, OTP send/verify, reminder confirmation.
+2. Booking flow state:
+- centralized multi-step state in `useBookingFlowState` (`service/staff/slot/contact/otp/appointmentId`);
+- service/staff catalog is loaded from backend `GET /api/book/:tenantSlug/config`.
+3. Implemented edge states:
+- no slots available (`/datetime?state=no-slots`);
+- OTP expired (`/verify?state=otp-expired`);
+- OTP resend action on verify step.
+4. Runtime API config:
+- `NUXT_PUBLIC_API_BASE_URL` (default: `http://localhost:4000`).
+
 ## Contracts wiring
 1. `@hurgadan/beauty-time-public-contracts` is installed as npm dependency from GitHub Packages.
 2. Local/CI install requires npm auth for GitHub Packages (`NODE_AUTH_TOKEN`).

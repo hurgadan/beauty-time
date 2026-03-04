@@ -73,7 +73,6 @@ export function useCrmApi(): {
   const token = useCookie<string | null>("crm_access_token", {
     sameSite: "lax",
   });
-  const fallback = useCrmFallbackData();
 
   function client(): CrmApiClient {
     return new CrmApiClient(
@@ -84,70 +83,17 @@ export function useCrmApi(): {
     );
   }
 
-  async function safeListAppointments(
-    payload: ListAppointmentsDto = {},
-  ): Promise<AppointmentDto[]> {
-    try {
-      return await client().listAppointments(payload);
-    } catch {
-      return fallback.appointments;
-    }
-  }
-
-  async function safeListServices(): Promise<Service[]> {
-    try {
-      return await client().listServices();
-    } catch {
-      return fallback.services;
-    }
-  }
-
-  async function safeListStaff(
-    payload: ListStaffDto = {},
-  ): Promise<StaffItemDto[]> {
-    try {
-      return await client().listStaff(payload);
-    } catch {
-      return fallback.staff;
-    }
-  }
-
-  async function safeListClients(
-    payload: ListClientsDto = {},
-  ): Promise<ClientListItemDto[]> {
-    try {
-      return await client().listClients(payload);
-    } catch {
-      return fallback.clients;
-    }
-  }
-
-  async function safeGetClient(id: string): Promise<Client> {
-    try {
-      return await client().getClient(id);
-    } catch {
-      return fallback.getClientById(id);
-    }
-  }
-
-  async function safeGetClientHistory(
-    id: string,
-    limit?: number,
-  ): Promise<ClientHistoryItemDto[]> {
-    try {
-      return await client().getClientHistory(id, limit);
-    } catch {
-      return fallback.clientHistory;
-    }
-  }
-
   return {
     async staffLogin(payload: StaffLoginDto): Promise<StaffLoginResponseDto> {
       const response = await client().staffLogin(payload);
       token.value = response.accessToken;
       return response;
     },
-    listAppointments: safeListAppointments,
+    async listAppointments(
+      payload: ListAppointmentsDto = {},
+    ): Promise<AppointmentDto[]> {
+      return client().listAppointments(payload);
+    },
     async createAppointment(
       payload: CreateAppointmentDto,
     ): Promise<AppointmentDto> {
@@ -159,7 +105,9 @@ export function useCrmApi(): {
     ): Promise<AppointmentDto> {
       return client().updateAppointment(appointmentId, payload);
     },
-    listServices: safeListServices,
+    async listServices(): Promise<Service[]> {
+      return client().listServices();
+    },
     async createService(payload: CreateServiceDto): Promise<Service> {
       return client().createService(payload);
     },
@@ -172,7 +120,9 @@ export function useCrmApi(): {
     async deleteService(serviceId: string): Promise<void> {
       await client().deleteService(serviceId);
     },
-    listStaff: safeListStaff,
+    async listStaff(payload: ListStaffDto = {}): Promise<StaffItemDto[]> {
+      return client().listStaff(payload);
+    },
     async createStaff(payload: CreateStaffDto): Promise<StaffItemDto> {
       return client().createStaff(payload);
     },
@@ -206,9 +156,20 @@ export function useCrmApi(): {
     async deleteTimeOff(staffId: string, timeOffId: string): Promise<void> {
       await client().deleteTimeOff(staffId, timeOffId);
     },
-    listClients: safeListClients,
-    getClient: safeGetClient,
-    getClientHistory: safeGetClientHistory,
+    async listClients(
+      payload: ListClientsDto = {},
+    ): Promise<ClientListItemDto[]> {
+      return client().listClients(payload);
+    },
+    async getClient(id: string): Promise<Client> {
+      return client().getClient(id);
+    },
+    async getClientHistory(
+      id: string,
+      limit?: number,
+    ): Promise<ClientHistoryItemDto[]> {
+      return client().getClientHistory(id, limit);
+    },
     hasToken(): boolean {
       return Boolean(token.value);
     },
