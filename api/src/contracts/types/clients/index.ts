@@ -5,3 +5,6 @@ export * from './client-history-item.type';
 export * from './list-clients.type';
 export * from './get-client.type';
 export * from './get-client-history.type';
+export * from './export-client-data.type';
+export * from './export-client-data-response.type';
+export * from './anonymize-client-response.type';

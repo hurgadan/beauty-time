@@ -8,6 +8,7 @@ import { BookingService } from './booking.service';
 import { CrmBookingAppointmentsController } from './crm-booking-appointments.controller';
 import { AppointmentEntity } from './dao/appointment.entity';
 import { PublicBookingController } from './public-booking.controller';
+import { AuditModule } from '../audit/audit.module';
 import { AuthModule } from '../auth/auth.module';
 import { ClientsModule } from '../clients/clients.module';
 import { NotificationsModule } from '../notifications/notifications.module';
@@ -18,6 +19,7 @@ import { TenantModule } from '../tenant/tenant.module';
 @Module({
   imports: [
     AuthModule,
+    AuditModule,
     ClientsModule,
     NotificationsModule,
     ServicesModule,

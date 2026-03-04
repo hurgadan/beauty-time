@@ -8,6 +8,12 @@ export default defineNuxtConfig({
         process.env.NUXT_PUBLIC_API_BASE_URL ?? "http://localhost:4000",
     },
   },
+  experimental: {
+    payloadExtraction: true,
+  },
+  nitro: {
+    compressPublicAssets: true,
+  },
   app: {
     head: {
       title: "Beauty-Time Booking",

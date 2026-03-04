@@ -16,6 +16,33 @@ import type {
   VerifyOtpResponseDto,
 } from "@hurgadan/beauty-time-public-contracts";
 
+export interface ExportPersonalDataResponse {
+  client: {
+    id: string;
+    tenantId: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string | null;
+    isReturningClient: boolean;
+  };
+  history: Array<{
+    appointmentId: string;
+    staffId: string;
+    serviceId: string;
+    startsAtIso: string;
+    endsAtIso: string;
+    status: string;
+    notes: string | null;
+  }>;
+  exportedAtIso: string;
+}
+
+export interface AnonymizePersonalDataResponse {
+  id: string;
+  anonymized: boolean;
+}
+
 export function useBookingApi(): {
   getBookingConfig: (tenantSlug: string) => Promise<BookingConfigResponseDto>;
   queryAvailability: (
@@ -33,6 +60,13 @@ export function useBookingApi(): {
   confirmAppointment: (
     appointmentId: string,
   ) => Promise<ConfirmAppointmentResponseDto>;
+  exportPersonalData: (
+    accessToken: string,
+    limit?: number,
+  ) => Promise<ExportPersonalDataResponse>;
+  anonymizePersonalData: (
+    accessToken: string,
+  ) => Promise<AnonymizePersonalDataResponse>;
 } {
   const runtimeConfig = useRuntimeConfig();
 
@@ -86,6 +120,42 @@ export function useBookingApi(): {
       return createClients().booking.confirmAppointment({
         id: appointmentId,
       });
+    },
+    async exportPersonalData(
+      accessToken: string,
+      limit?: number,
+    ): Promise<ExportPersonalDataResponse> {
+      const params = new URLSearchParams();
+      if (limit !== undefined) {
+        params.set("limit", String(limit));
+      }
+
+      const queryString = params.toString();
+      const path = queryString
+        ? `/api/public/me/personal-data-export?${queryString}`
+        : "/api/public/me/personal-data-export";
+
+      return await $fetch<ExportPersonalDataResponse>(path, {
+        baseURL: runtimeConfig.public.apiBaseUrl,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+    },
+    async anonymizePersonalData(
+      accessToken: string,
+    ): Promise<AnonymizePersonalDataResponse> {
+      return await $fetch<AnonymizePersonalDataResponse>(
+        "/api/public/me/personal-data",
+        {
+          baseURL: runtimeConfig.public.apiBaseUrl,
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
     },
   };
 }

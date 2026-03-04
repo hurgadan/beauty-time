@@ -62,6 +62,8 @@ async function verifyAndCreate(): Promise<void> {
       return;
     }
 
+    flow.value.clientToken = verifyResult.token;
+
     const appointment = await bookingApi.createPublicAppointment(slug, {
       clientName: flow.value.clientName,
       clientEmail: flow.value.clientEmail,

@@ -62,6 +62,7 @@ Design source of truth:
 - `booking-step-08-reminder-confirm.html`
 - `booking-step-09-no-slots.html`
 - `booking-step-10-otp-expired.html`
+- `booking-privacy-data-request.html`
 
 ## 4) Route Map for Nuxt 4 Implementation
 
@@ -105,10 +106,15 @@ Functional parity checklist (desktop vs mobile):
 - `/book/:slug/verify` -> step 6 OTP
 - `/book/:slug/success` -> step 7
 - `/book/confirm/:token` -> step 8 reminder confirmation
+- `/privacy/data-request` -> privacy/GDPR self-service page
 
 Edge states as route-level states or in-page states:
 - no slots
 - OTP expired
+
+Privacy/GDPR entry rule:
+- footer link `Privacy / GDPR request` must be present on all public booking pages and point to `/privacy/data-request`;
+- do not add extra GDPR entry points in booking steps; footer is the single global entry.
 
 ## 5) Component Checklist (must be reusable)
 
@@ -159,6 +165,8 @@ Booking:
 - `POST /book/:tenantSlug/availability/query`
 - `POST /book/:tenantSlug/appointments`
 - `POST /book/appointments/:id/confirm`
+- `GET /public/me/personal-data-export` (client JWT)
+- `DELETE /public/me/personal-data` (client JWT)
 
 ## 7) UX Rules to Keep During Coding
 

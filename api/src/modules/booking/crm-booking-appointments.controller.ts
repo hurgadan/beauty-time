@@ -22,7 +22,10 @@ import {
 } from '@nestjs/swagger';
 
 import { BookingAppointmentsService } from './booking-appointments.service';
+import { RateLimit } from '../../_common/decorators/rate-limit.decorator';
+import { RateLimitGuard } from '../../_common/guards/rate-limit.guard';
 import { transformToDto } from '../../_common/transform-to-dto';
+import { AuditService } from '../audit/audit.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import type { RequestWithUser } from '../auth/types/request-with-user.interface';
 import { AppointmentDto } from './dto/management/appointment.dto';
@@ -32,12 +35,16 @@ import { UpdateAppointmentDto } from './dto/management/update-appointment.dto';
 
 @ApiTags('appointments')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RateLimitGuard)
 @Controller('crm/appointments')
 export class CrmBookingAppointmentsController {
-  public constructor(private readonly bookingAppointmentsService: BookingAppointmentsService) {}
+  public constructor(
+    private readonly bookingAppointmentsService: BookingAppointmentsService,
+    private readonly auditService: AuditService,
+  ) {}
 
   @Get('list')
+  @RateLimit({ key: 'crm-booking-list-appointments', maxRequests: 120, windowSeconds: 60 })
   @ApiOperation({ summary: 'List tenant appointments' })
   @ApiOkResponse({ type: AppointmentDto, isArray: true })
   public async listAppointments(
@@ -59,6 +66,7 @@ export class CrmBookingAppointmentsController {
   }
 
   @Post()
+  @RateLimit({ key: 'crm-booking-create-appointment', maxRequests: 60, windowSeconds: 60 })
   @ApiOperation({ summary: 'Create appointment from backoffice flow' })
   @ApiBody({ type: CreateAppointmentDto })
   @ApiCreatedResponse({ type: AppointmentDto })
@@ -71,14 +79,30 @@ export class CrmBookingAppointmentsController {
       payload,
     );
 
-    return transformToDto(AppointmentDto, {
+    const dto = transformToDto(AppointmentDto, {
       ...appointment,
       startsAtIso: appointment.startsAt.toISOString(),
       endsAtIso: appointment.endsAt.toISOString(),
     });
+
+    await this.auditService.logFromRequest(request, {
+      action: 'booking.crm.create_appointment',
+      entityType: 'appointment',
+      entityId: appointment.id,
+      metadata: {
+        staffId: appointment.staffId,
+        serviceId: appointment.serviceId,
+        clientId: appointment.clientId,
+        startsAtIso: appointment.startsAt.toISOString(),
+        endsAtIso: appointment.endsAt.toISOString(),
+      },
+    });
+
+    return dto;
   }
 
   @Patch(':id')
+  @RateLimit({ key: 'crm-booking-update-appointment', maxRequests: 60, windowSeconds: 60 })
   @ApiOperation({ summary: 'Update appointment status/details' })
   @ApiParam({ name: 'id', type: String })
   @ApiBody({ type: UpdateAppointmentDto })
@@ -94,11 +118,22 @@ export class CrmBookingAppointmentsController {
       payload,
     );
 
-    return transformToDto(AppointmentDto, {
+    const dto = transformToDto(AppointmentDto, {
       ...appointment,
       startsAtIso: appointment.startsAt.toISOString(),
       endsAtIso: appointment.endsAt.toISOString(),
     });
+
+    await this.auditService.logFromRequest(request, {
+      action: 'booking.crm.update_appointment',
+      entityType: 'appointment',
+      entityId: appointment.id,
+      metadata: {
+        status: appointment.status,
+      },
+    });
+
+    return dto;
   }
 
   private getTenantId(request: RequestWithUser): string {

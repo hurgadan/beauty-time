@@ -103,6 +103,22 @@ export class ClientsRepository {
       take: limit,
     });
   }
+
+  public async anonymizeClient(tenantId: string, clientId: string, email: string): Promise<number> {
+    const result = await this.clientRepository.update(
+      { tenantId, id: clientId },
+      {
+        firstName: 'Anonymized',
+        lastName: 'Client',
+        salutation: ClientSalutation.NONE,
+        gender: ClientGender.UNSPECIFIED,
+        email,
+        phone: null,
+      },
+    );
+
+    return result.affected ?? 0;
+  }
 }
 
 function buildNameFromEmail(email: string): { firstName: string; lastName: string } {

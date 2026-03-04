@@ -19,6 +19,7 @@ export interface BookingFlowState {
   clientName: string;
   clientEmail: string;
   otp: string;
+  clientToken: string;
   appointmentId: string;
 }
 
@@ -31,6 +32,7 @@ function createInitialState(): BookingFlowState {
     clientName: "",
     clientEmail: "",
     otp: "",
+    clientToken: "",
     appointmentId: "",
   };
 }

@@ -1,3 +1,4 @@
+import { AuditModule } from '@modules/audit/audit.module';
 import { AuthModule } from '@modules/auth/auth.module';
 import { BookingModule } from '@modules/booking/booking.module';
 import { ClientsModule } from '@modules/clients/clients.module';
@@ -28,6 +29,7 @@ import { DB_ENTITIES } from './database/entities';
       }),
     }),
     HealthModule,
+    AuditModule,
     AuthModule,
     BookingModule,
     ClientsModule,

@@ -10,6 +10,8 @@ import type { ClientHistoryItemDto } from '../../types';
 import type { ClientListItemDto } from '../../types';
 import type { Client } from '../../types';
 import type { ListClientsDto } from '../../types';
+import type { AnonymizeClientResponseDto } from '../../types';
+import type { ExportClientDataResponseDto } from '../../types';
 import type { CreateServiceDto } from '../../types';
 import type { Service } from '../../types';
 import type { UpdateServiceDto } from '../../types';
@@ -210,6 +212,28 @@ export class CrmApiClient {
 
     return this.http.request<ClientHistoryItemDto[]>(url, {
       method: 'GET',
+    });
+  }
+
+  public async exportClientData(id: string, limit?: number): Promise<ExportClientDataResponseDto> {
+    const query = new URLSearchParams();
+    if (limit !== undefined) {
+      query.set('limit', String(limit));
+    }
+
+    const queryString = query.toString();
+    const url = queryString
+      ? `/api/crm/clients/${id}/export?${queryString}`
+      : `/api/crm/clients/${id}/export`;
+
+    return this.http.request<ExportClientDataResponseDto>(url, {
+      method: 'GET',
+    });
+  }
+
+  public async anonymizeClientData(id: string): Promise<AnonymizeClientResponseDto> {
+    return this.http.request<AnonymizeClientResponseDto>(`/api/crm/clients/${id}/personal-data`, {
+      method: 'DELETE',
     });
   }
 }

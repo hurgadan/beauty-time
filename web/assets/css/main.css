@@ -33,6 +33,27 @@ body,
     var(--bg);
 }
 
+.booking-layout {
+  display: flex;
+  flex-direction: column;
+}
+
+.booking-main {
+  flex: 1;
+}
+
+.booking-footer {
+  display: flex;
+  justify-content: center;
+  padding: 10px 16px 20px;
+}
+
+.booking-footer-link {
+  color: var(--muted);
+  font-size: 13px;
+  text-decoration: underline;
+}
+
 .booking-wrap {
   max-width: 980px;
   margin: 0 auto;
