@@ -56,6 +56,20 @@ describe('Public booking flow (e2e)', () => {
 
     expect(configResponse.body.tenantSlug).toBe('public-flow-tenant');
     expect(configResponse.body.timezone).toBe('Europe/Berlin');
+    expect(configResponse.body.services).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: service.id,
+        }),
+      ]),
+    );
+    expect(configResponse.body.staff).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: staff.id,
+        }),
+      ]),
+    );
 
     const availabilityBefore = await request(app.getHttpServer())
       .post('/api/book/public-flow-tenant/availability/query')

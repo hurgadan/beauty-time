@@ -32,7 +32,7 @@ export class JwtAuthGuard implements CanActivate {
       request.user = {
         sub: String(payload.sub),
         tenantId: String(payload.tenantId),
-        role: payload.role === 'owner' ? 'owner' : 'staff',
+        role: payload.role === 'owner' || payload.role === 'client' ? payload.role : 'staff',
       };
 
       return true;

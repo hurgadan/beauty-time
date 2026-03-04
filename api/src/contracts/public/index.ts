@@ -12,5 +12,8 @@ export * from '../types/booking/create-public-appointment-response.type';
 export * from '../types/booking/confirm-appointment.type';
 export * from '../types/booking/confirm-appointment-response.type';
 export * from '../types/booking/enums/appointment-status.enum';
+export * from '../types/clients/export-client-data.type';
+export * from '../types/clients/export-client-data-response.type';
+export * from '../types/clients/anonymize-client-response.type';
 
 export * from './clients';

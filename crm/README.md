@@ -17,7 +17,7 @@ Nuxt 4 CRM frontend for Beauty-Time.
 1. Integrated API layer:
 - composable `useCrmApi` uses `@hurgadan/beauty-time-crm-contracts` client and types;
 - auth login writes JWT into `crm_access_token` cookie;
-- page data loads through contracts client with safe fallback to local demo data.
+- page data is loaded only from backend API via contracts client.
 2. Connected screens:
 - `dashboard`, `calendar`, `appointments`, `services`, `staff`, `clients/:id` read from CRM API client.
 3. CRM module actions:

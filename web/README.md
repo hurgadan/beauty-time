@@ -11,6 +11,30 @@ Nuxt 4 booking frontend for Beauty-Time.
 - `/book/:slug/verify`
 - `/book/:slug/success`
 - `/book/confirm/:token`
+- `/privacy/data-request`
+
+## Current booking implementation status
+1. Public contracts integration:
+- composable `useBookingApi` uses `@hurgadan/beauty-time-public-contracts` clients/types;
+- uses API endpoints for booking config, availability query, create appointment, OTP send/verify, reminder confirmation;
+- uses typed `$fetch` calls for public GDPR endpoints (`/api/public/me/*`).
+2. Booking flow state:
+- centralized multi-step state in `useBookingFlowState` (`service/staff/slot/contact/otp/clientToken/appointmentId`);
+- service/staff catalog is loaded from backend `GET /api/book/:tenantSlug/config`.
+3. Privacy/GDPR UX:
+- global footer link `Privacy / GDPR request` is shown on all public pages;
+- `/privacy/data-request` allows client self-service:
+  - export personal data (`GET /api/public/me/personal-data-export`);
+  - anonymize personal data (`DELETE /api/public/me/personal-data`).
+4. Implemented edge states:
+- no slots available (`/datetime?state=no-slots`);
+- OTP expired (`/verify?state=otp-expired`);
+- OTP resend action on verify step.
+5. Runtime API config:
+- `NUXT_PUBLIC_API_BASE_URL` (default: `http://localhost:4000`).
+6. Performance baseline:
+- `experimental.payloadExtraction: true` to reduce client payload for route data;
+- `nitro.compressPublicAssets: true` to improve delivery on mobile networks.
 
 ## Contracts wiring
 1. `@hurgadan/beauty-time-public-contracts` is installed as npm dependency from GitHub Packages.

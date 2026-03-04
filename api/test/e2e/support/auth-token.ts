@@ -4,7 +4,7 @@ import { E2E_DEFAULT_JWT_SECRET } from "./e2e-env";
 
 export function createAuthToken(
   tenantId: string,
-  role: "owner" | "staff" = "owner",
+  role: "owner" | "staff" | "client" = "owner",
   sub = "e2e-user",
 ): string {
   const jwtService = new JwtService({

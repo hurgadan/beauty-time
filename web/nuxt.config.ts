@@ -2,6 +2,18 @@ import { defineNuxtConfig } from "nuxt/config";
 
 export default defineNuxtConfig({
   css: ["~/assets/css/main.css"],
+  runtimeConfig: {
+    public: {
+      apiBaseUrl:
+        process.env.NUXT_PUBLIC_API_BASE_URL ?? "http://localhost:4000",
+    },
+  },
+  experimental: {
+    payloadExtraction: true,
+  },
+  nitro: {
+    compressPublicAssets: true,
+  },
   app: {
     head: {
       title: "Beauty-Time Booking",

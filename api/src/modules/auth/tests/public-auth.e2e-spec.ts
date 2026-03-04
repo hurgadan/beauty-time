@@ -115,6 +115,31 @@ describe('Public auth flow (e2e)', () => {
     expect(clients[0].firstName).toBe('New');
     expect(clients[0].lastName).toBe('Client');
   });
+
+  it('applies auth endpoint rate limiting by IP window', async () => {
+    const app = getE2eApp();
+    const dataSource = getE2eDataSource();
+
+    await createTenant(dataSource, { slug: 'auth-rate-limit-tenant' });
+
+    for (let attempt = 1; attempt <= 5; attempt += 1) {
+      await request(app.getHttpServer())
+        .post('/api/auth/client/send-magic-link')
+        .send({
+          tenantSlug: 'auth-rate-limit-tenant',
+          email: `rate-limit-${attempt}@example.com`,
+        })
+        .expect(201);
+    }
+
+    await request(app.getHttpServer())
+      .post('/api/auth/client/send-magic-link')
+      .send({
+        tenantSlug: 'auth-rate-limit-tenant',
+        email: 'rate-limit-6@example.com',
+      })
+      .expect(429);
+  });
 });
 
 function hashOtp(otp: string): string {

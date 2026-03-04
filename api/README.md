@@ -3,6 +3,7 @@
 NestJS + TypeORM backend for Beauty-Time.
 
 ## MVP modules
+- Audit
 - Auth
 - Public API (public controllers + public DTO)
 - Services
@@ -108,7 +109,7 @@ Applied examples:
 - `POST /api/book/:tenantSlug/appointments`
 - `POST /api/book/appointments/:id/confirm`
 Public booking behavior (MVP):
-- booking config is resolved by tenant `slug` and returns tenant timezone;
+- booking config is resolved by tenant `slug` and returns tenant timezone + public catalog (`services`, `staff`);
 - availability is calculated from working hours + time-off + existing appointments + service duration/buffers;
 - slot step is 30 minutes;
 - public appointment creation auto-deduplicates client by `tenant+email` and creates client on first visit;
@@ -116,6 +117,9 @@ Public booking behavior (MVP):
 3. Public auth:
 - `POST /api/auth/client/send-magic-link`
 - `POST /api/auth/client/verify-otp`
+4. Public client GDPR:
+- `GET /api/public/me/personal-data-export`
+- `DELETE /api/public/me/personal-data`
 Public auth request payloads (MVP):
 - both endpoints require `tenantSlug` + `email`;
 - `verify-otp` also requires 6-digit `otp`.
@@ -128,18 +132,18 @@ Public auth behavior (MVP):
 - on successful verify API returns client JWT token;
 - client is deduplicated by `tenant+email`; if not found, minimal client record is created.
 - OTP delivery is delegated to notifications module (`auth_otp` template, email channel).
-4. CRM auth:
+5. CRM auth:
 - `POST /api/auth/staff/login`
-5. Appointments:
+6. Appointments:
 - `GET /api/crm/appointments/list`
 - `POST /api/crm/appointments`
 - `PATCH /api/crm/appointments/:id`
-6. Services:
+7. Services:
 - `GET /api/crm/services/list`
 - `POST /api/crm/services`
 - `PATCH /api/crm/services/:id`
 - `DELETE /api/crm/services/:id`
-7. Staff:
+8. Staff:
 - `GET /api/crm/staff/list`
 - `POST /api/crm/staff`
 - `PATCH /api/crm/staff/:id`
@@ -149,13 +153,31 @@ Public auth behavior (MVP):
 - `GET /api/crm/staff/:id/time-off`
 - `POST /api/crm/staff/:id/time-off`
 - `DELETE /api/crm/staff/:staffId/time-off/:timeOffId`
-8. Clients:
+9. Clients:
 - `GET /api/crm/clients/list`
 - `GET /api/crm/clients/:id`
 - `GET /api/crm/clients/:id/history`
-9. Internal notifications:
+- `GET /api/crm/clients/:id/export`
+- `DELETE /api/crm/clients/:id/personal-data`
+10. Internal notifications:
 - `POST /api/internal/notifications/schedule`
 - `POST /api/internal/notifications/send`
+
+## Security and GDPR (Stage 13)
+1. Audit logs:
+- audit records are stored in `audit_logs` table;
+- critical actions are logged for auth, booking, services, staff, and GDPR client operations;
+- audit payload includes action, actor, tenant, target entity, request IP/user-agent, metadata.
+2. Rate limiting:
+- lightweight in-memory `RateLimitGuard` + `@RateLimit(...)` decorator;
+- enabled for auth and booking endpoints (public + CRM auth/booking management).
+3. GDPR client operations:
+- `GET /api/crm/clients/:id/export` exports client card + appointments history;
+- `DELETE /api/crm/clients/:id/personal-data` anonymizes personal data while preserving referential integrity for analytics/history.
+4. Data minimization:
+- only required client fields are stored (`firstName`, `lastName`, `email`, optional `phone`);
+- OTP payload stores hash only (`otp_code_hash`), never raw OTP;
+- anonymization keeps operational ids and removes direct personal data.
 
 Booking + notifications behavior (MVP):
 - on public booking create and CRM appointment create API schedules:

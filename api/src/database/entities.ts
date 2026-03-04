@@ -1,3 +1,4 @@
+import { AuditLogEntity } from '@modules/audit/dao/audit-log.entity';
 import { OtpSessionEntity } from '@modules/auth/dao/otp-session.entity';
 import { AppointmentEntity } from '@modules/booking/dao/appointment.entity';
 import { ClientEntity } from '@modules/clients/dao/client.entity';
@@ -9,6 +10,7 @@ import { WorkingHoursEntity } from '@modules/staff/dao/working-hours.entity';
 import { TenantEntity } from '@modules/tenant/dao/tenant.entity';
 
 export const DB_ENTITIES = [
+  AuditLogEntity,
   TenantEntity,
   StaffEntity,
   ServiceEntity,

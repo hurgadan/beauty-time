@@ -76,6 +76,31 @@ export class ClientsService {
     return this.clientsRepository.saveClient(created);
   }
 
+  public async exportClientData(
+    tenantId: string,
+    clientId: string,
+    limit = 100,
+  ): Promise<{ client: ClientEntity; visitCount: number; history: AppointmentEntity[] }> {
+    const { client, visitCount } = await this.getClient(tenantId, clientId);
+    const history = await this.clientsRepository.findClientHistory(tenantId, clientId, limit);
+
+    return {
+      client,
+      visitCount,
+      history,
+    };
+  }
+
+  public async anonymizeClient(tenantId: string, clientId: string): Promise<void> {
+    const client = await this.clientsRepository.findClientById(tenantId, clientId);
+    if (!client) {
+      throw new NotFoundException('Client not found');
+    }
+
+    const anonymizedEmail = `anonymized+${clientId}@deleted.local`;
+    await this.clientsRepository.anonymizeClient(tenantId, clientId, anonymizedEmail);
+  }
+
   private async getVisitCountMap(
     tenantId: string,
     clientIds: string[],

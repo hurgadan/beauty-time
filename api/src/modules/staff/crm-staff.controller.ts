@@ -35,6 +35,7 @@ import { UpsertWorkingHoursDto } from './dto/upsert-working-hours.dto';
 import { WorkingHoursItemDto } from './dto/working-hours-item.dto';
 import { StaffService } from './staff.service';
 import { transformToDto } from '../../_common/transform-to-dto';
+import { AuditService } from '../audit/audit.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import type { RequestWithUser } from '../auth/types/request-with-user.interface';
 
@@ -43,7 +44,10 @@ import type { RequestWithUser } from '../auth/types/request-with-user.interface'
 @UseGuards(JwtAuthGuard)
 @Controller('crm/staff')
 export class CrmStaffController {
-  public constructor(private readonly staffService: StaffService) {}
+  public constructor(
+    private readonly staffService: StaffService,
+    private readonly auditService: AuditService,
+  ) {}
 
   @Get('list')
   @ApiOperation({ summary: 'List tenant staff' })
@@ -66,6 +70,15 @@ export class CrmStaffController {
     @Body() payload: CreateStaffDto,
   ): Promise<StaffItemDto> {
     const staff = await this.staffService.createStaff(this.getTenantId(request), payload);
+    await this.auditService.logFromRequest(request, {
+      action: 'staff.crm.create_staff',
+      entityType: 'staff',
+      entityId: staff.id,
+      metadata: {
+        role: staff.role,
+        email: staff.email,
+      },
+    });
 
     return transformToDto(StaffItemDto, staff);
   }
@@ -81,6 +94,15 @@ export class CrmStaffController {
     @Body() payload: UpdateStaffDto,
   ): Promise<StaffItemDto> {
     const staff = await this.staffService.updateStaff(this.getTenantId(request), id, payload);
+    await this.auditService.logFromRequest(request, {
+      action: 'staff.crm.update_staff',
+      entityType: 'staff',
+      entityId: staff.id,
+      metadata: {
+        role: staff.role,
+        isActive: staff.isActive,
+      },
+    });
 
     return transformToDto(StaffItemDto, staff);
   }
@@ -94,7 +116,12 @@ export class CrmStaffController {
     @Req() request: RequestWithUser,
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<void> {
-    return this.staffService.deleteStaff(this.getTenantId(request), id);
+    await this.staffService.deleteStaff(this.getTenantId(request), id);
+    await this.auditService.logFromRequest(request, {
+      action: 'staff.crm.delete_staff',
+      entityType: 'staff',
+      entityId: id,
+    });
   }
 
   @Get(':id/working-hours')
@@ -130,6 +157,14 @@ export class CrmStaffController {
       id,
       payload,
     );
+    await this.auditService.logFromRequest(request, {
+      action: 'staff.crm.replace_working_hours',
+      entityType: 'staff',
+      entityId: id,
+      metadata: {
+        itemsCount: payload.items.length,
+      },
+    });
 
     return workingHoursItems.map((workingHoursItem) =>
       transformToDto(WorkingHoursItemDto, workingHoursItem),
@@ -166,6 +201,14 @@ export class CrmStaffController {
     @Body() payload: CreateTimeOffDto,
   ): Promise<TimeOffItemDto> {
     const timeOff = await this.staffService.createTimeOff(this.getTenantId(request), id, payload);
+    await this.auditService.logFromRequest(request, {
+      action: 'staff.crm.create_time_off',
+      entityType: 'staff',
+      entityId: id,
+      metadata: {
+        timeOffId: timeOff.id,
+      },
+    });
 
     return transformToDto(TimeOffItemDto, {
       ...timeOff,
@@ -185,7 +228,15 @@ export class CrmStaffController {
     @Param('staffId', ParseUUIDPipe) staffId: string,
     @Param('timeOffId', ParseUUIDPipe) timeOffId: string,
   ): Promise<void> {
-    return this.staffService.deleteTimeOff(this.getTenantId(request), staffId, timeOffId);
+    await this.staffService.deleteTimeOff(this.getTenantId(request), staffId, timeOffId);
+    await this.auditService.logFromRequest(request, {
+      action: 'staff.crm.delete_time_off',
+      entityType: 'staff',
+      entityId: staffId,
+      metadata: {
+        timeOffId,
+      },
+    });
   }
 
   private getTenantId(request: RequestWithUser): string {

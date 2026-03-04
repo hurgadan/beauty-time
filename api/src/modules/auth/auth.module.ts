@@ -9,6 +9,7 @@ import { OtpSessionEntity } from './dao/otp-session.entity';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { OtpSessionRepository } from './otp-session.repository';
 import { PublicAuthController } from './public-auth.controller';
+import { AuditModule } from '../audit/audit.module';
 import { ClientsModule } from '../clients/clients.module';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { TenantModule } from '../tenant/tenant.module';
@@ -17,6 +18,7 @@ import { TenantModule } from '../tenant/tenant.module';
   imports: [
     TypeOrmModule.forFeature([OtpSessionEntity]),
     forwardRef(() => ClientsModule),
+    AuditModule,
     NotificationsModule,
     TenantModule,
     JwtModule.registerAsync({

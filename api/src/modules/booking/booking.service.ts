@@ -36,11 +36,28 @@ export class BookingService {
 
   public async getConfig(tenantSlug: string): Promise<BookingConfigResponseDto> {
     const tenant = await this.tenantService.getBySlugOrThrow(tenantSlug);
+    const [services, staff] = await Promise.all([
+      this.servicesService.listServices(tenant.id),
+      this.staffService.findActiveStaffByTenant(tenant.id),
+    ]);
 
     return {
       tenantSlug,
       timezone: tenant.timezone,
       reminderChannels: ['email'],
+      services: services
+        .filter((item) => item.isActive)
+        .map((item) => ({
+          id: item.id,
+          name: item.name,
+          durationMinutes: item.durationMinutes,
+          priceCents: item.priceCents,
+        })),
+      staff: staff.map((item) => ({
+        id: item.id,
+        fullName: item.fullName,
+        role: item.role,
+      })),
     };
   }
 
