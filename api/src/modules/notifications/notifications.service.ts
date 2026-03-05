@@ -38,7 +38,7 @@ export class NotificationsService {
   public async scheduleNotification(
     input: ScheduleNotificationInput,
   ): Promise<NotificationJobEntity> {
-    const defaultLanguage = this.configService.get<NotificationLanguage>(
+    const defaultLanguage = this.configService.getOrThrow<NotificationLanguage>(
       'notifications.defaultLanguage',
     );
     const lang = input.lang ?? resolveNotificationLanguage(undefined, defaultLanguage);
@@ -59,8 +59,9 @@ export class NotificationsService {
     input: ScheduleAppointmentNotificationsInput,
   ): Promise<number> {
     const now = new Date();
-    const publicBookingBaseUrl =
-      this.configService.get<string>('notifications.publicBookingBaseUrl') ?? '';
+    const publicBookingBaseUrl = this.configService.getOrThrow<string>(
+      'notifications.publicBookingBaseUrl',
+    );
     const confirmUrl = `${trimTrailingSlash(publicBookingBaseUrl)}/book/appointments/${input.appointmentId}/confirm`;
 
     const jobs = [

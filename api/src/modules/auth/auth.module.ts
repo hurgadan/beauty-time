@@ -24,7 +24,7 @@ import { TenantModule } from '../tenant/tenant.module';
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        secret: configService.get<string>('auth.jwtSecret') ?? 'dev-secret',
+        secret: configService.getOrThrow<string>('auth.jwtSecret'),
         signOptions: { expiresIn: '12h' },
       }),
     }),
