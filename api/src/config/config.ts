@@ -1,4 +1,7 @@
 import { NotificationLanguage } from '@contracts';
+import * as dotenv from 'dotenv';
+
+dotenv.config({ quiet: true });
 
 export interface AppConfig {
   app: {
