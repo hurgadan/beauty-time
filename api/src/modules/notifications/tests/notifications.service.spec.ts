@@ -27,17 +27,28 @@ function createNotificationsProcessingServiceMock(): NotificationsProcessingServ
 }
 
 function createConfigServiceMock(): ConfigServiceMock {
+  const resolver = (key: string): unknown => {
+    if (key === 'notifications.defaultLanguage') {
+      return NotificationLanguage.EN;
+    }
+
+    if (key === 'notifications.publicBookingBaseUrl') {
+      return 'https://booking.example.com';
+    }
+
+    return undefined;
+  };
+
   return {
-    get: jest.fn().mockImplementation((key: string) => {
-      if (key === 'notifications.defaultLanguage') {
-        return NotificationLanguage.EN;
+    get: jest.fn().mockImplementation(resolver),
+    getOrThrow: jest.fn().mockImplementation((key: string) => {
+      const value = resolver(key);
+
+      if (value === undefined) {
+        throw new Error(`Missing config for key ${key}`);
       }
 
-      if (key === 'notifications.publicBookingBaseUrl') {
-        return 'https://booking.example.com';
-      }
-
-      return undefined;
+      return value;
     }),
   };
 }

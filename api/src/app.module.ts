@@ -23,7 +23,7 @@ import { DB_ENTITIES } from './database/entities';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        url: configService.get<string>('database.url'),
+        url: configService.getOrThrow<string>('database.url'),
         entities: [...DB_ENTITIES],
         synchronize: false,
       }),

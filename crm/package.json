@@ -10,7 +10,7 @@
     "lint": "eslint \"**/*.ts\""
   },
   "dependencies": {
-    "@hurgadan/beauty-time-crm-contracts": "0.2.0",
+    "@hurgadan/beauty-time-crm-contracts": "0.3.0",
     "nuxt": "^4.0.0",
     "vue": "^3.5.13"
   },

@@ -30,13 +30,24 @@ function createNotificationProviderRegistryMock(): NotificationProviderRegistryM
 }
 
 function createConfigServiceMock(): ConfigServiceMock {
+  const resolver = (key: string): unknown => {
+    if (key === 'notifications.defaultLanguage') {
+      return 'en';
+    }
+
+    return undefined;
+  };
+
   return {
-    get: jest.fn().mockImplementation((key: string) => {
-      if (key === 'notifications.defaultLanguage') {
-        return 'en';
+    get: jest.fn().mockImplementation(resolver),
+    getOrThrow: jest.fn().mockImplementation((key: string) => {
+      const value = resolver(key);
+
+      if (value === undefined) {
+        throw new Error(`Missing config for key ${key}`);
       }
 
-      return undefined;
+      return value;
     }),
   };
 }

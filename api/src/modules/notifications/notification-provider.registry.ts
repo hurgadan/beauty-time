@@ -44,13 +44,13 @@ export class NotificationProviderRegistry {
   private resolveProviderName(channel: NotificationChannel): string {
     switch (channel) {
       case NotificationChannel.EMAIL:
-        return this.configService.get<string>('notifications.providers.email') ?? 'noop';
+        return this.configService.getOrThrow<string>('notifications.providers.email');
       case NotificationChannel.SMS:
-        return this.configService.get<string>('notifications.providers.sms') ?? 'noop';
+        return this.configService.getOrThrow<string>('notifications.providers.sms');
       case NotificationChannel.TELEGRAM:
-        return this.configService.get<string>('notifications.providers.telegram') ?? 'noop';
+        return this.configService.getOrThrow<string>('notifications.providers.telegram');
       default:
-        return 'noop';
+        throw new Error(`Unsupported notification channel: ${channel}`);
     }
   }
 }
